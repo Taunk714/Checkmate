@@ -7,17 +7,17 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import com.teamred.checkmate.databinding.ActivityMain2Binding;
+import com.teamred.checkmate.databinding.ActivityBottomMenuBinding;
 
 public class MainActivity2 extends AppCompatActivity {
 
-private ActivityMain2Binding binding;
+private ActivityBottomMenuBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-     binding = ActivityMain2Binding.inflate(getLayoutInflater());
+     binding = ActivityBottomMenuBinding.inflate(getLayoutInflater());
      setContentView(binding.getRoot());
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
