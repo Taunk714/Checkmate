@@ -17,4 +17,5 @@ bottom_menu:
 * fragment_scrolling.xml: helpful article fragment. use in
 
 ## helpful resource
-firebase chat: https://firebase.google.com/codelabs/firebase-android#1
+firebase colab chat: https://firebase.google.com/codelabs/firebase-android#1
+firebase colab storage: https://firebase.google.com/codelabs/firestore-web#1
