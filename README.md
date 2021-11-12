@@ -19,3 +19,5 @@ bottom_menu:
 firebase colab chat: https://firebase.google.com/codelabs/firebase-android#1
 
 firebase colab storage: https://firebase.google.com/codelabs/firestore-web#1
+
+firebase auth github demo: https://github.com/firebase/snippets-android/tree/8184cba2c40842a180f91dcfb4a216e721cc6ae6/auth/app/src/main/java/com/google/firebase/quickstart/auth
