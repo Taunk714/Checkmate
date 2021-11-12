@@ -13,7 +13,6 @@ bottom_menu:
 * fragment_dashboard.xml: one of the bottom menu
 * fragment_home.xml: one of the bottom menu
 * fragment_notification.xml: one of the bottom menu
-
 * fragment_scrolling.xml: helpful article fragment. use in
 
 ## helpful resource
