@@ -18,4 +18,5 @@ bottom_menu:
 
 ## helpful resource
 firebase colab chat: https://firebase.google.com/codelabs/firebase-android#1
+
 firebase colab storage: https://firebase.google.com/codelabs/firestore-web#1
