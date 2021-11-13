@@ -28,4 +28,6 @@
         android:name="com.teamred.checkmate.ui.search.SearchFragment"
         android:label="@string/title_search"
         tools:layout="@layout/fragment_search" />
+
+
 </navigation>

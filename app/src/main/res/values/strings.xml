@@ -124,6 +124,7 @@
     <string name="post_content">Here the content here</string>
     <string name="view_more">View More</string>
     <string name="recommendation">Recommendation</string>
+    <string name="content_description_add_post">Add Post</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
 </resources>

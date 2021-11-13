@@ -15,9 +15,6 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.teamred.checkmate.databinding.FragmentAddPostBinding;
-import com.teamred.checkmate.databinding.FragmentSearchBinding;
-import com.teamred.checkmate.databinding.FragmentSlideshowBinding;
-import com.teamred.checkmate.ui.notifications.NotificationsViewModel;
 
 public class AddPostFragment extends Fragment {
     private FragmentAddPostBinding binding;
@@ -39,7 +36,7 @@ public class AddPostFragment extends Fragment {
             public void onClick(View view) {
                 String title = String.valueOf(postTitle.getText());
                 String content = String.valueOf(post.getText());
-                Toast.makeText(getContext(), "send to firebase", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity().getApplicationContext(), "send to firebase", Toast.LENGTH_LONG).show();
                 // upload to firebase
             }
         });
