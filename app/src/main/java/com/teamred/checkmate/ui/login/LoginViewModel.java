@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel;
 
 import android.util.Patterns;
 
+import com.google.firebase.auth.FirebaseUser;
 import com.teamred.checkmate.data.LoginRepository;
 import com.teamred.checkmate.data.Result;
 import com.teamred.checkmate.data.model.LoggedInUser;
@@ -29,17 +30,17 @@ public class LoginViewModel extends ViewModel {
         return loginResult;
     }
 
-    public void login(String username, String password) {
-        // can be launched in a separate asynchronous job
-        Result<LoggedInUser> result = loginRepository.login(username, password);
-
-        if (result instanceof Result.Success) {
-            LoggedInUser data = ((Result.Success<LoggedInUser>) result).getData();
-            loginResult.setValue(new LoginResult(new LoggedInUserView(data.getDisplayName())));
-        } else {
-            loginResult.setValue(new LoginResult(R.string.login_failed));
-        }
-    }
+//    public void login(String username, String password) {
+//        // can be launched in a separate asynchronous job
+//        Result<LoggedInUser> result = loginRepository.login(username, password);
+//
+//        if (result instanceof Result.Success) {
+//            LoggedInUser data = ((Result.Success<LoggedInUser>) result).getData();
+//            loginResult.setValue(new LoginResult(new LoggedInUserView(data.getDisplayName())));
+//        } else {
+//            loginResult.setValue(new LoginResult(R.string.login_failed));
+//        }
+//    }
 
     public void loginDataChanged(String username, String password) {
         if (!isUserNameValid(username)) {
@@ -66,5 +67,14 @@ public class LoginViewModel extends ViewModel {
     // A placeholder password validation check
     private boolean isPasswordValid(String password) {
         return password != null && password.trim().length() > 5;
+    }
+
+    public void setLoginResult(Result<LoggedInUser> result) {
+        if (result instanceof Result.Success) {
+            FirebaseUser data = ((Result.Success<FirebaseUser>) result).getData();
+            loginResult.setValue(new LoginResult(new LoggedInUserView(data.getDisplayName())));
+        } else {
+            loginResult.setValue(new LoginResult(R.string.login_failed));
+        }
     }
 }

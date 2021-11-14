@@ -1,5 +1,8 @@
 # Checkmate
 
+## Test account
+test@test.com test123
+
 ## Layout file
 side_nav:
 

@@ -16,9 +16,11 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 import com.teamred.checkmate.AddPostActivity;
 import com.teamred.checkmate.R;
 import com.teamred.checkmate.databinding.FragmentHomeBinding;
+import com.teamred.checkmate.ui.login.LoginActivity;
 import com.teamred.checkmate.ui.post.AddPostFragment;
 
 public class HomeFragment extends Fragment {
@@ -38,9 +40,18 @@ public class HomeFragment extends Fragment {
         btnAddPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getActivity(), AddPostActivity.class);
-                Toast.makeText(getContext(), "click add post", Toast.LENGTH_LONG).show();
-                startActivity(i);
+//                Intent i = new Intent(getActivity(), AddPostActivity.class);
+
+                if (FirebaseAuth.getInstance().getCurrentUser() == null){
+                    Intent login = new Intent(getActivity(), LoginActivity.class);
+                    Toast.makeText(getContext(), "Interceptor! Jump to login", Toast.LENGTH_LONG).show();
+                    login.putExtra("callback", AddPostActivity.class.getCanonicalName());
+                    startActivity(login);
+                }else{
+                    Intent i = new Intent(getActivity(), AddPostActivity.class);
+                    Toast.makeText(getContext(), "click add post", Toast.LENGTH_LONG).show();
+                    startActivity(i);
+                }
             }
         });
 

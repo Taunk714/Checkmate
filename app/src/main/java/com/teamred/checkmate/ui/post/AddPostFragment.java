@@ -38,6 +38,7 @@ public class AddPostFragment extends Fragment {
                 String content = String.valueOf(post.getText());
                 Toast.makeText(getActivity().getApplicationContext(), "send to firebase", Toast.LENGTH_LONG).show();
                 // upload to firebase
+                getActivity().finish();
             }
         });
         return root;
