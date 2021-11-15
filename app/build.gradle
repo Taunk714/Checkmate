@@ -48,9 +48,12 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics'
     // FirebaseUI for Firebase Auth
     implementation 'com.firebaseui:firebase-ui-auth:8.0.0'
+//    implementation 'com.algolia:instantsearch-android:2.X.X'
     // Declare the dependency for the Firebase Authentication library
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation 'com.google.firebase:firebase-auth'
+    implementation 'com.google.firebase:firebase-firestore'
+    implementation group: 'com.alibaba', name: 'fastjson', version: '1.2.76'
     implementation 'com.evernote:android-sdk:2.0.0-RC4'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.+'

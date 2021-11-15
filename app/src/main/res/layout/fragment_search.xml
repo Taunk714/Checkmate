@@ -14,13 +14,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <fragment
-            android:id="@+id/fragmentContainerView2"
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/search_bar_frag"
             android:name="com.teamred.checkmate.SearchBarFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
             tools:layout="@layout/fragment_search_bar" />
+
+        <ListView
+            android:id="@+id/search_result_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

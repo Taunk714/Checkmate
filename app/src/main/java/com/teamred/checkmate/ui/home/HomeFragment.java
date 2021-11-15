@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,10 +17,8 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.teamred.checkmate.AddPostActivity;
-import com.teamred.checkmate.R;
 import com.teamred.checkmate.databinding.FragmentHomeBinding;
 import com.teamred.checkmate.ui.login.LoginActivity;
-import com.teamred.checkmate.ui.post.AddPostFragment;
 
 public class HomeFragment extends Fragment {
 
