@@ -27,6 +27,7 @@ import java.util.Properties;
 
 public class AlgoliaDataSource {
 
+
     private Client adminClient;
     private static volatile AlgoliaDataSource _instance = null;
     private static HashMap<String,String> map = new HashMap<>();
