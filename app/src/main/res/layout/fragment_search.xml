@@ -14,18 +14,92 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/search_bar_frag"
-            android:name="com.teamred.checkmate.SearchBarFragment"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="top"
-            tools:layout="@layout/fragment_search_bar" />
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/algolia_logo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:contentDescription="@string/algolia_logo"
+                android:foregroundGravity="center"
+                app:srcCompat="@drawable/algolia_blue_mark" />
+
+            <Spinner
+                android:id="@+id/search_type"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:entries="@array/search_type" />
+
+            <SearchView
+                android:id="@+id/search_keywords"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="#FFFFFF"
+                android:elevation="10dp">
+
+            </SearchView>
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/search_filter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="filter"
+            android:inputType="textPersonName"
+            android:minHeight="48dp" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_author_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="author desc"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/btn_author_asc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="author asc" />
+
+            <Button
+                android:id="@+id/btn_number_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Number desc" />
+
+            <Button
+                android:id="@+id/btn_number_asc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="number asc" />
+        </LinearLayout>
 
         <ListView
             android:id="@+id/search_result_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

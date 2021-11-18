@@ -127,4 +127,5 @@
     <string name="view_more">查看更多</string>
     <string name="recommendation">推荐</string>
     <string name="content_description_add_post">发布笔记</string>
+    <string name="algolia_logo">algolia logo</string>
 </resources>

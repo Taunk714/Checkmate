@@ -1,10 +1,17 @@
 package com.teamred.checkmate.data;
 
+import android.content.Context;
+import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+
 import com.algolia.search.saas.AlgoliaException;
 import com.algolia.search.saas.Client;
 import com.algolia.search.saas.CompletionHandler;
 import com.algolia.search.saas.Index;
 import com.algolia.search.saas.Query;
+import com.algolia.search.saas.Request;
+import com.teamred.checkmate.SyncHelper;
 import com.teamred.checkmate.data.model.Note;
 import com.teamred.checkmate.ui.search.SearchFragment;
 
@@ -13,37 +20,111 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Properties;
 
 public class AlgoliaDataSource {
 
     private Client adminClient;
-    private static AlgoliaDataSource _instance = null;
+    private static volatile AlgoliaDataSource _instance = null;
+    private static HashMap<String,String> map = new HashMap<>();
+//    static {
+//        FireStoreDataSource.getKey(map, "admin");
+//        try {
+//            Thread.currentThread().join();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        _instance = new AlgoliaDataSource(1);
+//    }
 
     private AlgoliaDataSource() {
         // This is bad. A better way is to store the info in the firebase and fetch everytime.
         // I will modify this later.
         // default is search only. No much sense at this time.
-        adminClient = new Client("M7T1CSJRGZ", FireStoreDataSource.getKey("search"));
+//        SyncHelper.acquire();
+        FireStoreDataSource.getKey(map, "admin");
+        adminClient = new Client("M7T1CSJRGZ", map.get("search"));
     }
 
     private AlgoliaDataSource(int admin) {
         // admin
-        adminClient = new Client("M7T1CSJRGZ", FireStoreDataSource.getKey("admin"));
+        SyncHelper.acquire();
+        adminClient = new Client("M7T1CSJRGZ", map.get("admin"));
     }
 
-//    private
+    public static void initAlgolia(){
+        FireStoreDataSource.getKey(map, "search");
+//        if (map.containsKey("error")){
+//            Toast.makeText(context, "firebase fetch fail", Toast.LENGTH_SHORT).show();
+//        }else{
+//            Toast.makeText(context, "firebase fetch success", Toast.LENGTH_SHORT).show();
+//        }
+    }
+
+    public static void set_instance(AlgoliaDataSource _instance) {
+        AlgoliaDataSource._instance = _instance;
+    }
+
+    //    private
     public void initIndex(String index){
         adminClient.initIndex(index);
     }
 
-    public static AlgoliaDataSource getInstance(){
+    public static AlgoliaDataSource getInstance(Context context){
         if (_instance == null){
+//            initAlgolia(context);
             _instance = new AlgoliaDataSource(1);
         }
         return _instance;
     }
 
+    /**
+     * set custom ranking.
+     * @param fragment
+     * @param attr even is desc/asc, odd is the attribute name
+     */
+    public void setCustomRanking(SearchFragment fragment, String...  attr){
+        JSONArray arr = new JSONArray();
+        // add custom ranking
+        for (int i = 0; i < attr.length; i=i+2) {
+            if (attr[i].equalsIgnoreCase("desc")){
+                arr.put("desc("+attr[i+1]+")");
+            }else if (attr[i].equalsIgnoreCase("asc")){
+                arr.put("asc("+attr[i+1]+")");
+            }
+        }
+        // add default ranking
+        arr.put("typo")
+                .put("geo")
+                .put("words")
+                .put("filters")
+                .put("proximity")
+                .put("attribute")
+                .put("exact")
+                .put("custom");
+                // the `asc` and `desc` modifiers must be placed at the top
+                // if you are configuring an index for sorting purposes only
+        try {
+            JSONObject ranking = new JSONObject().put("ranking", arr);
+            adminClient.getIndex("demo").setSettingsAsync(ranking, new CompletionHandler() {
+                @Override
+                public void requestCompleted(@Nullable JSONObject jsonObject, @Nullable AlgoliaException e) {
+                    Toast.makeText(fragment.getContext(), "Set rank", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * First step. send data to algolia
+     * @param index index to search
+     * @param jsonString record
+     */
     public void addRecord(String index, String jsonString){
         Index target = adminClient.getIndex(index);
         try {
@@ -53,16 +134,40 @@ public class AlgoliaDataSource {
         }
     }
 
-    public void noteSetting(String index) throws JSONException {
+    /** second step. set searchable attributes.
+     *
+     * @param index
+     * @param attributes attributes list
+     */
+    public void noteSetting(String index, String... attributes){
         Index target = adminClient.getIndex(index);
-        JSONObject jsonObject = new JSONObject()
-                .put("searchableAttributes", "tag")
-                .put("searchableAttributes", "title")
-                .put("searchableAttributes", "content");
-        target.setSettingsAsync(jsonObject, null);
+
+        try {
+            JSONArray jsonArray = new JSONArray();
+
+            for (int i = 0; i < attributes.length; i++) {
+                jsonArray.put(attributes[i].toLowerCase());
+            }
+            JSONObject jsonObject = new JSONObject().put(
+                    "searchableAttributes",
+                    jsonArray);
+            target.setSettings(jsonObject);
+        } catch (JSONException | AlgoliaException e) {
+            e.printStackTrace();
+        }
+
     }
 
-    public void searchNote(SearchFragment fragment, String index, String keywords){
+    /**
+     * Third step. search notes by keywords,filters
+     * @param fragment
+     * @param index index of the target
+     * @param keywords  keywords
+     * @param type the searchable attributes
+     * @param filters filter
+     */
+    public void searchNote(SearchFragment fragment,  String index, String keywords,String[] type,String filters){
+        // callback handler. fill the result into listview
         CompletionHandler completionHandler = new CompletionHandler() {
             @Override
             public void requestCompleted(JSONObject content, AlgoliaException error) {
@@ -72,36 +177,40 @@ public class AlgoliaDataSource {
                 }
                 System.out.println(content);
                 try {
-                    JSONArray hits = content.getJSONArray("hits");
+                    JSONArray hits = content.getJSONArray("hits");  // get result
                     int size = hits.length();
                     Note[] noteList = new Note[size];
-                    for (int i = 0; i < hits.length(); i++) {
+                    for (int i = 0; i < hits.length(); i++) { // change json to object
                         Note note = new Note();
-                        JSONObject hitObj = hits.getJSONObject(i).getJSONObject("_highlightResult");
-                        note.setContent(hitObj.getJSONObject("content").getString("value"));
-                        note.setTitle(hitObj.getJSONObject("title").getString("value"));
+                        JSONObject hitObj = hits.getJSONObject(i);
+                        note.setContent(hitObj.getString("content"));
+                        note.setTitle(hitObj.getString("title"));
+                        note.setAuthor(hitObj.getString("author"));
+                        note.setCreateDate(new Date(hitObj.getLong("createDate")));
+                        note.setNumber(hitObj.getInt("number"));
                         JSONArray arr = hitObj.getJSONArray("tags");
                         List<String> tagList = new ArrayList<>();
                         for (int j = 0; j < arr.length(); j++) {
-                            tagList.add(arr.getJSONObject(i).getString("value"));
+                            tagList.add(arr.getString(j));
                         }
                         note.setTags(tagList.toArray(new String[0]));
                         noteList[i] = note;
-//                        fragment
                     }
+                    fragment.updateSearchResult(noteList); // update listview
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
         };
-        Index searchIndex = adminClient.getIndex(index);
-        searchIndex.searchAsync(new Query(keywords), completionHandler);
+
+        // async search
+        adminClient
+                .getIndex(index)
+                .searchAsync(
+                        new Query(keywords) // basic query
+                                .setRestrictSearchableAttributes(type) // restrict searchable attributes
+                                .setFilters(filters)  // set filter
+                        , completionHandler);
 
     }
-//    {"hits":
-//    [{"content":"So happy the first note is succesfully uploaded to the algolia. By the way all the notes are currently stored under demo index. OK so many words! I readlly want copy and emm.\nQueries contain keywords, terms that are especially indicative of what a user is looking for. However, these keywords are not universal. They vary based on your catalog and products. For a clothing company, the word “red” in a query likely indicates that a user is searching for red articles. For a film database however, “red” is probably unrelated to a color category.\n\nOnce you determine the intended effect of specific query terms or phrases, you can dynamically change your users’ results when their search matches those terms. Algolia lets you configure this using Rules.\n ","tags":["thoughts"," work"," diary"],"title":"So happy the first note uploaded successfully!","objectID":"22482411001","_highlightResult":{"content":{"value":"So happy the first note is succesfully uploaded to the algolia. By the way all the notes are currently stored under demo index. OK so many words! I readlly want <em>copy<\/em> and emm.\nQueries contain keywords, terms that are especially indicative of what a user is looking for. However, these keywords are not universal. They vary based on your catalog and products. For a clothing company, the word “red” in a query likely indicates that a user is searching for red articles. For a film database however, “red” is probably unrelated to a color category.\n\nOnce you determine the intended effect of specific query terms or phrases, you can dynamically change your users’ results when their search matches those terms. Algolia lets you configure this using Rules.\n ","matchLevel":"full","fullyHighlighted":false,"matchedWords":["copy"]},"tags":[{"value":"thoughts","matchLevel":"none","matchedWords":[]},{"value":" work","matchLevel":"none","matchedWords":[]},{"value":" diary","matchLevel":"none","matchedWords":[]}],"title":{"value":"So happy the first note uploaded successfully!","matchLevel":"none","matchedWords":[]}}},
-//     {"content":"hello! This this the first note! Welecome to checkmate. It's really hard to generate a test note because there is really nothing to say. And I don;t know how to copy and paste the text in my PC to this emulator. So sad everyting I type again.\nHello Hello Hello. \nLet me think what I need to present all the functions. Well the color in the title should't be here be cause I want to show the importance.\nAnyway, upload!","tags":["diary"," morning"],"title":"today is a blue day","objectID":"22521818000","_highlightResult":{"content":{"value":"hello! This this the first note! Welecome to checkmate. It's really hard to generate a test note because there is really nothing to say. And I don;t know how to <em>copy<\/em> and paste the text in my PC to this emulator. So sad everyting I type again.\nHello Hello Hello. \nLet me think what I need to present all the functions. Well the color in the title should't be here be cause I want to show the importance.\nAnyway, upload!","matchLevel":"full","fullyHighlighted":false,"matchedWords":["copy"]},"tags":[{"value":"diary","matchLevel":"none","matchedWords":[]},{"value":" morning","matchLevel":"none","matchedWords":[]}],"title":{"value":"today is a blue day","matchLevel":"none","matchedWords":[]}}},
-//     {"content":"Remember Terminator 2? Guns were nearly useless against the murderous T-1000, played by Robert Patrick. Bullets fired at the “liquid metal” robot resulted only in a chrome-looking bullet splash that momentarily staggered the killing machine. The effects were done by Stan Winston, who died in 2008, but a video and short blurb shared by the Stan Winston School of Character Arts revealed, to our surprise and delight, that the bullet impact effects were not CGI.\n\nHow was this accomplished? First of all, Winston and his team researched the correct “look” for the splash impacts by firing projectiles into mud and painstakingly working to duplicate the resulting shapes. These rea
-
-
-    }
+}

@@ -17,6 +17,8 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.teamred.checkmate.AddPostActivity;
+import com.teamred.checkmate.data.AlgoliaDataSource;
+import com.teamred.checkmate.data.FireStoreDataSource;
 import com.teamred.checkmate.databinding.FragmentHomeBinding;
 import com.teamred.checkmate.ui.login.LoginActivity;
 
@@ -32,6 +34,7 @@ public class HomeFragment extends Fragment {
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+        AlgoliaDataSource.initAlgolia();
 
         FloatingActionButton btnAddPost = binding.btnAddPost;
         btnAddPost.setOnClickListener(new View.OnClickListener() {

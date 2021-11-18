@@ -23,6 +23,13 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="title_activity_register">RegisterActivity</string>
+    <string-array name="search_type">
+        <item>All</item>
+        <item>Author </item>
+        <item>Title</item>
+        <item>Content</item>
+        <item>Tags</item>
+    </string-array>
 
 
     <string name="large_text">
@@ -128,4 +135,5 @@
     <string name="content_description_add_post">Add Post</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
+    <string name="algolia_logo">algolia logo</string>
 </resources>

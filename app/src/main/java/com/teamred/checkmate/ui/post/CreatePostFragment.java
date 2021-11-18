@@ -48,9 +48,9 @@ public class CreatePostFragment extends Fragment {
                 note.setTitle(title);
                 note.setContent(content);
                 note.setTags(tags);
-                note.setAuthor(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+                note.setAuthor(FirebaseAuth.getInstance().getCurrentUser().getEmail());
                 String s = JSON.toJSONString(note);
-                AlgoliaDataSource.getInstance().addRecord("demo", s);
+                AlgoliaDataSource.getInstance(getContext()).addRecord("demo", s);
                 getActivity().finish();
             }
         });
