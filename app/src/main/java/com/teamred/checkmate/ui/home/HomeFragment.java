@@ -18,7 +18,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.teamred.checkmate.AddPostActivity;
 import com.teamred.checkmate.data.AlgoliaDataSource;
-import com.teamred.checkmate.data.FireStoreDataSource;
 import com.teamred.checkmate.databinding.FragmentHomeBinding;
 import com.teamred.checkmate.ui.login.LoginActivity;
 
