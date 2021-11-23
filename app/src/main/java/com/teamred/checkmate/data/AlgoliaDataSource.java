@@ -12,6 +12,7 @@ import com.algolia.search.saas.CompletionHandler;
 import com.algolia.search.saas.Index;
 import com.algolia.search.saas.Query;
 import com.teamred.checkmate.SyncHelper;
+import com.teamred.checkmate.data.model.Group;
 import com.teamred.checkmate.data.model.Note;
 import com.teamred.checkmate.ui.search.SearchGroupFragment;
 
@@ -168,7 +169,7 @@ public class AlgoliaDataSource {
      * @param type the searchable attributes
      * @param filters filter
      */
-    public void searchNote(SearchGroupFragment fragment, String index, String keywords, String[] type, String filters){
+    public void searchGroup(SearchGroupFragment fragment, String index, String keywords, String[] type, String filters){
         // callback handler. fill the result into listview
         CompletionHandler completionHandler = new CompletionHandler() {
             @Override
@@ -181,22 +182,23 @@ public class AlgoliaDataSource {
                 try {
                     JSONArray hits = content.getJSONArray("hits");  // get result
                     int size = hits.length();
-                    Note[] noteList = new Note[size];
+                    Group[] noteList = new Group[size];
                     for (int i = 0; i < hits.length(); i++) { // change json to object
-                        Note note = new Note();
+                        Group group = new Group();
                         JSONObject hitObj = hits.getJSONObject(i);
-                        note.setContent(hitObj.getString("content"));
-                        note.setTitle(hitObj.getString("title"));
-                        note.setAuthor(hitObj.getString("author"));
-                        note.setCreateDate(new Date(hitObj.getLong("createDate")));
-                        note.setNumber(hitObj.getInt("number"));
+                        group.setGroupName(hitObj.getString("groupName"));
+                        group.setDescription(hitObj.getString("description"));
+                        group.setCreator(hitObj.getString("creator"));
+                        group.setCreateDate(new Date(hitObj.getLong("createDate")));
+                        group.setUpdateDate(new Date(hitObj.getLong("createDate")));
+                        group.setStatus(hitObj.getInt("status"));
                         JSONArray arr = hitObj.getJSONArray("tags");
                         List<String> tagList = new ArrayList<>();
                         for (int j = 0; j < arr.length(); j++) {
                             tagList.add(arr.getString(j));
                         }
-                        note.setTags(tagList.toArray(new String[0]));
-                        noteList[i] = note;
+                        group.setTags(tagList.toArray(new String[0]));
+                        noteList[i] = group;
                     }
                     fragment.updateSearchResult(noteList); // update listview
                 } catch (JSONException e) {
@@ -211,7 +213,7 @@ public class AlgoliaDataSource {
                 .searchAsync(
                         new Query(keywords) // basic query
                                 .setRestrictSearchableAttributes(type) // restrict searchable attributes
-//                                .setFilters(filters)  // set filter
+                                .setFilters(filters)  // set filter
                         , completionHandler);
 
     }

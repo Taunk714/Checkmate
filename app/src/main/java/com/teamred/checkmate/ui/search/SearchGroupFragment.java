@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -20,9 +19,11 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import com.teamred.checkmate.R;
 import com.teamred.checkmate.data.AlgoliaDataSource;
+import com.teamred.checkmate.data.model.Group;
 import com.teamred.checkmate.data.model.Note;
 import com.teamred.checkmate.data.model.Ranking;
 import com.teamred.checkmate.databinding.FragmentSearchGroupBinding;
+import com.teamred.checkmate.ui.GroupListViewAdapter;
 import com.teamred.checkmate.ui.NoteListViewAdapter;
 import com.teamred.checkmate.ui.notifications.NotificationsViewModel;
 
@@ -37,6 +38,7 @@ public class SearchGroupFragment extends Fragment implements FilterDialogFragmen
 //    private Note[] noteList;
 
     private ListAdapter noteAdapter;
+    private ListAdapter groupAdapter;
     private ListView listView;
     private SearchView searchKeywords;
     private Spinner searchType;
@@ -66,6 +68,7 @@ public class SearchGroupFragment extends Fragment implements FilterDialogFragmen
 
 
 
+
 //
 //        if (noteList != null && noteList.length > 0){
 //            noteAdapter = new NoteListViewAdapter(getContext(), noteList);
@@ -78,8 +81,8 @@ public class SearchGroupFragment extends Fragment implements FilterDialogFragmen
             public boolean onQueryTextSubmit(String s) {
                 // search algolia
                 Toast.makeText(getContext(), "search algolia "+ s, Toast.LENGTH_LONG).show();
-                String filters = filter.getText().toString();
-                AlgoliaDataSource.getInstance(getContext()).searchNote(SearchGroupFragment.this, "group", s, queryType, filters);
+                String filters = generateFilterString();
+                AlgoliaDataSource.getInstance(getContext()).searchGroup(SearchGroupFragment.this, "group", s, queryType, filters);
 //                updateSearchResult(demos);
                 searchKeywords.clearFocus();
                 return false;
@@ -157,11 +160,11 @@ public class SearchGroupFragment extends Fragment implements FilterDialogFragmen
 
     /**
      *  update the listview based on the search result.
-     * @param noteList content of the listview
+     * @param groups content of the listview
      */
-    public void updateSearchResult(Note[] noteList){
-        noteAdapter = new NoteListViewAdapter(getContext(), noteList);
-        listView.setAdapter(noteAdapter);
+    public void updateSearchResult(Group[] groups){
+        groupAdapter = new GroupListViewAdapter(getContext(), groups);
+        listView.setAdapter(groupAdapter);
     }
 
     public boolean[] getGroupStatusSelected() {
@@ -183,5 +186,11 @@ public class SearchGroupFragment extends Fragment implements FilterDialogFragmen
     public void onDialogNegativeClick(DialogFragment dialog) {
         FilterDialogFragment filterDialogFragment = (FilterDialogFragment) dialog;
         filterDialogFragment.setGroupStatusSelect(groupStatusSelected);
+    }
+
+    public String generateFilterString(){
+        return  (groupStatusSelected[0]? "status = 0 ": "")+
+                ((groupStatusSelected[0]&& groupStatusSelected[1])?" OR ":"")+
+                (groupStatusSelected[1]?"status = 1": "");
     }
 }

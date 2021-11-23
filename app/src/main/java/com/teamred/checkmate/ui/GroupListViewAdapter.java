@@ -9,20 +9,17 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.teamred.checkmate.R;
-import com.teamred.checkmate.data.model.Note;
+import com.teamred.checkmate.data.model.Group;
 import com.teamred.checkmate.util.DateUtil;
 
-/**
- * display the notes list.
- */
-public class NoteListViewAdapter extends BaseAdapter {
+public class GroupListViewAdapter extends BaseAdapter {
 
-    private Note[] noteList;
+    private Group[] groupList;
 
     Context context;   //Creating a reference to our context object, so we only have to get it once.  Context enables access to application specific resources.
 
-    public NoteListViewAdapter( Context context, Note[] noteList) {
-        this.noteList = noteList;
+    public GroupListViewAdapter( Context context, Group[] groupList) {
+        this.groupList = groupList;
         this.context = context;
     }
 
@@ -34,7 +31,7 @@ public class NoteListViewAdapter extends BaseAdapter {
 
         if (convertView == null){  //indicates this is the first time we are creating this row.
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);  //Inflater's are awesome, they convert xml to Java Objects!
-            row = inflater.inflate(R.layout.note_listview_row, parent, false);
+            row = inflater.inflate(R.layout.group_listview_row, parent, false);
         }
         else
         {
@@ -42,16 +39,16 @@ public class NoteListViewAdapter extends BaseAdapter {
         }
 
         // fill the view
-        TextView noteTitle = (TextView) row.findViewById(R.id.listview_group_name);
-        TextView noteAuthor = (TextView) row.findViewById(R.id.listview_group_creator);
-        TextView noteDate = row.findViewById(R.id.note_date);
-        TextView noteContent = row.findViewById(R.id.listview_group_description);
-        TextView noteNumber = row.findViewById(R.id.note_number);
-        noteContent.setText(Html.fromHtml(noteList[position].getContent()));
-        noteAuthor.setText(Html.fromHtml(noteList[position].getAuthor()));
-        noteDate.setText(DateUtil.getSimpleDateString(noteList[position].getCreateDate()));
-        noteTitle.setText(Html.fromHtml(noteList[position].getTitle()));
-        noteNumber.setText(noteList[position].getNumber().toString());
+        TextView groupName = (TextView) row.findViewById(R.id.listview_group_name);
+        TextView groupCreator = (TextView) row.findViewById(R.id.listview_group_creator);
+//        TextView noteDate = row.findViewById(R.id.note_date);
+        TextView groupDescription = row.findViewById(R.id.listview_group_description);
+//        TextView noteNumber = row.findViewById(R.id.note_number);
+        groupDescription.setText(Html.fromHtml(groupList[position].getDescription()));
+        groupCreator.setText(Html.fromHtml(groupList[position].getCreator()));
+//        noteDate.setText(DateUtil.getSimpleDateString(groupList[position].getCreateDate()));
+        groupName.setText(Html.fromHtml(groupList[position].getGroupName()));
+//        noteNumber.setText(groupList[position].getNumber().toString());
 
         row.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,12 +63,12 @@ public class NoteListViewAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return noteList.length;
+        return groupList.length;
     }
 
     @Override
     public Object getItem(int position) {
-        return noteList[position];
+        return groupList[position];
     }
 
     @Override

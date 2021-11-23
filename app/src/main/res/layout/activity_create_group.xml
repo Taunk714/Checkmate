@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="20dp"
-    app:layoutDescription="@xml/activity_create_group_scene"
     tools:context=".ui.group.CreateGroupActivity">
 
     <TextView
