@@ -25,9 +25,9 @@
 
     <fragment
         android:id="@+id/navigation_search"
-        android:name="com.teamred.checkmate.ui.search.SearchFragment"
+        android:name="com.teamred.checkmate.ui.search.SearchGroupFragment"
         android:label="@string/title_search"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search_group" />
 
 
 </navigation>

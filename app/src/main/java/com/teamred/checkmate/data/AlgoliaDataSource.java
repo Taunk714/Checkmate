@@ -1,6 +1,7 @@
 package com.teamred.checkmate.data;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -10,10 +11,9 @@ import com.algolia.search.saas.Client;
 import com.algolia.search.saas.CompletionHandler;
 import com.algolia.search.saas.Index;
 import com.algolia.search.saas.Query;
-import com.algolia.search.saas.Request;
 import com.teamred.checkmate.SyncHelper;
 import com.teamred.checkmate.data.model.Note;
-import com.teamred.checkmate.ui.search.SearchFragment;
+import com.teamred.checkmate.ui.search.SearchGroupFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,9 +23,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Properties;
 
 public class AlgoliaDataSource {
+    private final static String TAG = "Algolia";
 
 
     private Client adminClient;
@@ -57,7 +57,8 @@ public class AlgoliaDataSource {
     }
 
     public static void initAlgolia(){
-        FireStoreDataSource.getKey(map, "search");
+        FireStoreDataSource.getKey(map, "admin");
+        Log.i(TAG, "get algolia key");
 //        if (map.containsKey("error")){
 //            Toast.makeText(context, "firebase fetch fail", Toast.LENGTH_SHORT).show();
 //        }else{
@@ -87,7 +88,7 @@ public class AlgoliaDataSource {
      * @param fragment
      * @param attr even is desc/asc, odd is the attribute name
      */
-    public void setCustomRanking(SearchFragment fragment, String...  attr){
+    public void setCustomRanking(SearchGroupFragment fragment, String...  attr){
         JSONArray arr = new JSONArray();
         // add custom ranking
         for (int i = 0; i < attr.length; i=i+2) {
@@ -167,7 +168,7 @@ public class AlgoliaDataSource {
      * @param type the searchable attributes
      * @param filters filter
      */
-    public void searchNote(SearchFragment fragment,  String index, String keywords,String[] type,String filters){
+    public void searchNote(SearchGroupFragment fragment, String index, String keywords, String[] type, String filters){
         // callback handler. fill the result into listview
         CompletionHandler completionHandler = new CompletionHandler() {
             @Override
@@ -210,7 +211,7 @@ public class AlgoliaDataSource {
                 .searchAsync(
                         new Query(keywords) // basic query
                                 .setRestrictSearchableAttributes(type) // restrict searchable attributes
-                                .setFilters(filters)  // set filter
+//                                .setFilters(filters)  // set filter
                         , completionHandler);
 
     }

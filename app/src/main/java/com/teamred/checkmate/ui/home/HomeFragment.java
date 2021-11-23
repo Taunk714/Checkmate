@@ -16,7 +16,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
-import com.teamred.checkmate.AddPostActivity;
+import com.teamred.checkmate.ui.group.CreateGroupActivity;
 import com.teamred.checkmate.data.AlgoliaDataSource;
 import com.teamred.checkmate.databinding.FragmentHomeBinding;
 import com.teamred.checkmate.ui.login.LoginActivity;
@@ -44,11 +44,11 @@ public class HomeFragment extends Fragment {
                 if (FirebaseAuth.getInstance().getCurrentUser() == null){
                     Intent login = new Intent(getActivity(), LoginActivity.class);
                     Toast.makeText(getContext(), "Interceptor! Jump to login", Toast.LENGTH_LONG).show();
-                    login.putExtra("callback", AddPostActivity.class.getCanonicalName());
+                    login.putExtra("callback", CreateGroupActivity.class.getCanonicalName());
                     startActivity(login);
                 }else{
-                    Intent i = new Intent(getActivity(), AddPostActivity.class);
-                    Toast.makeText(getContext(), "click add post", Toast.LENGTH_LONG).show();
+                    Intent i = new Intent(getActivity(), CreateGroupActivity.class);
+                    Toast.makeText(getContext(), "click create group", Toast.LENGTH_LONG).show();
                     startActivity(i);
                 }
             }

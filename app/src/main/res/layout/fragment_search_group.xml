@@ -19,6 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
+            android:layout_weight="0"
             android:orientation="horizontal">
 
             <ImageView
@@ -50,55 +51,37 @@
             </SearchView>
         </LinearLayout>
 
-        <EditText
-            android:id="@+id/search_filter"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="filter"
-            android:inputType="textPersonName"
-            android:minHeight="48dp" />
-
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="66dp"
+            android:layout_weight="0"
             android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/btn_author_desc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <Spinner
+                android:id="@+id/spn_ranking"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="author desc"
-                android:textSize="14sp" />
+                android:entries="@array/sort_order" />
 
             <Button
-                android:id="@+id/btn_author_asc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/btn_filter"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="author asc" />
+                android:text="Filter"
+                android:textSize="20sp"
+                app:icon="@drawable/filter_full"
+                app:iconSize="32dp" />
 
-            <Button
-                android:id="@+id/btn_number_desc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Number desc" />
-
-            <Button
-                android:id="@+id/btn_number_asc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="number asc" />
         </LinearLayout>
 
         <ListView
             android:id="@+id/search_result_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_weight="5" />
 
     </LinearLayout>
 

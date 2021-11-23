@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -13,52 +12,47 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import com.teamred.checkmate.R;
 import com.teamred.checkmate.data.AlgoliaDataSource;
 import com.teamred.checkmate.data.model.Note;
-import com.teamred.checkmate.databinding.FragmentNotificationsBinding;
-import com.teamred.checkmate.databinding.FragmentSearchBarBinding;
-import com.teamred.checkmate.databinding.FragmentSearchBinding;
+import com.teamred.checkmate.data.model.Ranking;
+import com.teamred.checkmate.databinding.FragmentSearchGroupBinding;
 import com.teamred.checkmate.ui.NoteListViewAdapter;
 import com.teamred.checkmate.ui.notifications.NotificationsViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
-public class SearchFragment extends Fragment {
+public class SearchGroupFragment extends Fragment implements FilterDialogFragment.FilterDialogListener{
 
     private NotificationsViewModel notificationsViewModel;
-    private FragmentSearchBinding binding;
+    private FragmentSearchGroupBinding binding;
 
-    private Note[] noteList;
+//    private Note[] noteList;
 
     private ListAdapter noteAdapter;
     private ListView listView;
     private SearchView searchKeywords;
     private Spinner searchType;
     private String[] queryType;
-    private EditText filter;
+    private Button filter;
+    private Spinner ranking;
 
-    private Button numDesc;
-    private Button numAsc;
-    private Button authorDesc;
-    private Button authorAsc;
+    private boolean[] groupStatusSelected = new boolean[]{true, true};
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         notificationsViewModel =
                 new ViewModelProvider(this).get(NotificationsViewModel.class);
 
-        binding = FragmentSearchBinding.inflate(inflater, container, false);
+        binding = FragmentSearchGroupBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         queryType = getResources().getStringArray(R.array.search_type);
@@ -67,23 +61,16 @@ public class SearchFragment extends Fragment {
         searchKeywords = binding.searchKeywords;
         listView = binding.searchResultList;
         searchType = binding.searchType;
-        filter = binding.searchFilter;
-
-        numAsc = binding.btnNumberAsc;
-        numDesc = binding.btnNumberDesc;
-        authorAsc = binding.btnAuthorAsc;
-        authorDesc = binding.btnAuthorDesc;
+        filter = binding.btnFilter;
+        ranking = binding.spnRanking;
 
 
 
-//        Note test = new Note("12345",new String[]{"sdfgg"},"sedfddd");
-//        test.setAuthor("Mr. TEST");
-//        noteList = new Note[]{test, test,test,test, test,test,test, test,test};
-
-        if (noteList != null && noteList.length > 0){
-            noteAdapter = new NoteListViewAdapter(getContext(), noteList);
-            listView.setAdapter(noteAdapter);
-        }
+//
+//        if (noteList != null && noteList.length > 0){
+//            noteAdapter = new NoteListViewAdapter(getContext(), noteList);
+//            listView.setAdapter(noteAdapter);
+//        }
 
         // enter keywords and search
         searchKeywords.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -92,7 +79,7 @@ public class SearchFragment extends Fragment {
                 // search algolia
                 Toast.makeText(getContext(), "search algolia "+ s, Toast.LENGTH_LONG).show();
                 String filters = filter.getText().toString();
-                AlgoliaDataSource.getInstance(getContext()).searchNote(SearchFragment.this, "demo", s, queryType, filters);
+                AlgoliaDataSource.getInstance(getContext()).searchNote(SearchGroupFragment.this, "group", s, queryType, filters);
 //                updateSearchResult(demos);
                 searchKeywords.clearFocus();
                 return false;
@@ -112,7 +99,7 @@ public class SearchFragment extends Fragment {
                 String[] arr = getResources().getStringArray(R.array.search_type);
                 List<String> list = new ArrayList<>();
                 if (position == 0){
-                    queryType = new String[]{"title", "tags", "content"};
+                    queryType = new String[]{"groupName", "creator", "description", "tags"};
                 }else{
                     queryType = new String[]{current.toLowerCase()};
                 }
@@ -124,19 +111,41 @@ public class SearchFragment extends Fragment {
             }
         });
 
-        numDesc.setOnClickListener(new View.OnClickListener() {
+        Ranking[] rankingAdapter = new Ranking[]{
+                Ranking.Default,
+                Ranking.Newest,
+                Ranking.Oldest,
+                Ranking.Popular};
+
+        ranking.setAdapter(new ArrayAdapter<Ranking>(getContext(),
+                R.layout.support_simple_spinner_dropdown_item,
+                rankingAdapter));
+
+        ranking.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onClick(View v) {
-                AlgoliaDataSource.getInstance(getContext()).setCustomRanking(SearchFragment.this, "desc", "number");
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Ranking selected = rankingAdapter[position];
+                AlgoliaDataSource.getInstance(getContext()).setCustomRanking(
+                        SearchGroupFragment.this,
+                        selected.getOrder(),
+                        selected.getAttr());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
 
-        numAsc.setOnClickListener(new View.OnClickListener() {
+
+        filter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlgoliaDataSource.getInstance(getContext()).setCustomRanking(SearchFragment.this, "asc", "number");
+//                Dia
+                new FilterDialogFragment().show(getChildFragmentManager(), " FilterDialogFragment");
             }
         });
+
         return root;
     }
 
@@ -155,5 +164,24 @@ public class SearchFragment extends Fragment {
         listView.setAdapter(noteAdapter);
     }
 
+    public boolean[] getGroupStatusSelected() {
+        return groupStatusSelected;
+    }
 
+    public void setGroupStatusSelected(boolean[] groupStatusSelected) {
+        this.groupStatusSelected = groupStatusSelected;
+    }
+
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) {
+        FilterDialogFragment filterDialogFragment = (FilterDialogFragment) dialog;
+//        filterDialogFragment.setGroupStatusSelect(groupStatusSelected);
+        groupStatusSelected = filterDialogFragment.getGroupStatusSelect().clone();
+    }
+
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialog) {
+        FilterDialogFragment filterDialogFragment = (FilterDialogFragment) dialog;
+        filterDialogFragment.setGroupStatusSelect(groupStatusSelected);
+    }
 }

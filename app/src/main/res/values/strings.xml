@@ -129,11 +129,31 @@
     <string name="title_search">Search</string>
 
     <string name="post_title">Please Enter Your Title</string>
-    <string name="post_content">Here the content here</string>
+    <string name="post_content">Enter the content here</string>
     <string name="view_more">View More</string>
     <string name="recommendation">Recommendation</string>
     <string name="content_description_add_post">Add Post</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="algolia_logo">algolia logo</string>
+
+    <string name="group_name">Group Name</string>
+    <string name="Tags">Tags</string>
+    <string name="Description">Description</string>
+    <string name="group_name_hint">Please Enter Your Group Name</string>
+    <string name="group_descriotion_hint">Enter the Description here</string>
+    <string name="group_tags_hint">enter tags, use semicolon</string>
+    <string name="group_create">Create</string>
+
+    <string-array name="sort_order">
+        <item>Default</item>
+        <item>Newest </item>
+        <item>Oldest</item>
+        <item>Most popular</item>
+    </string-array>
+
+    <string name="dialog_title">Customize your filter</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+
 </resources>

@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Checkmate">
         <activity
-            android:name=".AddPostActivity"
+            android:name=".ui.group.CreateGroupActivity"
             android:exported="true" />
         <activity
             android:name=".MainActivity2"
