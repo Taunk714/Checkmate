@@ -10,19 +10,19 @@ public class Note {
     private String content;
     private Date createDate;
     private String author;
-    private Integer number;
+//    private Integer number;
 
     public Note(String title, String[] tags, String content) {
         this.title = title;
         this.tags = tags;
         this.content = content;
         this.createDate = new Date();
-        this.number = new Random().nextInt(20);
+//        this.number = new Random().nextInt(20);
     }
 
     public Note() {
         this.createDate = new Date();
-        this.number = new Random().nextInt(20);
+//        this.number = new Random().nextInt(20);
     }
 
     public String getTitle() {
@@ -65,11 +65,11 @@ public class Note {
         this.author = author;
     }
 
-    public Integer getNumber() {
-        return number;
-    }
+//    public Integer getNumber() {
+//        return number;
+//    }
 
-    public void setNumber(Integer number) {
-        this.number = number;
-    }
+//    public void setNumber(Integer number) {
+//        this.number = number;
+//    }
 }

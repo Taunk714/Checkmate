@@ -1,6 +1,7 @@
 package com.teamred.checkmate.ui.search;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,21 +17,28 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import com.teamred.checkmate.R;
+import com.teamred.checkmate.Searchable;
 import com.teamred.checkmate.data.AlgoliaDataSource;
 import com.teamred.checkmate.data.model.Group;
-import com.teamred.checkmate.data.model.Note;
 import com.teamred.checkmate.data.model.Ranking;
 import com.teamred.checkmate.databinding.FragmentSearchGroupBinding;
 import com.teamred.checkmate.ui.GroupListViewAdapter;
-import com.teamred.checkmate.ui.NoteListViewAdapter;
+import com.teamred.checkmate.ui.group.GroupDetailFragment;
 import com.teamred.checkmate.ui.notifications.NotificationsViewModel;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-public class SearchGroupFragment extends Fragment implements FilterDialogFragment.FilterDialogListener{
+public class SearchGroupFragment extends Fragment implements FilterDialogFragment.FilterDialogListener, Searchable {
 
     private NotificationsViewModel notificationsViewModel;
     private FragmentSearchGroupBinding binding;
@@ -82,7 +90,7 @@ public class SearchGroupFragment extends Fragment implements FilterDialogFragmen
                 // search algolia
                 Toast.makeText(getContext(), "search algolia "+ s, Toast.LENGTH_LONG).show();
                 String filters = generateFilterString();
-                AlgoliaDataSource.getInstance(getContext()).searchGroup(SearchGroupFragment.this, "group", s, queryType, filters);
+                AlgoliaDataSource.getInstance(getContext()).search(SearchGroupFragment.this, "group", s, queryType, filters);
 //                updateSearchResult(demos);
                 searchKeywords.clearFocus();
                 return false;
@@ -130,6 +138,7 @@ public class SearchGroupFragment extends Fragment implements FilterDialogFragmen
                 Ranking selected = rankingAdapter[position];
                 AlgoliaDataSource.getInstance(getContext()).setCustomRanking(
                         SearchGroupFragment.this,
+                        "group",
                         selected.getOrder(),
                         selected.getAttr());
             }
@@ -145,7 +154,22 @@ public class SearchGroupFragment extends Fragment implements FilterDialogFragmen
             @Override
             public void onClick(View v) {
 //                Dia
-                new FilterDialogFragment().show(getChildFragmentManager(), " FilterDialogFragment");
+                FilterDialogFragment f = new FilterDialogFragment();
+                Bundle bundle = new Bundle();
+                bundle.putBooleanArray("groupStatusSelect", groupStatusSelected);
+                f.setArguments(bundle);
+                f.show(getChildFragmentManager(), " FilterDialogFragment");
+            }
+        });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.i("group", "search group click");
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.replace(R.id.nav_host_fragment_content_main, new GroupDetailFragment())
+                        .commit();
             }
         });
 
@@ -160,11 +184,40 @@ public class SearchGroupFragment extends Fragment implements FilterDialogFragmen
 
     /**
      *  update the listview based on the search result.
-     * @param groups content of the listview
+     * @param content content of the listview
      */
-    public void updateSearchResult(Group[] groups){
-        groupAdapter = new GroupListViewAdapter(getContext(), groups);
-        listView.setAdapter(groupAdapter);
+    public void updateSearchResult(JSONObject content){
+        if (content == null){
+            return;
+        }
+        System.out.println(content);
+        try {
+            JSONArray hits = content.getJSONArray("hits");  // get result
+            int size = hits.length();
+            Group[] groups = new Group[size];
+            for (int i = 0; i < hits.length(); i++) { // change json to object
+                Group group = new Group();
+                JSONObject hitObj = hits.getJSONObject(i);
+                group.setGroupName(hitObj.getString("groupName"));
+                group.setDescription(hitObj.getString("description"));
+                group.setCreator(hitObj.getString("creator"));
+                group.setCreateDate(new Date(hitObj.getLong("createDate")));
+                group.setUpdateDate(new Date(hitObj.getLong("createDate")));
+                group.setStatus(hitObj.getInt("status"));
+                JSONArray arr = hitObj.getJSONArray("tags");
+                List<String> tagList = new ArrayList<>();
+                for (int j = 0; j < arr.length(); j++) {
+                    tagList.add(arr.getString(j));
+                }
+                group.setTags(tagList.toArray(new String[0]));
+                groups[i] = group;
+            }
+            groupAdapter = new GroupListViewAdapter(getContext(), groups);
+            listView.setAdapter(groupAdapter);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public boolean[] getGroupStatusSelected() {
@@ -184,8 +237,8 @@ public class SearchGroupFragment extends Fragment implements FilterDialogFragmen
 
     @Override
     public void onDialogNegativeClick(DialogFragment dialog) {
-        FilterDialogFragment filterDialogFragment = (FilterDialogFragment) dialog;
-        filterDialogFragment.setGroupStatusSelect(groupStatusSelected);
+//        FilterDialogFragment filterDialogFragment = (FilterDialogFragment) dialog;
+//        filterDialogFragment.setGroupStatusSelect(groupStatusSelected);
     }
 
     public String generateFilterString(){
@@ -193,4 +246,6 @@ public class SearchGroupFragment extends Fragment implements FilterDialogFragmen
                 ((groupStatusSelected[0]&& groupStatusSelected[1])?" OR ":"")+
                 (groupStatusSelected[1]?"status = 1": "");
     }
+
+
 }

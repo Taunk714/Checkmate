@@ -2,14 +2,19 @@ package com.teamred.checkmate.ui;
 
 import android.content.Context;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.teamred.checkmate.R;
 import com.teamred.checkmate.data.model.Group;
+import com.teamred.checkmate.ui.group.GroupDetailFragment;
 import com.teamred.checkmate.util.DateUtil;
 
 public class GroupListViewAdapter extends BaseAdapter {
@@ -18,7 +23,7 @@ public class GroupListViewAdapter extends BaseAdapter {
 
     Context context;   //Creating a reference to our context object, so we only have to get it once.  Context enables access to application specific resources.
 
-    public GroupListViewAdapter( Context context, Group[] groupList) {
+    public GroupListViewAdapter(Context context, Group[] groupList) {
         this.groupList = groupList;
         this.context = context;
     }
@@ -37,6 +42,16 @@ public class GroupListViewAdapter extends BaseAdapter {
         {
             row = convertView;
         }
+        row.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i("group", "search group click");
+//                FragmentManager fm = context.getSupportFragmentManager();
+//                FragmentTransaction ft = fm.beginTransaction();
+//                ft.replace(R.id.nav_host_fragment_content_main, new GroupDetailFragment())
+//                        .commit();
+            }
+        });
 
         // fill the view
         TextView groupName = (TextView) row.findViewById(R.id.listview_group_name);

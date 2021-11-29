@@ -30,6 +30,10 @@
         <item>Content</item>
         <item>Tags</item>
     </string-array>
+    <string-array name="group_active">
+        <item>Active</item>
+        <item>Inactive</item>
+    </string-array>
 
 
     <string name="large_text">
@@ -155,5 +159,15 @@
     <string name="dialog_title">Customize your filter</string>
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
+
+    <string-array name="note_list_sort">
+        <item>Default</item>
+        <item>Newest</item>
+        <item>Oldest</item>
+        <item>Popular</item>
+    </string-array>
+    <string-array name="note_list_filter">
+        <item>ALL</item>
+    </string-array>
 
 </resources>

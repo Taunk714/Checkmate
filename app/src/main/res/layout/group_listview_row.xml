@@ -10,7 +10,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:focusable="false">
 
         <TextView
             android:id="@+id/listview_group_name"
@@ -18,6 +19,7 @@
             android:layout_height="wrap_content"
             android:text="Title"
             android:textColor="@color/black"
+            android:focusable="false"
             android:textSize="24sp" />
 
     </LinearLayout>
@@ -26,18 +28,29 @@
         android:id="@+id/tagLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" />
+        android:orientation="horizontal"
+        android:focusable="false">
+
+        <TextView
+            android:id="@+id/tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="tag"
+            android:focusable="false"/>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:focusable="false">
 
         <TextView
             android:id="@+id/listview_group_creator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Creator"
+            android:focusable="false"
             android:textColor="@color/browser_actions_title_color" />
 
     </LinearLayout>
@@ -48,6 +61,7 @@
         android:layout_height="wrap_content"
         android:maxLines="3"
         android:text="Description"
+        android:focusable="false"
         android:textColor="#514F4F" />
 
 </LinearLayout>

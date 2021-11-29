@@ -46,12 +46,12 @@ public class NoteListViewAdapter extends BaseAdapter {
         TextView noteAuthor = (TextView) row.findViewById(R.id.listview_group_creator);
         TextView noteDate = row.findViewById(R.id.note_date);
         TextView noteContent = row.findViewById(R.id.listview_group_description);
-        TextView noteNumber = row.findViewById(R.id.note_number);
+//        TextView noteNumber = row.findViewById(R.id.note_number);
         noteContent.setText(Html.fromHtml(noteList[position].getContent()));
         noteAuthor.setText(Html.fromHtml(noteList[position].getAuthor()));
         noteDate.setText(DateUtil.getSimpleDateString(noteList[position].getCreateDate()));
         noteTitle.setText(Html.fromHtml(noteList[position].getTitle()));
-        noteNumber.setText(noteList[position].getNumber().toString());
+//        noteNumber.setText(noteList[position].getNumber().toString());
 
         row.setOnClickListener(new View.OnClickListener() {
             @Override

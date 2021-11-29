@@ -20,6 +20,10 @@ public class FilterDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the Builder class for convenient dialog construction
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            groupStatusSelect = arguments.getBooleanArray("groupStatusSelect");
+        }
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.dialog_title).setMultiChoiceItems(groupStatus, groupStatusSelect, new DialogInterface.OnMultiChoiceClickListener() {
             @Override
