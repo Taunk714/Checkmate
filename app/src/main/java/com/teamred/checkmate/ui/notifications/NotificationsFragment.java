@@ -15,7 +15,7 @@ import com.teamred.checkmate.databinding.FragmentNotificationsBinding;
 
 public class NotificationsFragment extends Fragment {
 
-private FragmentNotificationsBinding binding;
+    private FragmentNotificationsBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
