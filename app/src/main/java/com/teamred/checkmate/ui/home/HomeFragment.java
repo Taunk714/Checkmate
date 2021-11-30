@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,6 +17,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
+import com.teamred.checkmate.R;
+import com.teamred.checkmate.ui.calendar.CalendarActivity;
 import com.teamred.checkmate.ui.group.CreateGroupActivity;
 import com.teamred.checkmate.data.AlgoliaDataSource;
 import com.teamred.checkmate.databinding.FragmentHomeBinding;
@@ -23,17 +26,28 @@ import com.teamred.checkmate.ui.login.LoginActivity;
 
 public class HomeFragment extends Fragment {
 
-    private HomeViewModel homeViewModel;
     private FragmentHomeBinding binding;
+
+    //private Button calenderHeatmap;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        homeViewModel =
-                new ViewModelProvider(this).get(HomeViewModel.class);
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         AlgoliaDataSource.initAlgolia();
+
+        //calenderHeatmap = (Button) getView().findViewById(R.id.calendarheatmap);
+        Button calendarHeatmap = binding.calendarheatmap;
+
+        calendarHeatmap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getActivity(), CalendarActivity.class);
+                startActivity(i);
+            }
+        });
+
 
         FloatingActionButton btnAddPost = binding.btnAddPost;
         btnAddPost.setOnClickListener(new View.OnClickListener() {
@@ -54,13 +68,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        final TextView textView = binding.textHome;
-        homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
+
         return root;
     }
 

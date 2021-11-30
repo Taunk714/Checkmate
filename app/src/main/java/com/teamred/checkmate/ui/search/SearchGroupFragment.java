@@ -1,7 +1,6 @@
 package com.teamred.checkmate.ui.search;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModelProvider;
+
 import com.teamred.checkmate.R;
 import com.teamred.checkmate.Searchable;
 import com.teamred.checkmate.data.AlgoliaDataSource;
@@ -27,8 +24,6 @@ import com.teamred.checkmate.data.model.Group;
 import com.teamred.checkmate.data.model.Ranking;
 import com.teamred.checkmate.databinding.FragmentSearchGroupBinding;
 import com.teamred.checkmate.ui.GroupListViewAdapter;
-import com.teamred.checkmate.ui.group.GroupDetailFragment;
-import com.teamred.checkmate.ui.notifications.NotificationsViewModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,7 +35,6 @@ import java.util.List;
 
 public class SearchGroupFragment extends Fragment implements FilterDialogFragment.FilterDialogListener, Searchable {
 
-    private NotificationsViewModel notificationsViewModel;
     private FragmentSearchGroupBinding binding;
 
 //    private Note[] noteList;
@@ -59,8 +53,6 @@ public class SearchGroupFragment extends Fragment implements FilterDialogFragmen
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        notificationsViewModel =
-                new ViewModelProvider(this).get(NotificationsViewModel.class);
 
         binding = FragmentSearchGroupBinding.inflate(inflater, container, false);
         View root = binding.getRoot();

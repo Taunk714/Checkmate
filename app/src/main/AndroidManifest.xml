@@ -37,6 +37,11 @@
             android:name=".ui.login.LoginActivity"
             android:exported="true"
             android:label="@string/title_activity_login" />
+        <activity
+            android:name=".ui.calendar.CalendarActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Checkmate.NoActionBar"
+            android:label="@string/title_calendar_login" />
     </application>
 
 </manifest>
