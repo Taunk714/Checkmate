@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivitySideNavBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+
         setSupportActionBar(binding.appBarMain.toolbar);
         binding.appBarMain.add.setOnClickListener(new View.OnClickListener() {
             @Override
