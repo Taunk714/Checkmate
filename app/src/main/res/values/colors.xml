@@ -23,4 +23,6 @@
     <color name="blue_a400">#00B0FF</color>
     <color name="blue_a700">#0091EA</color>
     <color name="blue_a900">#005db3</color>
+
+    <color name="background">#F2F3F7</color>
 </resources>
