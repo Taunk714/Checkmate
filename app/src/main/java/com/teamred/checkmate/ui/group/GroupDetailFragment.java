@@ -71,13 +71,17 @@ public class GroupDetailFragment extends Fragment implements Searchable {
         ranking = binding.noteListRanking;
         filter = binding.noteListFilter;
 
-        title.setText(savedInstanceState.getString("title"));
-        creator.setText(savedInstanceState.getString("creator"));
-        desc.setText(savedInstanceState.getString("desc"));
-        subtopics = savedInstanceState.getStringArray("subtopics");
+        Bundle arguments = getArguments();
+        if (arguments!= null){
+            title.setText(arguments.getString("title"));
+            creator.setText(arguments.getString("creator"));
+            desc.setText(arguments.getString("desc"));
+            subtopics = arguments.getStringArray("subtopics");
+
+        }
 
 
-//        searchKeywords = binding.searchKeywords;
+        searchKeywords = binding.searchNote;
 //        listView = binding.searchResultList;
 //        searchType = binding.searchType;
 //        filter = binding.btnFilter;
@@ -111,25 +115,25 @@ public class GroupDetailFragment extends Fragment implements Searchable {
             }
         });
 
-        // dropdown spinner menu. Select the field you want to search
-        searchType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String current = getResources().getStringArray(R.array.search_type)[position];
-                String[] arr = getResources().getStringArray(R.array.search_type);
-                List<String> list = new ArrayList<>();
-                if (position == 0){
-                    queryType = new String[]{"groupName", "creator", "description", "tags"};
-                }else{
-                    queryType = new String[]{current.toLowerCase()};
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
+//        // dropdown spinner menu. Select the field you want to search
+//        searchType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                String current = getResources().getStringArray(R.array.search_type)[position];
+//                String[] arr = getResources().getStringArray(R.array.search_type);
+//                List<String> list = new ArrayList<>();
+//                if (position == 0){
+//                    queryType = new String[]{"groupName", "creator", "description", "tags"};
+//                }else{
+//                    queryType = new String[]{current.toLowerCase()};
+//                }
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//
+//            }
+//        });
 
         Ranking[] rankingAdapter = new Ranking[]{
                 Ranking.Default,

@@ -162,16 +162,16 @@ public class SearchGroupFragment extends Fragment implements FilterDialogFragmen
             }
         });
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.i("group", "search group click");
-                FragmentManager fm = getActivity().getSupportFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();
-                ft.replace(R.id.nav_host_fragment_content_main, new GroupDetailFragment())
-                        .commit();
-            }
-        });
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                Log.i("group", "search group click");
+//                FragmentManager fm = getActivity().getSupportFragmentManager();
+//                FragmentTransaction ft = fm.beginTransaction();
+//                ft.replace(R.id.nav_host_fragment_content_main, new GroupDetailFragment())
+//                        .commit();
+//            }
+//        });
 
         return root;
     }
@@ -204,15 +204,24 @@ public class SearchGroupFragment extends Fragment implements FilterDialogFragmen
                 group.setCreateDate(new Date(hitObj.getLong("createDate")));
                 group.setUpdateDate(new Date(hitObj.getLong("createDate")));
                 group.setStatus(hitObj.getInt("status"));
+//                group.setSubTopics();
                 JSONArray arr = hitObj.getJSONArray("tags");
                 List<String> tagList = new ArrayList<>();
+                JSONArray subtopics = hitObj.getJSONArray("subtopics");
+                String[] sub = new String[subtopics.length()];
+
+                for (int j = 0; j < subtopics.length(); j++) {
+                    sub[i] = subtopics.getString(j);
+                }
+
                 for (int j = 0; j < arr.length(); j++) {
                     tagList.add(arr.getString(j));
                 }
+                group.setSubTopics(sub);
                 group.setTags(tagList.toArray(new String[0]));
                 groups[i] = group;
             }
-            groupAdapter = new GroupListViewAdapter(getContext(), groups);
+            groupAdapter = new GroupListViewAdapter(getContext(), groups, getParentFragmentManager());
             listView.setAdapter(groupAdapter);
         } catch (JSONException e) {
             e.printStackTrace();

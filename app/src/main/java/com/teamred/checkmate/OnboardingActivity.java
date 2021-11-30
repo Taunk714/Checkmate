@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.ramotion.paperonboarding.PaperOnboardingFragment;
 import com.ramotion.paperonboarding.PaperOnboardingPage;
 import com.teamred.checkmate.ui.login.LoginActivity;
@@ -30,7 +31,11 @@ public class OnboardingActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // click handling code
-                startActivity(new Intent(OnboardingActivity.this, LoginActivity.class));
+                if (FirebaseAuth.getInstance().getCurrentUser() == null){
+                    startActivity(new Intent(OnboardingActivity.this, LoginActivity.class));
+                }else{
+                    startActivity(new Intent(OnboardingActivity.this, MainActivity2.class));
+                }
             }
         });
 

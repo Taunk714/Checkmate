@@ -8,7 +8,7 @@ public class Group {
     private String description;
     private Date createDate;
     private Date updateDate;
-    private Integer[] subTopics;
+    private String[] subTopics;
     private String creator;
     private Integer status = 0;
     private Integer memberNum = 1;
@@ -73,11 +73,11 @@ public class Group {
         this.updateDate = updateDate;
     }
 
-    public Integer[] getSubTopics() {
+    public String[] getSubTopics() {
         return subTopics;
     }
 
-    public void setSubTopics(Integer[] subTopics) {
+    public void setSubTopics(String[] subTopics) {
         this.subTopics = subTopics;
     }
 
