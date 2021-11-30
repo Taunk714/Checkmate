@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -16,22 +15,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.teamred.checkmate.R;
 import com.teamred.checkmate.Searchable;
 import com.teamred.checkmate.data.AlgoliaDataSource;
 import com.teamred.checkmate.data.model.Ranking;
 import com.teamred.checkmate.databinding.FragmentGroupDetailBinding;
-import com.teamred.checkmate.databinding.FragmentSearchGroupBinding;
-import com.teamred.checkmate.ui.notifications.NotificationsViewModel;
-import com.teamred.checkmate.ui.search.FilterDialogFragment;
-import com.teamred.checkmate.ui.search.SearchGroupFragment;
 
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class GroupDetailFragment extends Fragment implements Searchable {
 
