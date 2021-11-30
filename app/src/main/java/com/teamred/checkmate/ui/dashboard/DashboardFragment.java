@@ -1,9 +1,11 @@
 package com.teamred.checkmate.ui.dashboard;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,6 +14,8 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import com.teamred.checkmate.R;
 import com.teamred.checkmate.databinding.FragmentDashboardBinding;
+import com.teamred.checkmate.ui.calendar.CalendarActivity;
+import com.teamred.checkmate.ui.notifications.NotificationsFragment;
 
 public class DashboardFragment extends Fragment {
 
@@ -23,8 +27,19 @@ private FragmentDashboardBinding binding;
         dashboardViewModel =
                 new ViewModelProvider(this).get(DashboardViewModel.class);
 
-    binding = FragmentDashboardBinding.inflate(inflater, container, false);
-    View root = binding.getRoot();
+        binding = FragmentDashboardBinding.inflate(inflater, container, false);
+        View root = binding.getRoot();
+
+        /*Button notification = binding.notification;
+
+        notification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getActivity(), NotificationsFragment.class);
+                startActivity(i);
+            }
+        });*/
+
 
         final TextView textView = binding.textDashboard;
         dashboardViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {

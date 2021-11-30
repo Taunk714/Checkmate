@@ -42,6 +42,11 @@
             android:exported="true"
             android:theme="@style/Theme.Checkmate.NoActionBar"
             android:label="@string/title_calendar_login" />
+        <activity
+            android:name=".ui.notifications.NotificationsFragment"
+            android:exported="true"
+            android:theme="@style/Theme.Checkmate.NoActionBar"
+            android:label="@string/title_calendar_login" />
     </application>
 
 </manifest>
