@@ -13,15 +13,20 @@
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="com.teamred.checkmate.ui.dashboard.DashboardFragment"
+        android:name="com.teamred.checkmate.ui.profile.ProfileFragment"
         android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_profile" />
 
 <!--    <fragment-->
 <!--        android:id="@+id/navigation_notification"-->
 <!--        android:name="com.teamred.checkmate.ui.notifications.NotificationsFragment"-->
 <!--        android:label="@string/title_notifications"-->
 <!--        tools:layout="@layout/fragment_notifications" />-->
+    <fragment
+        android:id="@+id/navigation_chat"
+        android:name="com.teamred.checkmate.ui.search.SearchGroupFragment"
+        android:label="@string/title_chat"
+        tools:layout="@layout/fragment_chat" />
 
     <fragment
         android:id="@+id/navigation_search"
