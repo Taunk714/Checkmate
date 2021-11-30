@@ -30,11 +30,7 @@ private ActivityBottomMenuBinding binding;
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-<<<<<<< HEAD
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_search)
-=======
                 R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notification, R.id.navigation_search)
->>>>>>> parent of d1e73a7 (made a new java fragment and replaced the dashboard xml for profile)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main2);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
