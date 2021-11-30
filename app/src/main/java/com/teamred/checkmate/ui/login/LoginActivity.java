@@ -26,6 +26,8 @@ import android.widget.Toast;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.teamred.checkmate.MainActivity2;
+import com.teamred.checkmate.OnboardingActivity;
 import com.teamred.checkmate.R;
 import com.teamred.checkmate.data.Result;
 import com.teamred.checkmate.databinding.ActivityLoginBinding;
@@ -120,6 +122,8 @@ public class LoginActivity extends AppCompatActivity {
                 if (callback != null){
                     Intent i = new Intent(LoginActivity.this, callback);
                     startActivity(i);
+                } else {
+                    startActivity(new Intent(LoginActivity.this, MainActivity2.class));
                 }
 
 

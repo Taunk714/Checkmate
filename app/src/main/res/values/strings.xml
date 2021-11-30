@@ -13,7 +13,7 @@
     <string name="menu_slideshow">Slideshow</string>
     <string name="menu_logout">Logout</string>
     <string name="title_activity_login">LoginActivity</string>
-    <string name="prompt_email">Email</string>
+    <string name="prompt_email">Username</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
@@ -29,6 +29,10 @@
         <item>Title</item>
         <item>Content</item>
         <item>Tags</item>
+    </string-array>
+    <string-array name="group_active">
+        <item>Active</item>
+        <item>Inactive</item>
     </string-array>
 
 
@@ -155,5 +159,15 @@
     <string name="dialog_title">Customize your filter</string>
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
+
+    <string-array name="note_list_sort">
+        <item>Default</item>
+        <item>Newest</item>
+        <item>Oldest</item>
+        <item>Popular</item>
+    </string-array>
+    <string-array name="note_list_filter">
+        <item>ALL</item>
+    </string-array>
 
 </resources>

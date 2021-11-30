@@ -5,12 +5,14 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.algolia.search.saas.AlgoliaException;
 import com.algolia.search.saas.Client;
 import com.algolia.search.saas.CompletionHandler;
 import com.algolia.search.saas.Index;
 import com.algolia.search.saas.Query;
+import com.teamred.checkmate.Searchable;
 import com.teamred.checkmate.SyncHelper;
 import com.teamred.checkmate.data.model.Group;
 import com.teamred.checkmate.data.model.Note;
@@ -89,7 +91,7 @@ public class AlgoliaDataSource {
      * @param fragment
      * @param attr even is desc/asc, odd is the attribute name
      */
-    public void setCustomRanking(SearchGroupFragment fragment, String...  attr){
+    public void setCustomRanking(Fragment fragment, String index, String...  attr){
         JSONArray arr = new JSONArray();
         // add custom ranking
         for (int i = 0; i < attr.length; i=i+2) {
@@ -112,7 +114,7 @@ public class AlgoliaDataSource {
                 // if you are configuring an index for sorting purposes only
         try {
             JSONObject ranking = new JSONObject().put("ranking", arr);
-            adminClient.getIndex("demo").setSettingsAsync(ranking, new CompletionHandler() {
+            adminClient.getIndex(index).setSettingsAsync(ranking, new CompletionHandler() {
                 @Override
                 public void requestCompleted(@Nullable JSONObject jsonObject, @Nullable AlgoliaException e) {
                     Toast.makeText(fragment.getContext(), "Set rank", Toast.LENGTH_SHORT).show();
@@ -169,41 +171,13 @@ public class AlgoliaDataSource {
      * @param type the searchable attributes
      * @param filters filter
      */
-    public void searchGroup(SearchGroupFragment fragment, String index, String keywords, String[] type, String filters){
+    public void search(Searchable fragment, String index, String keywords, String[] type, String filters){
         // callback handler. fill the result into listview
         CompletionHandler completionHandler = new CompletionHandler() {
             @Override
             public void requestCompleted(JSONObject content, AlgoliaException error) {
                 // [...]
-                if (content == null){
-                    return;
-                }
-                System.out.println(content);
-                try {
-                    JSONArray hits = content.getJSONArray("hits");  // get result
-                    int size = hits.length();
-                    Group[] noteList = new Group[size];
-                    for (int i = 0; i < hits.length(); i++) { // change json to object
-                        Group group = new Group();
-                        JSONObject hitObj = hits.getJSONObject(i);
-                        group.setGroupName(hitObj.getString("groupName"));
-                        group.setDescription(hitObj.getString("description"));
-                        group.setCreator(hitObj.getString("creator"));
-                        group.setCreateDate(new Date(hitObj.getLong("createDate")));
-                        group.setUpdateDate(new Date(hitObj.getLong("createDate")));
-                        group.setStatus(hitObj.getInt("status"));
-                        JSONArray arr = hitObj.getJSONArray("tags");
-                        List<String> tagList = new ArrayList<>();
-                        for (int j = 0; j < arr.length(); j++) {
-                            tagList.add(arr.getString(j));
-                        }
-                        group.setTags(tagList.toArray(new String[0]));
-                        noteList[i] = group;
-                    }
-                    fragment.updateSearchResult(noteList); // update listview
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                fragment.updateSearchResult(content);
             }
         };
 
