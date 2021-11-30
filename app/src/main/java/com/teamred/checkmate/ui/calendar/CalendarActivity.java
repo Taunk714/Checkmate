@@ -13,6 +13,7 @@ import android.view.MenuItem;
 
 import com.teamred.checkmate.R;
 
+// Reference: https://github.com/SundeepK/CompactCalendarView
 
 public class CalendarActivity extends AppCompatActivity {
 
