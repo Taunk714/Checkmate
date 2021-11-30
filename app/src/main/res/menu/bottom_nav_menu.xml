@@ -12,7 +12,10 @@
         android:icon="@drawable/ic_dashboard_black_24dp"
         android:title="@string/title_dashboard"/>
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> parent of d1e73a7 (made a new java fragment and replaced the dashboard xml for profile)
 
     <item
         android:id="@+id/navigation_notification"
