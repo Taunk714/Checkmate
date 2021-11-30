@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import com.teamred.checkmate.R;
-import com.teamred.checkmate.databinding.FragmentDashboardBinding;
+import com.teamred.checkmate.data.FragmentDashboardBinding;
 
 public class DashboardFragment extends Fragment {
 
