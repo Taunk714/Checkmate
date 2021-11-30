@@ -55,6 +55,7 @@ public class CreateGroupActivity extends AppCompatActivity {
                 group.setGroupName(name);
                 group.setDescription(description);
                 group.setTags(tags);
+//                group.setSubTopics(new String[]{});
                 group.setCreator(FirebaseAuth.getInstance().getCurrentUser().getEmail());
                 group.setCreateDate(new Date());
                 group.setUpdateDate(new Date());

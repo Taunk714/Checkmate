@@ -66,8 +66,10 @@ public class FriendlyMessageAdapter extends FirebaseRecyclerAdapter<FriendlyMess
 
     class MessageViewHolder extends RecyclerView.ViewHolder {
 
+        private MessageBinding binding;
         public MessageViewHolder(MessageBinding binding) {
             super(binding.getRoot());
+            this.binding = binding;
         }
 
         private void setTextColor(String userName, TextView textView) {
@@ -80,7 +82,19 @@ public class FriendlyMessageAdapter extends FirebaseRecyclerAdapter<FriendlyMess
             }
         }
         public void bind(FriendlyMessage item){
+            binding.messageTextView.setText(item.getText());
+            setTextColor(item.getName(), binding.messageTextView);
 
+            if (item.getName() == null){
+                binding.messageTextView.setText(ANONYMOUS);
+            }else{
+                binding.messageTextView.setText(item.getName());
+            }
+            if (item.getPhotoUrl() != null) {
+                loadImageIntoView(binding.messengerImageView, item.getPhotoUrl());
+            } else {
+                binding.messengerImageView.setImageResource(R.drawable.ic_account_circle_black_36dp);
+            }
         }
 
     }
@@ -89,12 +103,25 @@ public class FriendlyMessageAdapter extends FirebaseRecyclerAdapter<FriendlyMess
 
     class ImageMessageViewHolder extends RecyclerView.ViewHolder{
 
+        private ImageMessageBinding binding;
         public ImageMessageViewHolder(ImageMessageBinding binding) {
             super(binding.getRoot());
+            this.binding = binding;
         }
 
         public void bind(FriendlyMessage item){
+            loadImageIntoView(binding.messageImageView, item.getImageUrl());
 
+            if (item.getName() == null){
+                binding.messengerTextView.setText(ANONYMOUS);
+            }else{
+                binding.messengerTextView.setText(item.getName());
+            }
+            if (item.getPhotoUrl() != null) {
+                loadImageIntoView(binding.messengerImageView, item.getImageUrl());
+            } else {
+                binding.messengerImageView.setImageResource(R.drawable.ic_account_circle_black_36dp);
+            }
         }
     }
 

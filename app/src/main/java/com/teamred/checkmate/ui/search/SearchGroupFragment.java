@@ -199,7 +199,7 @@ public class SearchGroupFragment extends Fragment implements FilterDialogFragmen
 //                group.setSubTopics();
                 JSONArray arr = hitObj.getJSONArray("tags");
                 List<String> tagList = new ArrayList<>();
-                JSONArray subtopics = hitObj.getJSONArray("subtopics");
+                JSONArray subtopics = hitObj.getJSONArray("subTopics");
                 String[] sub = new String[subtopics.length()];
 
                 for (int j = 0; j < subtopics.length(); j++) {

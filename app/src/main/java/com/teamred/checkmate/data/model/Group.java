@@ -8,7 +8,7 @@ public class Group {
     private String description;
     private Date createDate;
     private Date updateDate;
-    private String[] subTopics;
+    private String[] subTopics = new String[]{};
     private String creator;
     private Integer status = 0;
     private Integer memberNum = 1;
