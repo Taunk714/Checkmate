@@ -12,10 +12,10 @@
         android:layout_width="fill_parent"
         android:layout_height="250dp"
 
-        app:compactCalendarBackgroundColor="#ffe95451"
-        app:compactCalendarCurrentDayBackgroundColor="#B71C1C"
+        app:compactCalendarBackgroundColor="#29B6F6"
+        app:compactCalendarCurrentDayBackgroundColor="#005db3"
         app:compactCalendarCurrentDayIndicatorStyle="fill_large_indicator"
-        app:compactCalendarCurrentSelectedDayBackgroundColor="#ffbd5f5f"
+        app:compactCalendarCurrentSelectedDayBackgroundColor="#81D4FA"
         app:compactCalendarEventIndicatorStyle="small_indicator"
         app:compactCalendarOtherMonthDaysTextColor="#534c4c"
         app:compactCalendarShouldSelectFirstDayOfMonthOnScroll="true"
