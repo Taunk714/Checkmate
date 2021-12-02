@@ -8,6 +8,12 @@ public class MyScrollToButtonObserver extends RecyclerView.AdapterDataObserver {
     private FriendlyMessageAdapter adapter;
     private LinearLayoutManager manager;
 
+    public MyScrollToButtonObserver(RecyclerView recycler, FriendlyMessageAdapter adapter, LinearLayoutManager manager) {
+        this.recycler = recycler;
+        this.adapter = adapter;
+        this.manager = manager;
+    }
+
     @Override
     public void onItemRangeInserted(int positionStart, int itemCount) {
         super.onItemRangeInserted(positionStart, itemCount);

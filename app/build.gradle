@@ -54,6 +54,7 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:29.0.0')
     implementation 'com.google.firebase:firebase-analytics'
     // FirebaseUI for Firebase Auth
+
     implementation 'com.firebaseui:firebase-ui-auth:8.0.0'
     implementation 'com.firebaseui:firebase-ui-database:8.0.0'
 //    implementation 'com.algolia:instantsearch-android:2.X.X'
@@ -62,6 +63,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.firebase:firebase-firestore'
     implementation 'com.google.firebase:firebase-storage'
+    implementation 'com.facebook.android:facebook-android-sdk:8.x'
     implementation group: 'com.alibaba', name: 'fastjson', version: '1.2.76'
     implementation 'com.evernote:android-sdk:2.0.0-RC4'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'

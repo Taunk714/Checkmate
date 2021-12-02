@@ -30,9 +30,9 @@ public class FriendlyMessageAdapter extends FirebaseRecyclerAdapter<FriendlyMess
     private String currentUserName;
 
 
-    public FriendlyMessageAdapter(@NonNull FirebaseRecyclerOptions<FriendlyMessage> options, FirebaseRecyclerOptions<FriendlyMessage> options1, String currentUserName) {
+    public FriendlyMessageAdapter(@NonNull FirebaseRecyclerOptions<FriendlyMessage> options,  String currentUserName) {
         super(options);
-        this.options = options1;
+        this.options = options;
         this.currentUserName = currentUserName;
     }
 
@@ -81,6 +81,7 @@ public class FriendlyMessageAdapter extends FirebaseRecyclerAdapter<FriendlyMess
                 textView.setTextColor(Color.BLACK);
             }
         }
+
         public void bind(FriendlyMessage item){
             binding.messageTextView.setText(item.getText());
             setTextColor(item.getName(), binding.messageTextView);

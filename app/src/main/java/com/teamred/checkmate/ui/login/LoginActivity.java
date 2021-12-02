@@ -203,26 +203,25 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void createAccount(String email, String password){
-        mAuth.signInWithEmailAndPassword(email, password)
+        mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithEmail:success");
+                            Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             updateUI(user);
-                            loginViewModel.setLoginResult(new Result.Success<>(user));
                         } else {
                             // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithEmail:failure", task.getException());
+                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                             updateUI(null);
-                            loginViewModel.setLoginResult(new Result.Error(new IOException("Error logging in", task.getException())));
                         }
                     }
                 });
+
     }
 
     private void signIn(String email, String password) {
@@ -270,6 +269,5 @@ public class LoginActivity extends AppCompatActivity {
         String welcome = getString(R.string.welcome) + user.getDisplayName();
         // TODO : initiate successful logged in experience
         Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
-
     }
 }
