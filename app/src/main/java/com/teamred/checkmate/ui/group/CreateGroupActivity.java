@@ -69,7 +69,7 @@ public class CreateGroupActivity extends AppCompatActivity {
                 group.setGroupName(name);
                 group.setDescription(description);
 //                group.setSubTopics(new String[]{});
-                group.setCreator(LoginDataSource.getUser());
+                group.setCreator(LoginDataSource.getUserResult());
                 group.setCreateDate(new Date());
                 group.setUpdateDate(new Date());
                 String s = JSON.toJSONString(group);

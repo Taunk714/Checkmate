@@ -15,6 +15,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.teamred.checkmate.data.LoginDataSource;
 import com.teamred.checkmate.databinding.ActivityBottomMenuBinding;
 import com.teamred.checkmate.ui.login.LoginActivity;
 import com.teamred.checkmate.ui.search.FilterDialogFragment;
@@ -32,6 +33,7 @@ private ActivityBottomMenuBinding binding;
 
      binding = ActivityBottomMenuBinding.inflate(getLayoutInflater());
      setContentView(binding.getRoot());
+
 
         BottomNavigationView navView = findViewById(R.id.bottom_nav_view);
         // Passing each menu ID as a set of Ids because each

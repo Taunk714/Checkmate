@@ -33,7 +33,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.teamred.checkmate.data.AlgoliaDataSource;
+import com.teamred.checkmate.data.LoginDataSource;
 import com.teamred.checkmate.data.model.FriendlyMessage;
+import com.teamred.checkmate.data.model.User;
 import com.teamred.checkmate.databinding.FragmentChatBinding;
 import com.teamred.checkmate.databinding.FragmentHomeBinding;
 import com.teamred.checkmate.ui.calendar.CalendarActivity;
@@ -53,23 +55,28 @@ public class ChatFragment extends Fragment {
             onImageSelected(result);
         }
     });
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         binding = FragmentChatBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        // auth to check whether user is signed in
-        //calenderHeatmap = (Button) getView().findViewById(R.id.calendarheatmap);
-        binding.messageEditText.addTextChangedListener(new MyButtonObserver(binding.sendButton));
-
         mAuth = FirebaseAuth.getInstance();
         if (mAuth.getCurrentUser() == null){
             startActivity(new Intent(getActivity(), LoginActivity.class));
+            getActivity().finish();
+            return root;
         }
+
+        // auth to check whether user is signed in
+        //calenderHeatmap = (Button) getView().findViewById(R.id.calendarheatmap);
+
+
         mdb = FirebaseDatabase.getInstance();
         DatabaseReference messagesRef = mdb.getReference().child(MESSAGES_CHILD);
 //        Query messagesRef = FirebaseStorage.getInstance().getReference().child(MESSAGES_CHILD);
+
         FirebaseRecyclerOptions<FriendlyMessage> options = new FirebaseRecyclerOptions.Builder<FriendlyMessage>()
                 .setQuery(messagesRef, FriendlyMessage.class)
                 .build();
@@ -87,20 +94,34 @@ public class ChatFragment extends Fragment {
 //        binding.addMessageImageView.setOnClickListener(
 //
 //        );
-        adapter.registerAdapterDataObserver(new MyScrollToButtonObserver(binding.messageRecyclerView, adapter, manager));
+        adapter.registerAdapterDataObserver(
+                new MyScrollToButtonObserver(binding.messageRecyclerView, adapter, manager)
+        );
 
-
-        binding.messageEditText.addTextChangedListener(new MyButtonObserver(binding.sendButton));
+        binding.messageEditText.addTextChangedListener(
+                new MyButtonObserver(binding.sendButton)
+        );
 
         binding.sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FriendlyMessage friendlyMessage = new FriendlyMessage(binding.messageEditText.getText().toString(),
+                FriendlyMessage friendlyMessage = new FriendlyMessage(
+                        binding.messageEditText.getText().toString(),
                         getUserName(),
                         getPhotoUrl(),
                         null);
-                mdb.getReference().child(MESSAGES_CHILD).push().setValue(friendlyMessage);
+                mdb.getReference()
+                        .child(MESSAGES_CHILD)
+                        .push()
+                        .setValue(friendlyMessage);
                 binding.messageEditText.setText("");
+            }
+        });
+
+        binding.addMessageImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openDocument.launch(new String[]{"image/*"});
             }
         });
 
@@ -129,15 +150,15 @@ public class ChatFragment extends Fragment {
 
     }
 
-//    public void onPause() {
-//        adapter.stopListening();
-//        super.onPause();
-//    }
+    public void onPause() {
+        adapter.stopListening();
+        super.onPause();
+    }
 //
-//    public void onResume(){
-//        super.onResume();
-//        adapter.startListening();
-//    }
+    public void onResume(){
+        super.onResume();
+        adapter.startListening();
+    }
 
 //    override fun onCreateOptionsMenu(menu: Menu): Boolean {
 //        val inflater = menuInflater
@@ -206,9 +227,9 @@ public class ChatFragment extends Fragment {
     }
 
     private String getUserName() {
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+        User currentUser = LoginDataSource.getUserResult();
         if (currentUser != null) {
-            return currentUser.getDisplayName();
+            return currentUser.getUsername();
         } else {
             return ANONYMOUS;
         }
@@ -216,7 +237,7 @@ public class ChatFragment extends Fragment {
 
     private String getPhotoUrl(){
         try {
-            return mAuth.getCurrentUser().getPhotoUrl().toString();
+            return LoginDataSource.getUserResult().getPhotoUrl().toString();
         }catch (Exception e){
             return null;
         }

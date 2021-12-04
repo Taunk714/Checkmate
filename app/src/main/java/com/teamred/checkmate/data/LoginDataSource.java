@@ -1,27 +1,25 @@
 package com.teamred.checkmate.data;
 
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.MutableLiveData;
 
 import com.alibaba.fastjson.JSON;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Source;
-import com.teamred.checkmate.R;
 import com.teamred.checkmate.data.model.LoggedInUser;
 import com.teamred.checkmate.data.model.User;
-import com.teamred.checkmate.ui.login.LoginActivity;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Map;
 
 // auto-generated, we don't need this file
@@ -33,6 +31,10 @@ public class LoginDataSource {
 
 
     private static final String TAG = "USER";
+
+//    private static User user = new User();
+
+    public static MutableLiveData<User> currentUserResult = new MutableLiveData<>();
 
     public Result<LoggedInUser> login(String username, String password) {
 
@@ -111,9 +113,27 @@ public class LoginDataSource {
 //        // [END send_email_verification]
 //    }
 
-    public static User getUser(){
-        return getUser(FirebaseAuth.getInstance().getUid());
+    public static void getUser(){
+        if(currentUserResult.getValue() == null){
+            getUser(FirebaseAuth.getInstance().getUid());
+        }
+//        return user;
     }
+
+    public static User getUserResult(){
+        return currentUserResult.getValue();
+    }
+
+    public static void setUser(Map<String, Object> data){
+        User user = new User();
+        user.setName((String) data.get("name"));
+        user.setGroupJoined(((ArrayList<String>) data.get("groupJoined")).toArray(new String[0]));
+        user.setPhotoUrl((String) data.get("photoUrl"));
+        user.setUid((String) data.get("uid"));
+        user.setUsername((String) data.get("username"));
+        currentUserResult.setValue(user);
+    }
+
 
     public static User getUser(String uid){
         User user = new User();
@@ -125,10 +145,11 @@ public class LoginDataSource {
                 if (task.isSuccessful()){
                     Map<String, Object> data = task.getResult().getData();
                     user.setName((String) data.get("name"));
-                    user.setGroupJoined((String[]) data.get("groupJoined"));
+                    user.setGroupJoined(((ArrayList<String>) data.get("groupJoined")).toArray(new String[0]));
                     user.setPhotoUrl((String) data.get("photoUrl"));
                     user.setUid(uid);
                     user.setUsername((String) data.get("username"));
+                    currentUserResult.setValue(user);
                     Log.i(TAG, "Fetch algolia key");
 //                    AlgoliaDataSource.
                 }else{
@@ -143,9 +164,9 @@ public class LoginDataSource {
     public static void addUser(FirebaseUser firebaseUser){
         User user = new User();
         user.setUid(firebaseUser.getUid());
-        user.setUsername(firebaseUser.getDisplayName());
+        user.setUsername(firebaseUser.getEmail());
         user.setGroupJoined(new String[0]);
-        user.setPhotoUrl(firebaseUser.getPhotoUrl() == null? "":firebaseUser.getPhotoUrl().toString());
+        user.setPhotoUrl(firebaseUser.getPhotoUrl() == null? null:firebaseUser.getPhotoUrl().toString());
         user.setName(firebaseUser.getUid());
         user.setEmail(firebaseUser.getEmail());
         FirebaseFirestore.getInstance()

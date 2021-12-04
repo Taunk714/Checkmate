@@ -23,9 +23,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.teamred.checkmate.MainActivity2;
 import com.teamred.checkmate.OnboardingActivity;
 import com.teamred.checkmate.R;
@@ -47,6 +50,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.io.IOException;
+import java.util.Map;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -240,8 +244,20 @@ public class LoginActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            FirebaseFirestore.getInstance()
+                                    .collection("user")
+                                    .document(user.getUid())
+                                    .get()
+                                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                @Override
+                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                    Map<String, Object> data = documentSnapshot.getData();
+                                    LoginDataSource.setUser(data);
+//                                    loginViewModel.setLoginResult(new Result.Success<>(user));
+                                }
+                            });
                             updateUI(user);
-                            loginViewModel.setLoginResult(new Result.Success<>(user));
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());

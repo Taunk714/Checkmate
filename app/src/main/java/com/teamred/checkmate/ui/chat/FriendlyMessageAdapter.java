@@ -36,19 +36,6 @@ public class FriendlyMessageAdapter extends FirebaseRecyclerAdapter<FriendlyMess
         this.currentUserName = currentUserName;
     }
 
-    @Override
-    protected void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position, @NonNull FriendlyMessage model) {
-        if (options.getSnapshots().get(position).getText() != null){
-//            holder.b
-            ((MessageViewHolder) holder).bind(model);
-        }else{
-            ((ImageMessageViewHolder) holder).bind(model);
-        }
-    }
-    private static String ANONYMOUS = "anonymous";
-    private static int VIEW_TYPE_TEXT = 1;
-    private static int VIEW_TYPE_IMAGE = 2;
-
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -62,6 +49,30 @@ public class FriendlyMessageAdapter extends FirebaseRecyclerAdapter<FriendlyMess
         }
     }
 
+    @Override
+    protected void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position, @NonNull FriendlyMessage model) {
+        if (options.getSnapshots().get(position).getText() != null){
+//            holder.b
+            ((MessageViewHolder) holder).bind(model);
+        }else{
+            ((ImageMessageViewHolder) holder).bind(model);
+        }
+    }
+
+    public int getItemViewType(int position){
+        if (options.getSnapshots().get(position).getText() != null){
+            return VIEW_TYPE_TEXT;
+        }else{
+            return VIEW_TYPE_IMAGE;
+        }
+    }
+
+    private static String ANONYMOUS = "anonymous";
+    private static int VIEW_TYPE_TEXT = 1;
+    private static int VIEW_TYPE_IMAGE = 2;
+
+
+
 
 
     class MessageViewHolder extends RecyclerView.ViewHolder {
@@ -72,25 +83,16 @@ public class FriendlyMessageAdapter extends FirebaseRecyclerAdapter<FriendlyMess
             this.binding = binding;
         }
 
-        private void setTextColor(String userName, TextView textView) {
-            if (!userName.equals(ANONYMOUS) && currentUserName.equals(userName) && userName != null) {
-                textView.setBackgroundResource(R.drawable.rounded_message_blue);
-                textView.setTextColor(Color.WHITE);
-            } else {
-                textView.setBackgroundResource(R.drawable.rounded_message_gray);
-                textView.setTextColor(Color.BLACK);
-            }
-        }
-
         public void bind(FriendlyMessage item){
             binding.messageTextView.setText(item.getText());
             setTextColor(item.getName(), binding.messageTextView);
 
             if (item.getName() == null){
-                binding.messageTextView.setText(ANONYMOUS);
+                binding.messengerTextView.setText(ANONYMOUS);
             }else{
-                binding.messageTextView.setText(item.getName());
+                binding.messengerTextView.setText(item.getName());
             }
+
             if (item.getPhotoUrl() != null) {
                 loadImageIntoView(binding.messengerImageView, item.getPhotoUrl());
             } else {
@@ -98,9 +100,18 @@ public class FriendlyMessageAdapter extends FirebaseRecyclerAdapter<FriendlyMess
             }
         }
 
+        private void setTextColor(String userName, TextView textView) {
+            if (!userName.equals(ANONYMOUS)
+                    && currentUserName.equals(userName)
+                    && userName != null) {
+                textView.setBackgroundResource(R.drawable.rounded_message_blue);
+                textView.setTextColor(Color.WHITE);
+            } else {
+                textView.setBackgroundResource(R.drawable.rounded_message_gray);
+                textView.setTextColor(Color.BLACK);
+            }
+        }
     }
-
-
 
     class ImageMessageViewHolder extends RecyclerView.ViewHolder{
 
