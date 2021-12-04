@@ -54,6 +54,7 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:29.0.0')
     implementation 'com.google.firebase:firebase-analytics'
     // FirebaseUI for Firebase Auth
+
     implementation 'com.firebaseui:firebase-ui-auth:8.0.0'
     implementation 'com.firebaseui:firebase-ui-database:8.0.0'
 //    implementation 'com.algolia:instantsearch-android:2.X.X'

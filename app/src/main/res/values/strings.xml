@@ -143,6 +143,10 @@
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="algolia_logo">algolia logo</string>
 
+    <string name="facebook_application_id" translatable="false">YOUR_APP_ID</string>
+    <string name="facebook_login_protocol_scheme" translatable="false">fbYOUR_APP_ID</string>
+
+
     <string name="group_name">Group Name</string>
     <string name="Tags">Tags</string>
     <string name="Description">Description</string>
@@ -161,6 +165,7 @@
     <string name="dialog_title">Customize your filter</string>
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
+    <string name="logout">Logout</string>
 
     <string-array name="note_list_sort">
         <item>Default</item>

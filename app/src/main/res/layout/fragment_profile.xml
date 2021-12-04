@@ -11,8 +11,10 @@
         android:layout_width="411dp"
         android:layout_height="4dp"
         android:background="#F2F3F7"
-        tools:layout_editor_absoluteX="2dp"
-        tools:layout_editor_absoluteY="373dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/button2"
@@ -21,8 +23,7 @@
         android:layout_marginStart="16dp"
         android:text="Edit"
         app:layout_constraintBottom_toBottomOf="@+id/Username"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/backgroundLayout" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/Name"

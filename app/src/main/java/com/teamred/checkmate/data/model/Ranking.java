@@ -3,7 +3,7 @@ package com.teamred.checkmate.data.model;
 public enum Ranking {
 
     Newest("desc", "createDate", "Newest"),
-    Oldest("asc", "createDate", "Newest"),
+    Oldest("asc", "createDate", "Oldest"),
     Default("", "", "Default"),
     Popular("desc", "memberNum", "Most Popular");
 
