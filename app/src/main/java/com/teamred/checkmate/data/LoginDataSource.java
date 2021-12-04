@@ -161,6 +161,42 @@ public class LoginDataSource {
         return user;
     }
 
+    public static User getChatUser(String uid){
+        User user = new User();
+        Source source = Source.SERVER;
+        Task<DocumentSnapshot> documentSnapshotTask = FirebaseFirestore.getInstance().collection("user").document(uid).get();
+        documentSnapshotTask.addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()){
+                    Map<String, Object> data = task.getResult().getData();
+                    user.setName((String) data.get("name"));
+                    user.setGroupJoined(((ArrayList<String>) data.get("groupJoined")).toArray(new String[0]));
+                    user.setPhotoUrl((String) data.get("photoUrl"));
+                    user.setUid(uid);
+                    user.setUsername((String) data.get("username"));
+                    Log.i(TAG, "Get chat user");
+//                    AlgoliaDataSource.
+                }else{
+                    Log.i(TAG, "Get User Error");
+                }
+
+            }
+        });
+        return user;
+    }
+
+    public static User generateUser(FirebaseUser firebaseUser){
+        User user = new User();
+        user.setUid(firebaseUser.getUid());
+        user.setUsername(firebaseUser.getEmail());
+        user.setGroupJoined(new String[0]);
+        user.setPhotoUrl(firebaseUser.getPhotoUrl() == null? null:firebaseUser.getPhotoUrl().toString());
+        user.setName(firebaseUser.getUid());
+        user.setEmail(firebaseUser.getEmail());
+        return user;
+    }
+
     public static void addUser(FirebaseUser firebaseUser){
         User user = new User();
         user.setUid(firebaseUser.getUid());

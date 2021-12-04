@@ -48,6 +48,8 @@ public class ChatFragment extends Fragment {
     private FirebaseDatabase mdb;
     private FriendlyMessageAdapter adapter;
     private LinearLayoutManager manager;
+
+    private String otherUserUid = null;
 //    private
     private ActivityResultLauncher<String[]> openDocument = registerForActivityResult(new MyOpenDocumentContract(), new ActivityResultCallback<Uri>() {
         @Override
@@ -67,6 +69,12 @@ public class ChatFragment extends Fragment {
             startActivity(new Intent(getActivity(), LoginActivity.class));
             getActivity().finish();
             return root;
+        }
+
+        Bundle arguments = getArguments();
+        if (arguments != null){
+            this.otherUserUid = arguments.getString("otherUserUid");
+            LoginDataSource.getUser(this.otherUserUid);
         }
 
         // auth to check whether user is signed in

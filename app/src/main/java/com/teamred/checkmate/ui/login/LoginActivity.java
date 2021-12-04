@@ -217,9 +217,12 @@ public class LoginActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            LoginDataSource.addUser(user);
+//                            LoginDataSource.addUser(user);
                             updateUI(user);
-                            loginViewModel.setLoginResult(new Result.Success<>(user));
+                            Intent intent = new Intent(LoginActivity.this, AfterRegisterActivity.class);
+                            startActivity(intent);
+                            finish();
+//                            loginViewModel.setLoginResult(new Result.Success<>(user));
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
