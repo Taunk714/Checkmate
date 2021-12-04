@@ -29,6 +29,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.teamred.checkmate.MainActivity2;
 import com.teamred.checkmate.OnboardingActivity;
 import com.teamred.checkmate.R;
+import com.teamred.checkmate.data.LoginDataSource;
 import com.teamred.checkmate.data.Result;
 import com.teamred.checkmate.databinding.ActivityLoginBinding;
 
@@ -53,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
     private LoginViewModel loginViewModel;
     private ActivityLoginBinding binding;
 
-    private FirebaseAuth mAuth;
+    private static FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private static final String TAG = "FirebaseLogin";
 
     private Class callback = null;
@@ -83,7 +84,7 @@ public class LoginActivity extends AppCompatActivity {
         final Button registerButton = binding.register;
         final ProgressBar loadingProgressBar = binding.loading;
 
-        mAuth = FirebaseAuth.getInstance();
+//        mAuth = FirebaseAuth.getInstance();
 
         // get login info from the form
         loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
@@ -124,6 +125,7 @@ public class LoginActivity extends AppCompatActivity {
                     startActivity(i);
                 } else {
                     startActivity(new Intent(LoginActivity.this, MainActivity2.class));
+                    finish();
                 }
 
 
@@ -211,13 +213,17 @@ public class LoginActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            LoginDataSource.addUser(user);
                             updateUI(user);
+                            loginViewModel.setLoginResult(new Result.Success<>(user));
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                             updateUI(null);
+                            loginViewModel.setLoginResult(new Result.Error(new IOException("Error logging in", task.getException())));
+
                         }
                     }
                 });
@@ -241,7 +247,7 @@ public class LoginActivity extends AppCompatActivity {
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-                            updateUI(null);
+//                            updateUI(null);
                             loginViewModel.setLoginResult(new Result.Error(new IOException("Error logging in", task.getException())));
                         }
                     }
@@ -266,7 +272,7 @@ public class LoginActivity extends AppCompatActivity {
     private void reload() { }
 
     private void updateUI(FirebaseUser user) {
-        String welcome = getString(R.string.welcome) + user.getDisplayName();
+        String welcome = getString(R.string.welcome) + user.getEmail();
         // TODO : initiate successful logged in experience
         Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
     }

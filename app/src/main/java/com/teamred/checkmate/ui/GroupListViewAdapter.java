@@ -55,7 +55,7 @@ public class GroupListViewAdapter extends BaseAdapter {
         TextView groupDescription = row.findViewById(R.id.listview_group_description);
 //        TextView noteNumber = row.findViewById(R.id.note_number);
         groupDescription.setText(Html.fromHtml(groupList[position].getDescription()));
-        groupCreator.setText(Html.fromHtml(groupList[position].getCreator()));
+        groupCreator.setText(Html.fromHtml(groupList[position].getCreator().getName()));
 //        noteDate.setText(DateUtil.getSimpleDateString(groupList[position].getCreateDate()));
         groupName.setText(Html.fromHtml(groupList[position].getGroupName()));
 //        noteNumber.setText(groupList[position].getNumber().toString());

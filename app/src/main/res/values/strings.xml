@@ -165,6 +165,7 @@
     <string name="dialog_title">Customize your filter</string>
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
+    <string name="logout">Logout</string>
 
     <string-array name="note_list_sort">
         <item>Default</item>
