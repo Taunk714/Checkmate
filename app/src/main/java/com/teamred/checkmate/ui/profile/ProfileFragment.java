@@ -54,8 +54,10 @@ private TextView tAbout_me;
 
         list = binding.l;
         ArrayAdapter<String> arr;
-        arr = new ArrayAdapter<String>(getContext(), R.layout.support_simple_spinner_dropdown_item, tutorials);
+        arr = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_multiple_choice, tutorials);
+        list.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         list.setAdapter(arr);
+
 
 
 
