@@ -8,16 +8,11 @@
 
     <View
         android:id="@+id/view"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="407dp"
+        android:layout_width="411dp"
+        android:layout_height="4dp"
         android:background="#F2F3F7"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Username"
-        app:layout_constraintVertical_bias="0.443" />
+        tools:layout_editor_absoluteX="2dp"
+        tools:layout_editor_absoluteY="373dp" />
 
     <Button
         android:id="@+id/button2"
@@ -45,9 +40,7 @@
         android:id="@+id/Username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="91dp"
         android:text="Username"
-        app:layout_constraintBottom_toTopOf="@+id/view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/Name"
@@ -57,35 +50,30 @@
         android:id="@+id/textView6"
         android:layout_width="82dp"
         android:layout_height="22dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginStart="16dp"
         android:text="To do:"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view" />
+        app:layout_constraintBottom_toTopOf="@+id/l"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ListView
         android:id="@+id/l"
-        android:layout_width="0dp"
-        android:layout_height="251dp"
+        android:layout_width="414dp"
+        android:layout_height="219dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView6"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/aboutme"
         android:layout_width="0dp"
         android:layout_height="62dp"
         android:layout_marginStart="14dp"
-        android:layout_marginEnd="14dp"
+        android:layout_marginEnd="11dp"
         android:text="About Me:"
-        app:layout_constraintBottom_toBottomOf="@+id/view"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/view"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button2"
-        app:layout_constraintVertical_bias="0.773" />
+        app:layout_constraintTop_toBottomOf="@+id/Username" />
 
     <FrameLayout
         android:id="@+id/backgroundLayout"
