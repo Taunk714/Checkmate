@@ -10,21 +10,30 @@ public class Group {
     private Date createDate;
     private Date updateDate;
     private String[] subTopics = new String[]{};
-    private String creator;
+    private String creatorUsername;
     private Integer status = 0;
     private Integer memberNum = 1;
 
-    public Group() {}
-
-    public Group(String groupDocumentID, String groupName, String[] tags, String description) {
+    public Group(){}
+    /**
+     *
+     * @param groupDocumentID docrefid
+     * @param groupName groupname
+     * @param tags tags array
+     * @param creatorUsername creator's username (firebase)
+     * @param description description of group
+     */
+    public Group(String groupDocumentID, String groupName, String[] tags, String creatorUsername, String description) {
         this.groupDocumentID = groupDocumentID;
         this.groupName = groupName;
         this.tags = tags;
+        this.creatorUsername = creatorUsername;
         this.description = description;
         this.createDate = new Date();
         this.updateDate = new Date();
         this.status = 0;
     }
+
 
     public Group(String groupName, String[] tags, String description, Date createDate, Date updateDate) {
         this.groupName = groupName;
@@ -34,6 +43,8 @@ public class Group {
         this.updateDate = updateDate;
         this.status = 0;
     }
+
+    public String getGroupDocumentID() { return groupDocumentID; }
 
     public String getGroupName() {
         return groupName;
@@ -83,12 +94,12 @@ public class Group {
         this.subTopics = subTopics;
     }
 
-    public String getCreator() {
-        return creator;
+    public String getCreatorUsername() {
+        return creatorUsername;
     }
 
-    public void setCreator(String creator) {
-        this.creator = creator;
+    public void setCreatorUsername(String creatorUsername) {
+        this.creatorUsername = creatorUsername;
     }
 
     public Integer getStatus() {

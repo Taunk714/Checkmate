@@ -37,7 +37,7 @@ public class SearchGroupFragment extends Fragment implements FilterDialogFragmen
 
     private FragmentSearchGroupBinding binding;
 
-//    private Note[] noteList;
+//    private Post[] noteList;
 
     private ListAdapter noteAdapter;
     private ListAdapter groupAdapter;
@@ -71,7 +71,7 @@ public class SearchGroupFragment extends Fragment implements FilterDialogFragmen
 
 //
 //        if (noteList != null && noteList.length > 0){
-//            noteAdapter = new NoteListViewAdapter(getContext(), noteList);
+//            noteAdapter = new PostListViewAdapter(getContext(), noteList);
 //            listView.setAdapter(noteAdapter);
 //        }
 
@@ -192,7 +192,7 @@ public class SearchGroupFragment extends Fragment implements FilterDialogFragmen
                 JSONObject hitObj = hits.getJSONObject(i);
                 group.setGroupName(hitObj.getString("groupName"));
                 group.setDescription(hitObj.getString("description"));
-                group.setCreator(hitObj.getString("creator"));
+                group.setCreatorUsername(hitObj.getString("creator"));
                 group.setCreateDate(new Date(hitObj.getLong("createDate")));
                 group.setUpdateDate(new Date(hitObj.getLong("createDate")));
                 group.setStatus(hitObj.getInt("status"));

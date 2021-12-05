@@ -1,23 +1,17 @@
 package com.teamred.checkmate.ui.group;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.google.firebase.auth.FirebaseAuth;
-import com.teamred.checkmate.R;
 import com.teamred.checkmate.data.AlgoliaDataSource;
 import com.teamred.checkmate.data.model.Group;
-import com.teamred.checkmate.data.model.Note;
 import com.teamred.checkmate.databinding.ActivityCreateGroupBinding;
 
 import java.util.Date;
@@ -56,7 +50,7 @@ public class CreateGroupActivity extends AppCompatActivity {
                 group.setDescription(description);
                 group.setTags(tags);
 //                group.setSubTopics(new String[]{});
-                group.setCreator(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+                group.setCreatorUsername(FirebaseAuth.getInstance().getCurrentUser().getEmail());
                 group.setCreateDate(new Date());
                 group.setUpdateDate(new Date());
                 String s = JSON.toJSONString(group);

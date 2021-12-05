@@ -14,18 +14,12 @@ import com.algolia.search.saas.Index;
 import com.algolia.search.saas.Query;
 import com.teamred.checkmate.Searchable;
 import com.teamred.checkmate.SyncHelper;
-import com.teamred.checkmate.data.model.Group;
-import com.teamred.checkmate.data.model.Note;
-import com.teamred.checkmate.ui.search.SearchGroupFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 
 public class AlgoliaDataSource {
     private final static String TAG = "Algolia";

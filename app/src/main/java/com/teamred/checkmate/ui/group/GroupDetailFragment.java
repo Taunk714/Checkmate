@@ -16,6 +16,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -28,10 +31,13 @@ import com.teamred.checkmate.R;
 import com.teamred.checkmate.Searchable;
 import com.teamred.checkmate.data.AlgoliaDataSource;
 import com.teamred.checkmate.data.model.Group;
-import com.teamred.checkmate.data.model.Note;
+import com.teamred.checkmate.data.model.Post;
 import com.teamred.checkmate.data.model.Ranking;
 import com.teamred.checkmate.databinding.FragmentGroupDetailBinding;
-import com.teamred.checkmate.ui.NoteListViewAdapter;
+import com.teamred.checkmate.ui.PostListViewAdapter;
+import com.teamred.checkmate.ui.notes.CreateNoteFragment;
+import com.teamred.checkmate.ui.notes.PostFragment;
+import com.teamred.checkmate.ui.notes.PostListViewModel;
 
 import org.json.JSONObject;
 
@@ -43,7 +49,7 @@ public class GroupDetailFragment extends Fragment implements Searchable {
 
     private FragmentGroupDetailBinding binding;
 
-    private List<Note> noteList;
+    private List<Post> postList;
 
     private ListAdapter noteAdapter;
     private ListView listView;
@@ -61,13 +67,12 @@ public class GroupDetailFragment extends Fragment implements Searchable {
 
 
     /* Actual stuff */
-    private Group thisGroup;
     private String TAG = "GroupDETAIL";
+    private Group groupRef; // selected Group
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
 
         binding = FragmentGroupDetailBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -86,47 +91,30 @@ public class GroupDetailFragment extends Fragment implements Searchable {
                         if (document.exists()) {
                             Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                             Map<String, Object> data = document.getData();
-                            binding.groupDetailTitle.setText(data.get("groupName").toString());
-                            binding.groupDetailCreator.setText(data.get("creatorUsername").toString());
-                            binding.groupDetailDescription.setText(data.get("description").toString());
+                            groupRef = new Group(groupDocID, data.get("groupName").toString(),
+                                    (String[]) data.get("tags"),
+                                    data.get("creatorUsername").toString(),
+                                    data.get("description").toString());
+
+                            binding.groupDetailTitle.setText(groupRef.getGroupName());
+                            binding.groupDetailCreator.setText(groupRef.getCreatorUsername());
+                            binding.groupDetailDescription.setText(groupRef.getDescription());
+                            binding.groupDetailNumMembers.setText(data.get("numMembers").toString());
                         } else {
                             Log.d(TAG, "No such document");
                         }
                     } else {
                         Log.d(TAG, "get failed with ", task.getException());
                     }
-                    getPostsAsync();
-                }
 
-                /**
-                 * Grabs all posts within this group and puts them in a list view
-                 */
-                private void getPostsAsync() {
-                    docRef.collection("posts").get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        noteList = new ArrayList<Note>();
-                                        for (QueryDocumentSnapshot document : task.getResult()) {
-                                            Map<String, Object> data = document.getData();
+                    PostListViewModel postListModel = new ViewModelProvider(requireActivity()).get(PostListViewModel.class);
+                    postListModel.init(groupDocID);
 
-                                            String title = data.get("postTitle").toString();
-                                            String[] tags = new String[1];
-                                            String author = "";
-                                            String content = data.get("content").toString();
-
-                                            Note n = new Note(title, tags, author, content);
-                                            noteList.add(n);
-                                            Log.d(TAG, document.getId() + " => " + document.getData());
-                                        }
-                                        noteAdapter = new NoteListViewAdapter(getContext(), noteList.toArray(new Note[noteList.size()]));
-                                        listView.setAdapter(noteAdapter);
-                                    } else {
-                                        Log.d(TAG, "Error getting documents: ", task.getException());
-                                    }
-                                }
-                            });
+                    postListModel.getPosts().observe(getViewLifecycleOwner(), posts -> {
+                        // Update UI
+                        noteAdapter = new PostListViewAdapter(getContext(), posts.toArray((new Post[posts.size()])), postListModel);
+                        listView.setAdapter(noteAdapter);
+                    });
                 }
             });
         }
@@ -137,6 +125,22 @@ public class GroupDetailFragment extends Fragment implements Searchable {
 //        searchType = binding.searchType;
         filter = binding.noteListFilter;
         ranking = binding.noteListRanking;
+
+        binding.createNoteFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Go to Create Note fragment
+                Fragment createNoteFragment = CreateNoteFragment.newInstance(groupRef.getGroupDocumentID());
+
+                FragmentManager manager = getParentFragmentManager();
+
+                manager.beginTransaction()
+                        .replace(R.id.navigation_host, createNoteFragment, null)
+                        .setReorderingAllowed(true)
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
 
 
 // enter keywords and search

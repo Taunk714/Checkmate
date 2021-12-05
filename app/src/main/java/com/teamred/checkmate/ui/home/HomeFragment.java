@@ -56,18 +56,16 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Fragment fragment = new GroupDetailFragment();
-//                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-//                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//                fragmentTransaction.replace(R.id.nav_host_fragment_activity_main2, fragment);
-//                fragmentTransaction.addToBackStack(null);
-//                fragmentTransaction.commit();
 
                 Bundle bundle = new Bundle();
                 bundle.putString("groupDocID", "0JG8VeJxHYJ83y9nZF3Y");
                 fragment.setArguments(bundle);
+                FragmentManager manager = getParentFragmentManager();
 
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(((ViewGroup)getView().getParent()).getId(), fragment, "findThisFragment")
+                manager.beginTransaction()
+                        .replace(R.id.navigation_host, fragment, null)
+                        .setReorderingAllowed(true)
+                        .addToBackStack(null)
                         .commit();
             }
         });

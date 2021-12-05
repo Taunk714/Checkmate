@@ -7,7 +7,22 @@
     android:background="#FFFFFF"
     android:backgroundTintMode="screen">
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/createNoteFab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="32dp"
+        android:backgroundTint="@color/blue_700"
+        android:clickable="true"
+        app:backgroundTint="@color/blue_900"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_add_black_24dp"
+        tools:ignore="SpeakableTextPresentCheck" />
+
     <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="10dp"
@@ -33,8 +48,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:background="#FFFEFE"
             android:orientation="vertical">
 
@@ -47,17 +62,17 @@
                 android:textSize="24sp" />
 
             <!--            <TextView-->
-<!--                android:id="@+id/group_detail_desc"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:maxLines="3"-->
-<!--                android:text="desc" />-->
+            <!--                android:id="@+id/group_detail_desc"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:maxLines="3"-->
+            <!--                android:text="desc" />-->
 
-<!--            <TextView-->
-<!--                android:id="@+id/textView8"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="TextView" />-->
+            <!--            <TextView-->
+            <!--                android:id="@+id/textView8"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:text="TextView" />-->
 
             <TextView
                 android:id="@+id/group_detail_creator"
@@ -83,22 +98,31 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="5dp"
             android:layout_marginBottom="5dp"
+            android:gravity="center"
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/numPosts"
+                android:id="@+id/group_detail_numMembers"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="5 members" />
+                android:text="1" />
+
+            <ImageView
+                android:id="@+id/peopleIV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_weight="0"
+                app:srcCompat="@drawable/ic_baseline_people_24" />
 
             <Spinner
                 android:id="@+id/note_list_ranking"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:entries="@array/note_list_sort"
@@ -107,7 +131,7 @@
 
             <Spinner
                 android:id="@+id/note_list_filter"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="1"
@@ -120,9 +144,7 @@
         <ListView
             android:id="@+id/note_list_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/background">
-        </ListView>
+            android:layout_height="match_parent"></ListView>
 
     </LinearLayout>
 

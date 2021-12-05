@@ -2,17 +2,20 @@ package com.teamred.checkmate.data.model;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
-public class Note {
+public class Post {
     private String title;
-    private String[] tags;
+    private List<String> tags;
     private String content;
     private Date createDate;
     private String author;
+    private String postID;
 //    private Integer number;
 
-    public Note(String title, String[] tags, String author, String content) {
+    public Post(String postID, String title, List<String> tags, String author, String content) {
+        this.postID = postID;
         this.title = title;
         this.tags = tags;
         this.content = content;
@@ -21,10 +24,12 @@ public class Note {
 //        this.number = new Random().nextInt(20);
     }
 
-    public Note() {
+    public Post() {
         this.createDate = new Date();
 //        this.number = new Random().nextInt(20);
     }
+
+    public String getPostID() { return postID; }
 
     public String getTitle() {
         return title;
@@ -34,11 +39,11 @@ public class Note {
         this.title = title;
     }
 
-    public String[] getTags() {
+    public List<String> getTags() {
         return tags;
     }
 
-    public void setTags(String[] tags) {
+    public void setTags(List<String> tags) {
         this.tags = tags;
     }
 
