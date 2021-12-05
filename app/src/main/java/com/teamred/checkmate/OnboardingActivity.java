@@ -14,8 +14,10 @@ import androidx.lifecycle.Observer;
 import com.google.firebase.auth.FirebaseAuth;
 import com.ramotion.paperonboarding.PaperOnboardingFragment;
 import com.ramotion.paperonboarding.PaperOnboardingPage;
+import com.teamred.checkmate.data.Constant;
 import com.teamred.checkmate.data.LoginDataSource;
 import com.teamred.checkmate.data.model.User;
+import com.teamred.checkmate.ui.login.AfterRegisterActivity;
 import com.teamred.checkmate.ui.login.LoginActivity;
 
 import java.util.ArrayList;
@@ -42,7 +44,11 @@ public class OnboardingActivity extends AppCompatActivity {
                     LoginDataSource.currentUserResult.observe(OnboardingActivity.this, new Observer<User>() {
                         @Override
                         public void onChanged(User user) {
-                            startActivity(new Intent(OnboardingActivity.this, MainActivity2.class));
+                            if (user.getUsername() == null){
+                                startActivity(new Intent(OnboardingActivity.this, AfterRegisterActivity.class));
+                            }else{
+                                startActivity(new Intent(OnboardingActivity.this, MainActivity2.class));
+                            }
                             finish();
                         }
                     });

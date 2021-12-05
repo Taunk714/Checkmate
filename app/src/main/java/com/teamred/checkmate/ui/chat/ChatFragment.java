@@ -3,65 +3,45 @@ package com.teamred.checkmate.ui.chat;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-import com.teamred.checkmate.data.AlgoliaDataSource;
+import com.teamred.checkmate.data.Constant;
 import com.teamred.checkmate.data.LoginDataSource;
+import com.teamred.checkmate.data.model.Chat;
 import com.teamred.checkmate.data.model.FriendlyMessage;
-import com.teamred.checkmate.data.model.User;
 import com.teamred.checkmate.databinding.FragmentChatBinding;
-import com.teamred.checkmate.databinding.FragmentHomeBinding;
-import com.teamred.checkmate.ui.calendar.CalendarActivity;
-import com.teamred.checkmate.ui.group.CreateGroupActivity;
+import com.teamred.checkmate.databinding.FragmentChatMainBinding;
 import com.teamred.checkmate.ui.login.LoginActivity;
 
 public class ChatFragment extends Fragment {
-    private FragmentChatBinding binding;
+
+    private FragmentChatMainBinding binding;
     private FirebaseAuth mAuth;
     private FirebaseDatabase mdb;
-    private FriendlyMessageAdapter adapter;
+    private ChatAdapter adapter;
     private LinearLayoutManager manager;
 
-    private String otherUserUid = null;
-//    private
-    private ActivityResultLauncher<String[]> openDocument = registerForActivityResult(new MyOpenDocumentContract(), new ActivityResultCallback<Uri>() {
-        @Override
-        public void onActivityResult(Uri result) {
-            onImageSelected(result);
-        }
-    });
+    private String MESSAGE_REF;
+
+    private String CHAT_LIST= "chatList";
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        binding = FragmentChatBinding.inflate(inflater, container, false);
+        binding = FragmentChatMainBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         mAuth = FirebaseAuth.getInstance();
@@ -71,189 +51,56 @@ public class ChatFragment extends Fragment {
             return root;
         }
 
-        Bundle arguments = getArguments();
-        if (arguments != null){
-            this.otherUserUid = arguments.getString("otherUserUid");
-            LoginDataSource.getUser(this.otherUserUid);
-        }
-
-        // auth to check whether user is signed in
-        //calenderHeatmap = (Button) getView().findViewById(R.id.calendarheatmap);
-
+//        Bundle arguments = getArguments();
+//        assert arguments != null;
+//        this.otherUserUid = arguments.getString("otherUserUid");
+//        LoginDataSource.getUser(this.otherUserUid);
+//        MESSAGE_REF = generateMessageRef(otherUserUid, Constant.getInstance().getCurrentUser().getUid());
 
         mdb = FirebaseDatabase.getInstance();
-        DatabaseReference messagesRef = mdb.getReference().child(MESSAGES_CHILD);
+        DatabaseReference messagesRef = mdb.getReference().child(CHAT_LIST);
 //        Query messagesRef = FirebaseStorage.getInstance().getReference().child(MESSAGES_CHILD);
 
-        FirebaseRecyclerOptions<FriendlyMessage> options = new FirebaseRecyclerOptions.Builder<FriendlyMessage>()
-                .setQuery(messagesRef, FriendlyMessage.class)
+        FirebaseRecyclerOptions<Chat> options = new FirebaseRecyclerOptions.Builder<Chat>()
+                .setQuery(messagesRef, Chat.class)
                 .build();
 
-//        new com.firebase.ui.database.FirebaseRecyclerOptions.Builder<FriendlyMessage>().setQuery(messagesRef, FriendlyMessage.class).build();
-
-
-        adapter = new FriendlyMessageAdapter(options, getUserName());
-        binding.progressBar.setVisibility(ProgressBar.INVISIBLE);
+        adapter = new ChatAdapter(options);
         manager = new LinearLayoutManager(getContext());
         manager.setStackFromEnd(true);
-        binding.messageRecyclerView.setLayoutManager(manager);
-        binding.messageRecyclerView.setAdapter(adapter);
+        binding.chatListview.setLayoutManager(manager);
+        binding.chatListview.setAdapter(adapter);
 
-//        binding.addMessageImageView.setOnClickListener(
-//
-//        );
         adapter.registerAdapterDataObserver(
-                new MyScrollToButtonObserver(binding.messageRecyclerView, adapter, manager)
+                new MyScrollToButtonObserver<ChatAdapter>(binding.chatListview, adapter, manager)
         );
 
-        binding.messageEditText.addTextChangedListener(
-                new MyButtonObserver(binding.sendButton)
-        );
-
-        binding.sendButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FriendlyMessage friendlyMessage = new FriendlyMessage(
-                        binding.messageEditText.getText().toString(),
-                        getUserName(),
-                        getPhotoUrl(),
-                        null);
-                mdb.getReference()
-                        .child(MESSAGES_CHILD)
-                        .push()
-                        .setValue(friendlyMessage);
-                binding.messageEditText.setText("");
-            }
-        });
-
-        binding.addMessageImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openDocument.launch(new String[]{"image/*"});
-            }
-        });
-
+//        binding.sendButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                FriendlyMessage friendlyMessage = new FriendlyMessage(
+//                        FirebaseAuth.getInstance().getUid(),
+//                        otherUserUid,
+//                        binding.messageEditText.getText().toString(),
+//                        getUserName(),
+//                        getPhotoUrl(),
+//                        null);
+//                mdb.getReference()
+//                        .child(MESSAGES_CHILD)
+//                        .child(MESSAGE_REF)
+//                        .push()
+//                        .setValue(friendlyMessage);
+//                binding.messageEditText.setText("");
+//            }
+//        });
+//
 //        binding.addMessageImageView.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
-//                openDocument.launch("image/*");
+//                openDocument.launch(new String[]{"image/*"});
 //            }
 //        });
 
         return root;
     }
-//
-//    public boolean onOptionsItemSelected(MenuItem item){
-//        re
-//    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-    }
-
-    public void onStart() {
-        super.onStart();
-
-    }
-
-    public void onPause() {
-        adapter.stopListening();
-        super.onPause();
-    }
-//
-    public void onResume(){
-        super.onResume();
-        adapter.startListening();
-    }
-
-//    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-//        val inflater = menuInflater
-//        inflater.inflate(R.menu.main_menu, menu)
-//        return true
-//    }
-//
-//    private Boolean onOptionsItemSelected(MenuItem item) {
-//        return when (item.itemId) {
-//            R.id.sign_out_menu -> {
-//                signOut()
-//                true
-//            }
-//            else -> super.onOptionsItemSelected(item)
-//        }
-//    }
-//
-    private void onImageSelected(Uri uri) {
-        // TODO: implement
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        FriendlyMessage friendlyMessage = new FriendlyMessage(null, getUserName(), getPhotoUrl(), LOADING_IMAGE_URL);
-        mdb.getReference().child(MESSAGES_CHILD).push().setValue(friendlyMessage,
-                new DatabaseReference.CompletionListener(){
-
-                    @Override
-                    public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                        if (error != null){
-                            Log.w(TAG, "Unable to write message to database.",
-                                    error.toException());
-                            return;
-                        }
-
-                        String key = ref.getKey();
-                        StorageReference child = FirebaseStorage.getInstance().getReference(currentUser.getUid()).child(key).child(uri.getLastPathSegment());
-                        putImageInStorage(child, uri, key);
-
-                    }
-                });
-
-    }
-//
-    private void putImageInStorage(StorageReference reference, Uri uri, String key) {
-        // Upload the image to Cloud Storage
-        // TODO: implement
-        reference.putFile(uri)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
-                                FriendlyMessage friendlyMessage = new FriendlyMessage(null, getUserName(), getPhotoUrl(), uri.toString());
-                                mdb.getReference().child(MESSAGES_CHILD).child(key).setValue(friendlyMessage);
-
-                            }
-                        });
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Image upload task was unsuccessful.",
-                                e);
-                    }
-                });
-    }
-
-    private String getUserName() {
-        User currentUser = LoginDataSource.getUserResult();
-        if (currentUser != null) {
-            return currentUser.getUsername();
-        } else {
-            return ANONYMOUS;
-        }
-    }
-
-    private String getPhotoUrl(){
-        try {
-            return LoginDataSource.getUserResult().getPhotoUrl().toString();
-        }catch (Exception e){
-            return null;
-        }
-    }
-
-    private static String TAG = "ChatFragment";
-    private static String MESSAGES_CHILD = "messages";
-    private static String ANONYMOUS = "anonymous";
-    private static String LOADING_IMAGE_URL = "https://www.google.com/images/spin-32.gif";
-
 }

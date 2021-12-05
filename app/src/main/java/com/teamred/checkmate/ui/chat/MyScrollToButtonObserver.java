@@ -3,12 +3,14 @@ package com.teamred.checkmate.ui.chat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class MyScrollToButtonObserver extends RecyclerView.AdapterDataObserver {
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+
+public class MyScrollToButtonObserver<T extends FirebaseRecyclerAdapter> extends RecyclerView.AdapterDataObserver {
     private RecyclerView recycler;
-    private FriendlyMessageAdapter adapter;
+    private T adapter;
     private LinearLayoutManager manager;
 
-    public MyScrollToButtonObserver(RecyclerView recycler, FriendlyMessageAdapter adapter, LinearLayoutManager manager) {
+    public MyScrollToButtonObserver(RecyclerView recycler, T adapter, LinearLayoutManager manager) {
         this.recycler = recycler;
         this.adapter = adapter;
         this.manager = manager;
@@ -28,4 +30,6 @@ public class MyScrollToButtonObserver extends RecyclerView.AdapterDataObserver {
             recycler.scrollToPosition(positionStart);
         }
     }
+
+
 }

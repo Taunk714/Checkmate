@@ -149,6 +149,7 @@ public class LoginDataSource {
                     user.setPhotoUrl((String) data.get("photoUrl"));
                     user.setUid(uid);
                     user.setUsername((String) data.get("username"));
+                    Constant.getInstance().setCurrentUser(user);
                     currentUserResult.setValue(user);
                     Log.i(TAG, "Fetch algolia key");
 //                    AlgoliaDataSource.
@@ -159,6 +160,13 @@ public class LoginDataSource {
             }
         });
         return user;
+    }
+
+    public static Task<DocumentSnapshot> getTargetUser(String uid){
+        User user = new User();
+        Source source = Source.SERVER;
+        Task<DocumentSnapshot> documentSnapshotTask = FirebaseFirestore.getInstance().collection("user").document(uid).get();
+        return documentSnapshotTask;
     }
 
     public static User getChatUser(String uid){
