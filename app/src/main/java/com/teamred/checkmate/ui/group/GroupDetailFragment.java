@@ -68,11 +68,29 @@ public class GroupDetailFragment extends Fragment implements Searchable {
             creator.setText(arguments.getString("creator"));
             desc.setText(arguments.getString("desc"));
             subtopics = arguments.getStringArray("subtopics");
-
         }
+
+        desc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (desc.getMaxLines() == 3){
+                    desc.setMaxLines(99);
+                }else{
+                    desc.setMaxLines(3);
+                }
+            }
+        });
 
 
         searchKeywords = binding.searchNote;
+        String numThreads = subtopics.length + " Available Threads";
+        binding.numberOfThread.setText(numThreads);
+        binding.noteListFilter.setAdapter(
+                new ArrayAdapter<String>(
+                        getContext(),
+                        R.layout.support_simple_spinner_dropdown_item,
+                        generateAdapterArray(subtopics)));
+
 //        listView = binding.searchResultList;
 //        searchType = binding.searchType;
 //        filter = binding.btnFilter;
@@ -182,5 +200,15 @@ public class GroupDetailFragment extends Fragment implements Searchable {
     @Override
     public void updateSearchResult(JSONObject content) {
 
+    }
+
+    private String[] generateAdapterArray(String[] subtopics){
+        String[] ret = new String[1 + subtopics.length];
+        ret[0] = "All";
+        if (subtopics.length == 0){
+            return ret;
+        }
+        System.arraycopy(subtopics, 0, ret, 1, subtopics.length);
+        return ret;
     }
 }
