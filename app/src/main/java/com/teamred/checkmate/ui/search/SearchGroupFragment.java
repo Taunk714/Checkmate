@@ -193,7 +193,7 @@ public class SearchGroupFragment extends Fragment implements FilterDialogFragmen
                 JSONObject hitObj = hits.getJSONObject(i);
                 group.setGroupName(hitObj.getString("groupName"));
                 group.setDescription(hitObj.getString("description"));
-                group.setCreator(LoginDataSource.getUser(hitObj.getString("creator")));
+                group.setCreator(LoginDataSource.getUser(hitObj.getString("creator")).getUsername());
                 group.setCreateDate(new Date(hitObj.getLong("createDate")));
                 group.setUpdateDate(new Date(hitObj.getLong("createDate")));
                 group.setStatus(hitObj.getInt("status"));

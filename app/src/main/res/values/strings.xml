@@ -170,6 +170,7 @@
     <string name="enter_your_username">Enter your username</string>
     <string name="username">USERNAME</string>
     <string name="message">message</string>
+    <string name="title_activity_after_register">AfterRegisterActivity</string>
 
     <string-array name="note_list_sort">
         <item>Default</item>
