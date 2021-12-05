@@ -291,6 +291,9 @@ public class LoginActivity extends AppCompatActivity {
     private void reload() { }
 
     private void updateUI(FirebaseUser user) {
+        if(user == null){
+            return;
+        }
         String welcome = getString(R.string.welcome) + user.getEmail();
         // TODO : initiate successful logged in experience
         Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
