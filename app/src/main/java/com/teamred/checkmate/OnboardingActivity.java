@@ -34,7 +34,7 @@ public class OnboardingActivity extends AppCompatActivity {
                 if (FirebaseAuth.getInstance().getCurrentUser() == null){
                     startActivity(new Intent(OnboardingActivity.this, LoginActivity.class));
                 }else{
-                    startActivity(new Intent(OnboardingActivity.this, MainActivity2.class));
+                    startActivity(new Intent(OnboardingActivity.this, MainActivity.class));
                 }
             }
         });

@@ -16,7 +16,6 @@ import androidx.fragment.app.FragmentTransaction;
 import com.teamred.checkmate.R;
 import com.teamred.checkmate.data.model.Group;
 import com.teamred.checkmate.ui.group.GroupDetailFragment;
-import com.teamred.checkmate.util.DateUtil;
 
 public class GroupListViewAdapter extends BaseAdapter {
 
@@ -72,7 +71,7 @@ public class GroupListViewAdapter extends BaseAdapter {
                 bundle.putString("desc", String.valueOf(groupDescription.getText()));
                 bundle.putStringArray("subtopics",groupList[position].getSubTopics());
                 groupDetailFragment.setArguments(bundle);
-                ft.replace(R.id.nav_host_fragment_activity_main2, groupDetailFragment)
+                ft.replace(R.id.navigation_host, groupDetailFragment)
                         .commit();
             }
         });

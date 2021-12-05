@@ -3,6 +3,7 @@ package com.teamred.checkmate.data.model;
 import java.util.Date;
 
 public class Group {
+    private String groupDocumentID;
     private String groupName;
     private String[] tags;
     private String description;
@@ -15,7 +16,8 @@ public class Group {
 
     public Group() {}
 
-    public Group(String groupName, String[] tags, String description) {
+    public Group(String groupDocumentID, String groupName, String[] tags, String description) {
+        this.groupDocumentID = groupDocumentID;
         this.groupName = groupName;
         this.tags = tags;
         this.description = description;

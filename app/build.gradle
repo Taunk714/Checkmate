@@ -10,9 +10,6 @@ allprojects {
         google()
         mavenLocal()
         maven {
-            url 'https://pkgs.dev.azure.com/MicrosoftDeviceSDK/DuoSDK-Public/_packaging/Duo-SDK-Feed/maven/v1'
-        }
-        maven {
             name "vsts-maven-adal-android"
             url "https://identitydivision.pkgs.visualstudio.com/_packaging/AndroidADAL/maven/v1"
             credentials {
@@ -91,4 +88,10 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     // calender heat map lib
     implementation 'com.github.sundeepk:compact-calendar-view:3.0.0'
+
+    implementation 'com.microsoft.identity.client:msal:2.+'
 }
+
+
+
+apply plugin: 'com.android.application'

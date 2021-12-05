@@ -26,24 +26,17 @@ import android.widget.Toast;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.teamred.checkmate.MainActivity2;
-import com.teamred.checkmate.OnboardingActivity;
+import com.teamred.checkmate.MainActivity;
 import com.teamred.checkmate.R;
 import com.teamred.checkmate.data.Result;
 import com.teamred.checkmate.databinding.ActivityLoginBinding;
 
-import android.app.Activity;
-import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import java.io.IOException;
 
@@ -123,7 +116,7 @@ public class LoginActivity extends AppCompatActivity {
                     Intent i = new Intent(LoginActivity.this, callback);
                     startActivity(i);
                 } else {
-                    startActivity(new Intent(LoginActivity.this, MainActivity2.class));
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 }
 
 

@@ -12,10 +12,11 @@ public class Note {
     private String author;
 //    private Integer number;
 
-    public Note(String title, String[] tags, String content) {
+    public Note(String title, String[] tags, String author, String content) {
         this.title = title;
         this.tags = tags;
         this.content = content;
+        this.author = author;
         this.createDate = new Date();
 //        this.number = new Random().nextInt(20);
     }

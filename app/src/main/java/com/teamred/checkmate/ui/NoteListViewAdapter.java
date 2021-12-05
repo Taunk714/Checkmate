@@ -33,7 +33,7 @@ public class NoteListViewAdapter extends BaseAdapter {
         View row;
 
         if (convertView == null){  //indicates this is the first time we are creating this row.
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);  //Inflater's are awesome, they convert xml to Java Objects!
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             row = inflater.inflate(R.layout.note_listview_row, parent, false);
         }
         else
