@@ -21,7 +21,7 @@ public class CalendarActivity extends AppCompatActivity {
     private ViewPager pager;
     private ViewPagerAdapter adapter;
     private SlidingTabLayout tabs;
-    private CharSequence titles[]= {"Home","Events"};
+    private CharSequence titles[]= {"Calendar","Events"};
     private int numberOfTabs = 1;
 
     @Override

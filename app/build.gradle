@@ -63,7 +63,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.firebase:firebase-firestore'
     implementation 'com.google.firebase:firebase-storage'
-    implementation 'com.facebook.android:facebook-android-sdk:8.x'
+    //implementation 'com.facebook.android:facebook-android-sdk:8.x'
     implementation group: 'com.alibaba', name: 'fastjson', version: '1.2.76'
     implementation 'com.evernote:android-sdk:2.0.0-RC4'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
