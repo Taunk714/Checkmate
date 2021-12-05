@@ -4,20 +4,21 @@ import java.util.Date;
 
 public class Group {
     private String groupName;
-    private String[] tags;
     private String description;
     private Date createDate;
     private Date updateDate;
     private String[] subTopics = new String[]{};
     private String creator;
+    private String creatorId;
     private Integer status = 0;
-    private Integer memberNum = 1;
+    private Integer numMember = 1;
+    private Integer numView = 1;
+
 
     public Group() {}
 
     public Group(String groupName, String[] tags, String description) {
         this.groupName = groupName;
-        this.tags = tags;
         this.description = description;
         this.createDate = new Date();
         this.updateDate = new Date();
@@ -26,7 +27,6 @@ public class Group {
 
     public Group(String groupName, String[] tags, String description, Date createDate, Date updateDate) {
         this.groupName = groupName;
-        this.tags = tags;
         this.description = description;
         this.createDate = createDate;
         this.updateDate = updateDate;
@@ -39,14 +39,6 @@ public class Group {
 
     public void setGroupName(String groupName) {
         this.groupName = groupName;
-    }
-
-    public String[] getTags() {
-        return tags;
-    }
-
-    public void setTags(String[] tags) {
-        this.tags = tags;
     }
 
     public String getDescription() {
@@ -97,11 +89,27 @@ public class Group {
         this.status = status;
     }
 
-    public Integer getMemberNum() {
-        return memberNum;
+    public Integer getNumMember() {
+        return numMember;
     }
 
-    public void setMemberNum(Integer memberNum) {
-        this.memberNum = memberNum;
+    public void setNumMember(Integer numMember) {
+        this.numMember = numMember;
+    }
+
+    public String getCreatorId() {
+        return creatorId;
+    }
+
+    public void setCreatorId(String creatorId) {
+        this.creatorId = creatorId;
+    }
+
+    public Integer getNumView() {
+        return numView;
+    }
+
+    public void setNumView(Integer numView) {
+        this.numView = numView;
     }
 }

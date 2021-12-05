@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment;
 import com.teamred.checkmate.R;
 import com.teamred.checkmate.Searchable;
 import com.teamred.checkmate.data.AlgoliaDataSource;
+import com.teamred.checkmate.data.LoginDataSource;
 import com.teamred.checkmate.data.model.Group;
 import com.teamred.checkmate.data.model.Ranking;
 import com.teamred.checkmate.databinding.FragmentSearchGroupBinding;
@@ -192,7 +193,7 @@ public class SearchGroupFragment extends Fragment implements FilterDialogFragmen
                 JSONObject hitObj = hits.getJSONObject(i);
                 group.setGroupName(hitObj.getString("groupName"));
                 group.setDescription(hitObj.getString("description"));
-                group.setCreator(hitObj.getString("creator"));
+                group.setCreator(LoginDataSource.getUser(hitObj.getString("creator")));
                 group.setCreateDate(new Date(hitObj.getLong("createDate")));
                 group.setUpdateDate(new Date(hitObj.getLong("createDate")));
                 group.setStatus(hitObj.getInt("status"));
@@ -210,7 +211,6 @@ public class SearchGroupFragment extends Fragment implements FilterDialogFragmen
                     tagList.add(arr.getString(j));
                 }
                 group.setSubTopics(sub);
-                group.setTags(tagList.toArray(new String[0]));
                 groups[i] = group;
             }
             groupAdapter = new GroupListViewAdapter(getContext(), groups, getParentFragmentManager());
