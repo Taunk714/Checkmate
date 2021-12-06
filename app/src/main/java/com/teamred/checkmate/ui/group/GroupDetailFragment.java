@@ -16,9 +16,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.teamred.checkmate.R;
 import com.teamred.checkmate.Searchable;
 import com.teamred.checkmate.data.AlgoliaDataSource;
+import com.teamred.checkmate.data.LoginDataSource;
 import com.teamred.checkmate.data.model.Ranking;
 import com.teamred.checkmate.databinding.FragmentGroupDetailBinding;
 
@@ -41,6 +45,8 @@ public class GroupDetailFragment extends Fragment implements Searchable {
     private String[] queryType;
     private Spinner filter;
     private Spinner ranking;
+
+    private String creatorId;
 
     private String[] subtopics;
     private boolean[] groupStatusSelected = new boolean[]{true, true};
@@ -66,6 +72,7 @@ public class GroupDetailFragment extends Fragment implements Searchable {
         if (arguments!= null){
             title.setText(arguments.getString("title"));
             creator.setText(arguments.getString("creator"));
+            creatorId = arguments.getString("creatorId");
             desc.setText(arguments.getString("desc"));
             subtopics = arguments.getStringArray("subtopics");
         }
@@ -90,6 +97,15 @@ public class GroupDetailFragment extends Fragment implements Searchable {
                         getContext(),
                         R.layout.support_simple_spinner_dropdown_item,
                         generateAdapterArray(subtopics)));
+
+        creator.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // go to user profile
+                // uid is creatorId
+                String uid = creatorId;
+            }
+        });
 
 //        listView = binding.searchResultList;
 //        searchType = binding.searchType;

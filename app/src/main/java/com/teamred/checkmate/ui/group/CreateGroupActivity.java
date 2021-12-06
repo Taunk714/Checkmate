@@ -15,6 +15,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.teamred.checkmate.data.AlgoliaDataSource;
 import com.teamred.checkmate.data.CheckmateKey;
+import com.teamred.checkmate.data.Constant;
 import com.teamred.checkmate.data.FireStoreDataSource;
 import com.teamred.checkmate.data.LoginDataSource;
 import com.teamred.checkmate.data.model.Group;
@@ -56,7 +57,8 @@ public class CreateGroupActivity extends AppCompatActivity {
                 group.setGroupName(name);
                 group.setDescription(description);
 //                group.setSubTopics(new String[]{});
-                group.setCreator(LoginDataSource.getUserResult().getUsername());
+                group.setCreator(Constant.getInstance().getCurrentUser().getUsername());
+                group.setCreatorId(Constant.getInstance().getCurrentUser().getUid());
                 group.setCreateDate(new Date());
                 group.setUpdateDate(new Date());
 

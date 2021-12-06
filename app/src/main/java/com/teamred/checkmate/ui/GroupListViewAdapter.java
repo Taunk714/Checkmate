@@ -72,10 +72,11 @@ public class GroupListViewAdapter extends BaseAdapter {
                 FragmentTransaction ft = fm.beginTransaction();
                 GroupDetailFragment groupDetailFragment = new GroupDetailFragment();
                 Bundle bundle = new Bundle();
-                bundle.putString("title", String.valueOf(groupName.getText()));
-                bundle.putString("creator", String.valueOf(groupCreator.getText()));
-                bundle.putString("desc", String.valueOf(groupDescription.getText()));
+                bundle.putString("title", groupList[position].getGroupName());
+                bundle.putString("creator", groupList[position].getCreator());
+                bundle.putString("desc", groupList[position].getDescription());
                 bundle.putStringArray("subtopics",groupList[position].getSubTopics());
+                bundle.putString("creatorId", groupList[position].getCreatorId());
                 groupDetailFragment.setArguments(bundle);
                 ft.replace(R.id.nav_host_fragment_activity_main2, groupDetailFragment)
                         .commit();
