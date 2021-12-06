@@ -25,6 +25,7 @@ import com.teamred.checkmate.ui.group.CreateGroupActivity;
 import com.teamred.checkmate.data.AlgoliaDataSource;
 import com.teamred.checkmate.databinding.FragmentHomeBinding;
 import com.teamred.checkmate.ui.login.LoginActivity;
+import com.teamred.checkmate.MyGroupsActivity;
 
 public class HomeFragment extends Fragment {
 
@@ -41,6 +42,16 @@ public class HomeFragment extends Fragment {
 
         //calenderHeatmap = (Button) getView().findViewById(R.id.calendarheatmap);
         Button calendarHeatmap = binding.calendarheatmap;
+
+        Button myGroups = binding.myGroupsBtn;
+
+        myGroups.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getActivity(), MyGroupsActivity.class);
+                startActivity(i);
+            }
+        });
 
         calendarHeatmap.setOnClickListener(new View.OnClickListener() {
             @Override
