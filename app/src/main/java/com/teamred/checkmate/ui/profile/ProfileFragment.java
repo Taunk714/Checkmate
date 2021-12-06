@@ -68,6 +68,9 @@ private Button edit;
         list.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         list.setAdapter(arr);
 
+
+
+
         edit = binding.edit;
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,11 +86,7 @@ private Button edit;
                 ft.replace(R.id.nav_host_fragment_activity_main2, epf)
                         .commit();
             }
-
         });
-
-
-
 
         return root;
     }
@@ -97,4 +96,5 @@ private Button edit;
         super.onDestroyView();
         binding = null;
     }
+
 }
