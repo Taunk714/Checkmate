@@ -1,12 +1,17 @@
 package com.teamred.checkmate;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.ActionBar;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.text.DateFormatSymbols;
 
@@ -27,11 +32,14 @@ public class MyGroupsActivity extends AppCompatActivity {
                 android.R.layout.simple_list_item_1, testArray);
         lvMonth.setAdapter(monthAdapter);
 
-//        ArrayAdapter adapter = new ArrayAdapter<String>(this,
-//                R.layout.activity_my_groups, testArray);
-//
-//        ListView listView = (ListView) findViewById(R.id.activity_listview);
-//        listView.setAdapter(adapter);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+//        Toast.makeText(getApplicationContext(),"Back Button Clicked", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(MyGroupsActivity.this, MainActivity2.class));
+        return super.onOptionsItemSelected(item);
+    }
 }
