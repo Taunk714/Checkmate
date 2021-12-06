@@ -217,9 +217,12 @@ public class LoginActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            LoginDataSource.addUser(user);
+//                            LoginDataSource.addUser(user);
                             updateUI(user);
-                            loginViewModel.setLoginResult(new Result.Success<>(user));
+                            Intent intent = new Intent(LoginActivity.this, AfterRegisterActivity.class);
+                            startActivity(intent);
+                            finish();
+//                            loginViewModel.setLoginResult(new Result.Success<>(user));
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
@@ -253,7 +256,7 @@ public class LoginActivity extends AppCompatActivity {
                                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                                     Map<String, Object> data = documentSnapshot.getData();
                                     LoginDataSource.setUser(data);
-//                                    loginViewModel.setLoginResult(new Result.Success<>(user));
+                                    loginViewModel.setLoginResult(new Result.Success<>(user));
                                 }
                             });
                             updateUI(user);
@@ -288,6 +291,9 @@ public class LoginActivity extends AppCompatActivity {
     private void reload() { }
 
     private void updateUI(FirebaseUser user) {
+        if(user == null){
+            return;
+        }
         String welcome = getString(R.string.welcome) + user.getEmail();
         // TODO : initiate successful logged in experience
         Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();

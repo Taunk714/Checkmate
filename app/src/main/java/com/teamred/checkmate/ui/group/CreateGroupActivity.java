@@ -1,14 +1,10 @@
 package com.teamred.checkmate.ui.group;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,24 +12,16 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Source;
-import com.google.firebase.storage.FirebaseStorage;
-import com.teamred.checkmate.R;
-import com.teamred.checkmate.SyncHelper;
+import com.google.firebase.firestore.DocumentReference;
 import com.teamred.checkmate.data.AlgoliaDataSource;
+import com.teamred.checkmate.data.CheckmateKey;
+import com.teamred.checkmate.data.Constant;
 import com.teamred.checkmate.data.FireStoreDataSource;
 import com.teamred.checkmate.data.LoginDataSource;
 import com.teamred.checkmate.data.model.Group;
-import com.teamred.checkmate.data.model.Note;
-import com.teamred.checkmate.data.model.User;
 import com.teamred.checkmate.databinding.ActivityCreateGroupBinding;
 
 import java.util.Date;
-import java.util.Map;
 
 public class CreateGroupActivity extends AppCompatActivity {
 
@@ -69,12 +57,22 @@ public class CreateGroupActivity extends AppCompatActivity {
                 group.setGroupName(name);
                 group.setDescription(description);
 //                group.setSubTopics(new String[]{});
-                group.setCreator(LoginDataSource.getUserResult());
+                group.setCreator(Constant.getInstance().getCurrentUser().getUsername());
+                group.setCreatorId(Constant.getInstance().getCurrentUser().getUid());
                 group.setCreateDate(new Date());
                 group.setUpdateDate(new Date());
-                String s = JSON.toJSONString(group);
-                AlgoliaDataSource.getInstance(getApplicationContext()).addRecord("group", s);
-                finish();
+
+                Task<DocumentReference> documentReferenceTask = FireStoreDataSource.addGroup(group);
+                documentReferenceTask.addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentReference> task) {
+                        String id = task.getResult().getId();
+                        group.setId(id);
+                        String s = JSON.toJSONString(group);
+                        AlgoliaDataSource.getInstance().addRecord(CheckmateKey.GROUP_ALGOLIA, s);
+                        finish();
+                    }
+                });
             }
         });
     }

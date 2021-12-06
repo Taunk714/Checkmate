@@ -3,12 +3,14 @@ package com.teamred.checkmate.data.model;
 import java.util.Date;
 
 public class Group {
+    private String id;
     private String groupName;
     private String description;
     private Date createDate;
     private Date updateDate;
     private String[] subTopics = new String[]{};
-    private User creator;
+    private String creator;
+    private String creatorId;
     private Integer status = 0;
     private Integer numMember = 1;
     private Integer numView = 1;
@@ -72,11 +74,11 @@ public class Group {
         this.subTopics = subTopics;
     }
 
-    public User getCreator() {
+    public String getCreator() {
         return creator;
     }
 
-    public void setCreator(User creator) {
+    public void setCreator(String creator) {
         this.creator = creator;
     }
 
@@ -94,5 +96,33 @@ public class Group {
 
     public void setNumMember(Integer numMember) {
         this.numMember = numMember;
+    }
+
+    public String getCreatorId() {
+        return creatorId;
+    }
+
+    public void setCreatorId(String creatorId) {
+        this.creatorId = creatorId;
+    }
+
+    public Integer getNumView() {
+        return numView;
+    }
+
+    public void setNumView(Integer numView) {
+        this.numView = numView;
+    }
+
+    public void addView(){
+        this.numView++;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

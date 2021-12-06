@@ -72,4 +72,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     // calender heat map lib
     implementation 'com.github.sundeepk:compact-calendar-view:3.0.0'
+    // notification
+    implementation "androidx.core:core:1.5.0"
 }

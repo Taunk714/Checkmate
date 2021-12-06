@@ -14,6 +14,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.teamred.checkmate.R;
+import com.teamred.checkmate.data.AlgoliaDataSource;
+import com.teamred.checkmate.data.FireStoreDataSource;
 import com.teamred.checkmate.data.model.Group;
 import com.teamred.checkmate.ui.group.GroupDetailFragment;
 import com.teamred.checkmate.util.DateUtil;
@@ -55,7 +57,7 @@ public class GroupListViewAdapter extends BaseAdapter {
         TextView groupDescription = row.findViewById(R.id.listview_group_description);
 //        TextView noteNumber = row.findViewById(R.id.note_number);
         groupDescription.setText(Html.fromHtml(groupList[position].getDescription()));
-        groupCreator.setText(Html.fromHtml(groupList[position].getCreator().getName()));
+        groupCreator.setText(Html.fromHtml(groupList[position].getCreator()));
 //        noteDate.setText(DateUtil.getSimpleDateString(groupList[position].getCreateDate()));
         groupName.setText(Html.fromHtml(groupList[position].getGroupName()));
 //        noteNumber.setText(groupList[position].getNumber().toString());
@@ -64,13 +66,17 @@ public class GroupListViewAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Log.i("group", "search group click");
+                groupList[position].addView();
+                AlgoliaDataSource.getInstance().updateGroup(groupList[position]);
+                FireStoreDataSource.updateGroup(groupList[position]);
                 FragmentTransaction ft = fm.beginTransaction();
                 GroupDetailFragment groupDetailFragment = new GroupDetailFragment();
                 Bundle bundle = new Bundle();
-                bundle.putString("title", String.valueOf(groupName.getText()));
-                bundle.putString("creator", String.valueOf(groupCreator.getText()));
-                bundle.putString("desc", String.valueOf(groupDescription.getText()));
+                bundle.putString("title", groupList[position].getGroupName());
+                bundle.putString("creator", groupList[position].getCreator());
+                bundle.putString("desc", groupList[position].getDescription());
                 bundle.putStringArray("subtopics",groupList[position].getSubTopics());
+                bundle.putString("creatorId", groupList[position].getCreatorId());
                 groupDetailFragment.setArguments(bundle);
                 ft.replace(R.id.nav_host_fragment_activity_main2, groupDetailFragment)
                         .commit();

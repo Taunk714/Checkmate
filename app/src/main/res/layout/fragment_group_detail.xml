@@ -57,14 +57,9 @@
                 android:id="@+id/group_detail_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
                 android:maxLines="3"
                 android:text="desc" />
-
-            <TextView
-                android:id="@+id/textView8"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="TextView" />
 
             <TextView
                 android:id="@+id/group_detail_creator"
@@ -79,6 +74,13 @@
                 android:layout_marginBottom="5dp"
                 android:background="#F2F3F7" />
 
+            <TextView
+                android:id="@+id/numberOfThread"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="5 Available Threads" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -89,13 +91,6 @@
             android:layout_marginRight="10dp"
             android:layout_marginBottom="5dp"
             android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/numberOfThread"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="5 Available Threads" />
 
             <Spinner
                 android:id="@+id/note_list_ranking"

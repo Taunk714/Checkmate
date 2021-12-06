@@ -137,7 +137,7 @@ public class FriendlyMessageAdapter extends FirebaseRecyclerAdapter<FriendlyMess
         }
     }
 
-    private void loadImageIntoView(ImageView view, String url) {
+    public static void loadImageIntoView(ImageView view, String url) {
         if (url.startsWith("gs://")) {
             StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(url);
 //            val storageReference = storageReference1;

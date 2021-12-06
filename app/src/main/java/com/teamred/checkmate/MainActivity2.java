@@ -15,6 +15,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.teamred.checkmate.data.Constant;
 import com.teamred.checkmate.data.LoginDataSource;
 import com.teamred.checkmate.databinding.ActivityBottomMenuBinding;
 import com.teamred.checkmate.ui.login.LoginActivity;
@@ -85,6 +86,7 @@ private ActivityBottomMenuBinding binding;
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_logout) {
             FirebaseAuth.getInstance().signOut();
+            Constant.getInstance().setCurrentUser(null);
             Intent intent = new Intent(MainActivity2.this, LoginActivity.class);
             startActivity(intent);
             finish();
