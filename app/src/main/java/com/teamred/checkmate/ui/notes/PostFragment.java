@@ -1,5 +1,7 @@
 package com.teamred.checkmate.ui.notes;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,6 +12,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -18,9 +23,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.teamred.checkmate.R;
 import com.teamred.checkmate.data.model.Post;
-import com.teamred.checkmate.databinding.FragmentGroupDetailBinding;
 import com.teamred.checkmate.databinding.FragmentPostBinding;
 
 import java.util.Calendar;
@@ -58,6 +61,7 @@ public class PostFragment extends Fragment {
         binding.postAuthorTV.setText(this.post.getAuthor());
         binding.postDate.setText(this.post.getCreateDate().toString());
         binding.postContentTV.setText(this.post.getContent());
+        binding.postSubTopic.setText(this.post.getsubtopic());
 
         // TODO: Use state of logged in user for document path
         DocumentReference userPost = db.collection("user").document("c1tw3AB25SRVEqBNBw6GXoDc6X23").collection("savedPosts").document(post.getPostID());
@@ -113,6 +117,29 @@ public class PostFragment extends Fragment {
                 }
             }
         });
+
+        binding.openNoteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(post.getOnenoteAppURL()));
+                startActivity(browserIntent);
+            }
+        });
+
+        binding.webView.getSettings().setJavaScriptEnabled(true);
+        if (post.getOnenoteWebURL() != null) {
+            binding.webView.loadUrl(post.getOnenoteWebURL());
+            binding.webView.setWebViewClient(new WebViewClient() {
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                    return false;
+                }
+            });
+        }
+
+        if (post.getOnenoteAppURL() == null) {
+            binding.openNoteBtn.setVisibility(View.GONE);
+        }
 
         return root;
     }

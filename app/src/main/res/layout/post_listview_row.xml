@@ -28,6 +28,14 @@
             android:textSize="24sp" />
 
         <TextView
+            android:id="@+id/postrowsubtopic_TV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="subtopic goes here"
+            android:layout_marginLeft="10dp"/>
+
+        <TextView
             android:id="@+id/like_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -44,6 +52,7 @@
             android:layout_weight="0"
             android:visibility="invisible"
             app:srcCompat="@drawable/ic_baseline_thumb_up_24" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -58,6 +67,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="tags, go, here" />
+
     </LinearLayout>
 
     <LinearLayout

@@ -12,21 +12,38 @@ public class Post {
     private Date createDate;
     private String author;
     private String postID;
+    private String subtopic;
+    private String onenoteAppURL;
+    private String onenoteWebURL;
 //    private Integer number;
 
-    public Post(String postID, String title, List<String> tags, String author, String content) {
+    public Post(String postID, String title, String subtopic, List<String> tags, String author, String content, String onenoteWebURL, String onenoteAppURL) {
         this.postID = postID;
         this.title = title;
         this.tags = tags;
         this.content = content;
         this.author = author;
         this.createDate = new Date();
-//        this.number = new Random().nextInt(20);
+        this.subtopic = subtopic;
+        this.onenoteAppURL = onenoteWebURL;
+        this.onenoteWebURL = onenoteWebURL;
     }
 
     public Post() {
         this.createDate = new Date();
 //        this.number = new Random().nextInt(20);
+    }
+
+    public String getOnenoteAppURL() {
+        return onenoteAppURL;
+    }
+
+    public String getOnenoteWebURL() {
+        return onenoteWebURL;
+    }
+
+    public String getSubtopic() {
+        return subtopic;
     }
 
     public String getPostID() { return postID; }
@@ -71,7 +88,11 @@ public class Post {
         this.author = author;
     }
 
-//    public Integer getNumber() {
+    public String getsubtopic() {
+        return subtopic;
+    }
+
+    //    public Integer getNumber() {
 //        return number;
 //    }
 

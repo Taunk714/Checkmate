@@ -1,7 +1,8 @@
 package com.teamred.checkmate.ui;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Context;
-import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
@@ -34,6 +34,9 @@ public class PostListViewAdapter extends BaseAdapter {
 
     public PostListViewAdapter(Context context, Post[] postList, PostListViewModel postListViewModel) {
         this.postList = postList;
+        for (Post p: postList) {
+            Log.i(TAG, "PostListViewAdapter: Post's subtopic: " + p.getsubtopic());
+        }
         this.context = context;
         this.postListViewModel = postListViewModel;
     }
@@ -58,13 +61,16 @@ public class PostListViewAdapter extends BaseAdapter {
         TextView postDate = row.findViewById(R.id.post_date);
         TextView postTags = row.findViewById(R.id.tags_tv);
         TextView postContent = row.findViewById(R.id.post_content);
+        TextView postSubTopic = row.findViewById(R.id.postrowsubtopic_TV);
 //        TextView postNumber = row.findViewById(R.id.post_number);
         postContent.setText(postList[position].getContent());
         postAuthor.setText(postList[position].getAuthor());
         postDate.setText(DateUtil.getSimpleDateString(postList[position].getCreateDate()));
         postTitle.setText(postList[position].getTitle());
         postTags.setText(parseTags(postList[position].getTags()));
-        
+        Log.i(TAG, "getView: postlist position subtopic" + postList[position].getsubtopic());
+        postSubTopic.setText(postList[position].getsubtopic());
+
 //        postNumber.setText(postList[position].getNumber().toString());
 
         row.setOnClickListener(new View.OnClickListener() {

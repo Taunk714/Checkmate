@@ -47,8 +47,12 @@ public class PostListViewModel extends ViewModel {
                     List<String> tags = (ArrayList<String>) data.get("tags");
                     String author = "TODO Author"; // TODO
                     String content = data.get("content").toString();
+                    String subtopic = data.get("subTopic").toString();
+                    String onenoteWebURL = data.get("onenoteWebURL") != null ? data.get("onenoteWebURL").toString() : null;
+                    String onenoteAppURL = data.get("onenoteAppURL") != null ? data.get("onenoteAppURL").toString() : null;
 
-                    Post n = new Post(document.getId(), title, tags, author, content);
+                    Post n = new Post(document.getId(), title, subtopic, tags, author, content, onenoteWebURL, onenoteAppURL);
+
                     postList.add(n);
                 }
                 posts.setValue(postList);
@@ -89,8 +93,11 @@ public class PostListViewModel extends ViewModel {
                                 List<String> tags = (List<String>) data.get("tags");
                                 String author = "TODO Author";
                                 String content = data.get("content").toString();
+                                String subtopic = data.get("subTopic").toString();
+                                String onenoteWebURL = data.get("onenoteWebURL") != null ? data.get("onenoteWebURL").toString() : null;
+                                String onenoteAppURL = data.get("onenoteAppURL") != null ? data.get("onenoteAppURL").toString() : null;
 
-                                Post n = new Post(document.getId(), title, tags, author, content);
+                                Post n = new Post(document.getId(), title, subtopic, tags, author, content, onenoteWebURL, onenoteAppURL);
                                 postList.add(n);
                             }
                             posts.setValue(postList);
