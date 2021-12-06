@@ -7,38 +7,54 @@
     android:background="#FFFFFF"
     tools:context=".ui.home.HomeFragment">
 
-    <Button
-        android:id="@+id/calendarheatmap"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="127dp"
-        android:text="CALENDAR HEATMAP"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="16dp">
 
-    <Button
-        android:id="@+id/groupDetailButton"
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="69dp"
+            android:layout_height="31dp"
+            android:layout_marginBottom="8dp"
+            android:text="Alerts"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="290dp"
+            android:layout_height="93dp"
+            android:layout_marginStart="63dp"
+            android:layout_marginEnd="63dp"
+            android:text="This is your space where you can review your study material. \n \nClick the + button to create a new group." />
+
+        <Button
+            android:id="@+id/calendarheatmap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:text="CALENDAR HEATMAP" />
+
+        <Button
+            android:id="@+id/myGroupsBtn"
+            android:layout_width="121dp"
+            android:layout_height="48dp"
+            android:text="My groups" />
+
+    </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btn_add_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="264dp"
-        android:text="Go to Group 501"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        android:clickable="true"
+        android:contentDescription="@string/content_description_add_post"
+        android:src="@android:drawable/ic_input_add"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <!--    <androidx.fragment.app.FragmentContainerView-->
-    <!--        android:id="@+id/fragmentContainerView"-->
-    <!--        android:name="com.teamred.checkmate.ui.notifications.NotificationsFragment"-->
-    <!--        android:layout_width="332dp"-->
-    <!--        android:layout_height="438dp"-->
-    <!--        android:layout_marginBottom="40dp"-->
-    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintHorizontal_bias="0.493"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintTop_toBottomOf="@+id/calendarheatmap" />-->
-
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

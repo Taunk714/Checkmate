@@ -91,6 +91,8 @@ dependencies {
     implementation 'com.github.sundeepk:compact-calendar-view:3.0.0'
 
     implementation 'com.microsoft.identity.client:msal:2.+'
+    // notification
+    implementation "androidx.core:core:1.5.0"
 }
 
 

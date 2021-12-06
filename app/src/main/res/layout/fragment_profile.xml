@@ -8,72 +8,85 @@
 
     <View
         android:id="@+id/view"
-        android:layout_width="0dp"
-        android:layout_height="1dp"
+        android:layout_width="411dp"
+        android:layout_height="4dp"
         android:background="#F2F3F7"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
-        android:id="@+id/backgroundLayout"
-        android:layout_width="429dp"
-        android:layout_height="169dp"
-        android:layout_marginTop="1dp"
-        android:background="@drawable/background"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.523"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:srcCompat="@android:drawable/ic_menu_camera"
-            tools:src="@tools:sample/avatars" />
-
-    </LinearLayout>
-
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/edit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="6dp"
+        android:layout_marginStart="16dp"
         android:text="Edit"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/backgroundLayout" />
+        app:layout_constraintBottom_toBottomOf="@+id/Username"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/Name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="14dp"
+        android:layout_marginStart="68dp"
+        android:layout_marginTop="180dp"
+        android:layout_marginBottom="14dp"
         android:text="Name"
-        app:layout_constraintStart_toStartOf="@+id/Username"
-        app:layout_constraintTop_toBottomOf="@+id/backgroundLayout" />
+        app:layout_constraintBottom_toTopOf="@+id/Username"
+        app:layout_constraintStart_toEndOf="@+id/edit"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/Username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:text="Username"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/Name"
         app:layout_constraintTop_toBottomOf="@+id/Name" />
 
     <TextView
         android:id="@+id/textView6"
-        android:layout_width="0dp"
-        android:layout_height="52dp"
-        android:layout_marginStart="7dp"
-        android:layout_marginTop="14dp"
+        android:layout_width="82dp"
+        android:layout_height="22dp"
+        android:layout_marginStart="16dp"
         android:text="To do:"
+        app:layout_constraintBottom_toTopOf="@+id/l"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ListView
+        android:id="@+id/l"
+        android:layout_width="414dp"
+        android:layout_height="219dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/aboutme"
+        android:layout_width="0dp"
+        android:layout_height="62dp"
+        android:layout_marginStart="14dp"
+        android:layout_marginEnd="11dp"
+        android:text="About Me:"
+        app:layout_constraintEnd_toEndOf="@+id/view"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view" />
+        app:layout_constraintTop_toBottomOf="@+id/Username" />
+
+    <FrameLayout
+        android:id="@+id/backgroundLayout"
+        android:layout_width="181dp"
+        android:layout_height="142dp"
+        android:background="@drawable/background"
+        app:layout_constraintBottom_toTopOf="@+id/Name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,9 +3,13 @@ package com.teamred.checkmate.ui.home;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,12 +30,21 @@ import com.teamred.checkmate.data.AlgoliaDataSource;
 import com.teamred.checkmate.databinding.FragmentHomeBinding;
 import com.teamred.checkmate.ui.group.GroupDetailFragment;
 import com.teamred.checkmate.ui.login.LoginActivity;
+import com.teamred.checkmate.MyGroupsActivity;
+
+import java.text.DateFormatSymbols;
 
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
 
     //private Button calenderHeatmap;
+
+//    String[] testArray = {"Android","IPhone","WindowsMobile","Blackberry",
+//            "WebOS","Ubuntu","Windows7","Max OS X"};
+//
+//    ListView lvMonth;
+//    String[] months;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -43,6 +56,16 @@ public class HomeFragment extends Fragment {
         //calenderHeatmap = (Button) getView().findViewById(R.id.calendarheatmap);
         Button calendarHeatmap = binding.calendarheatmap;
 
+        Button myGroups = binding.myGroupsBtn;
+
+        myGroups.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getActivity(), MyGroupsActivity.class);
+                startActivity(i);
+            }
+        });
+
         calendarHeatmap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -51,47 +74,56 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        Button tempGroupDetailBtn = binding.groupDetailButton;
-        tempGroupDetailBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Fragment fragment = new GroupDetailFragment();
-
-                Bundle bundle = new Bundle();
-                bundle.putString("groupDocID", "0JG8VeJxHYJ83y9nZF3Y");
-                fragment.setArguments(bundle);
-                FragmentManager manager = getParentFragmentManager();
-
-                manager.beginTransaction()
-                        .replace(R.id.navigation_host, fragment, null)
-                        .setReorderingAllowed(true)
-                        .addToBackStack(null)
-                        .commit();
-            }
-        });
-
-//        FloatingActionButton btnAddPost = binding.btnAddPost;
-//        btnAddPost.setOnClickListener(new View.OnClickListener() {
+//        Button tempGroupDetailBtn = binding.groupDetailButton;
+//        tempGroupDetailBtn.setOnClickListener(new View.OnClickListener() {
 //            @Override
-//            public void onClick(View v) {
-////                Intent i = new Intent(getActivity(), AddPostActivity.class);
+//            public void onClick(View view) {
+//                Fragment fragment = new GroupDetailFragment();
 //
-//                if (FirebaseAuth.getInstance().getCurrentUser() == null){
-//                    Intent login = new Intent(getActivity(), LoginActivity.class);
-//                    Toast.makeText(getContext(), "Interceptor! Jump to login", Toast.LENGTH_LONG).show();
-//                    login.putExtra("callback", CreateGroupActivity.class.getCanonicalName());
-//                    startActivity(login);
-//                }else{
-//                    Intent i = new Intent(getActivity(), CreateGroupActivity.class);
-//                    Toast.makeText(getContext(), "click create group", Toast.LENGTH_LONG).show();
-//                    startActivity(i);
-//                }
+//                Bundle bundle = new Bundle();
+//                bundle.putString("groupDocID", "0JG8VeJxHYJ83y9nZF3Y");
+//                fragment.setArguments(bundle);
+//                FragmentManager manager = getParentFragmentManager();
+//
+//                manager.beginTransaction()
+//                        .replace(R.id.navigation_host, fragment, null)
+//                        .setReorderingAllowed(true)
+//                        .addToBackStack(null)
+//                        .commit();
 //            }
 //        });
+
+        FloatingActionButton btnAddPost = binding.btnAddGroup;
+        btnAddPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (FirebaseAuth.getInstance().getCurrentUser() == null){
+                    Intent login = new Intent(getActivity(), LoginActivity.class);
+                    Toast.makeText(getContext(), "Interceptor! Jump to login", Toast.LENGTH_LONG).show();
+                    login.putExtra("callback", CreateGroupActivity.class.getCanonicalName());
+                    startActivity(login);
+                }else{
+                    Intent i = new Intent(getActivity(), CreateGroupActivity.class);
+                    Toast.makeText(getContext(), "click create group", Toast.LENGTH_LONG).show();
+                    startActivity(i);
+                }
+            }
+        });
 
 
         return root;
     }
+
+//    @Override
+//    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+//        super.onViewCreated(view, savedInstanceState);
+//        lvMonth = view.findViewById(R.id.lvMonth);
+//        months = new DateFormatSymbols().getMonths();
+//        ArrayAdapter<String> monthAdapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),
+//                android.R.layout.simple_list_item_1, testArray);
+//        lvMonth.setAdapter(monthAdapter);
+//    }
 
     @Override
     public void onDestroyView() {

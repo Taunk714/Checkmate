@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
+import com.alibaba.fastjson.JSON;
 import com.teamred.checkmate.R;
 import com.teamred.checkmate.Searchable;
 import com.teamred.checkmate.data.AlgoliaDataSource;
@@ -37,7 +38,7 @@ public class SearchGroupFragment extends Fragment implements FilterDialogFragmen
 
     private FragmentSearchGroupBinding binding;
 
-//    private Post[] noteList;
+//    private Note[] noteList;
 
     private ListAdapter noteAdapter;
     private ListAdapter groupAdapter;
@@ -71,7 +72,7 @@ public class SearchGroupFragment extends Fragment implements FilterDialogFragmen
 
 //
 //        if (noteList != null && noteList.length > 0){
-//            noteAdapter = new PostListViewAdapter(getContext(), noteList);
+//            noteAdapter = new NoteListViewAdapter(getContext(), noteList);
 //            listView.setAdapter(noteAdapter);
 //        }
 
@@ -82,7 +83,7 @@ public class SearchGroupFragment extends Fragment implements FilterDialogFragmen
                 // search algolia
                 Toast.makeText(getContext(), "search algolia "+ s, Toast.LENGTH_LONG).show();
                 String filters = generateFilterString();
-                AlgoliaDataSource.getInstance(getContext()).search(SearchGroupFragment.this, "group", s, queryType, filters);
+                AlgoliaDataSource.getInstance().search(SearchGroupFragment.this, "group", s, queryType, filters);
 //                updateSearchResult(demos);
                 searchKeywords.clearFocus();
                 return false;
@@ -128,7 +129,7 @@ public class SearchGroupFragment extends Fragment implements FilterDialogFragmen
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Ranking selected = rankingAdapter[position];
-                AlgoliaDataSource.getInstance(getContext()).setCustomRanking(
+                AlgoliaDataSource.getInstance().setCustomRanking(
                         SearchGroupFragment.this,
                         "group",
                         selected.getOrder(),
@@ -188,29 +189,28 @@ public class SearchGroupFragment extends Fragment implements FilterDialogFragmen
             int size = hits.length();
             Group[] groups = new Group[size];
             for (int i = 0; i < hits.length(); i++) { // change json to object
-                Group group = new Group();
-                JSONObject hitObj = hits.getJSONObject(i);
-                group.setGroupName(hitObj.getString("groupName"));
-                group.setDescription(hitObj.getString("description"));
-                group.setCreatorUsername(hitObj.getString("creator"));
-                group.setCreateDate(new Date(hitObj.getLong("createDate")));
-                group.setUpdateDate(new Date(hitObj.getLong("createDate")));
-                group.setStatus(hitObj.getInt("status"));
-//                group.setSubTopics();
-                JSONArray arr = hitObj.getJSONArray("tags");
-                List<String> tagList = new ArrayList<>();
-                JSONArray subtopics = hitObj.getJSONArray("subTopics");
-                String[] sub = new String[subtopics.length()];
-
-                for (int j = 0; j < subtopics.length(); j++) {
-                    sub[i] = subtopics.getString(j);
-                }
-
-                for (int j = 0; j < arr.length(); j++) {
-                    tagList.add(arr.getString(j));
-                }
-                group.setSubTopics(sub);
-                group.setTags(tagList.toArray(new String[0]));
+//                Group group = new Group();
+                String hitObj = hits.getString(i);
+                Group group = JSON.parseObject(hitObj, Group.class);
+//                group.setGroupName(hitObj.getString("groupName"));
+//                group.setDescription(hitObj.getString("description"));
+//                group.setCreator(hitObj.getString("creator"));
+//                group.setCreateDate(new Date(hitObj.getLong("createDate")));
+//                group.setUpdateDate(new Date(hitObj.getLong("createDate")));
+//                group.setStatus(hitObj.getInt("status"));
+////                group.setSubTopics();
+//                List<String> tagList = new ArrayList<>();
+//                JSONArray subtopics = hitObj.getJSONArray("subTopics");
+//                String[] sub = new String[subtopics.length()];
+//
+//                for (int j = 0; j < subtopics.length(); j++) {
+//                    sub[i] = subtopics.getString(j);
+//                }
+//
+//                for (int j = 0; j < arr.length(); j++) {
+//                    tagList.add(arr.getString(j));
+//                }
+//                group.setSubTopics(sub);
                 groups[i] = group;
             }
             groupAdapter = new GroupListViewAdapter(getContext(), groups, getParentFragmentManager());

@@ -13,7 +13,10 @@ import android.widget.TextView;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.alibaba.fastjson.JSON;
 import com.teamred.checkmate.R;
+import com.teamred.checkmate.data.AlgoliaDataSource;
+import com.teamred.checkmate.data.FireStoreDataSource;
 import com.teamred.checkmate.data.model.Group;
 import com.teamred.checkmate.ui.group.GroupDetailFragment;
 
@@ -54,7 +57,7 @@ public class GroupListViewAdapter extends BaseAdapter {
         TextView groupDescription = row.findViewById(R.id.post_content);
 //        TextView noteNumber = row.findViewById(R.id.note_number);
         groupDescription.setText(Html.fromHtml(groupList[position].getDescription()));
-        groupCreator.setText(Html.fromHtml(groupList[position].getCreatorUsername()));
+        groupCreator.setText(Html.fromHtml(groupList[position].getCreator()));
 //        noteDate.setText(DateUtil.getSimpleDateString(groupList[position].getCreateDate()));
         groupName.setText(Html.fromHtml(groupList[position].getGroupName()));
 //        noteNumber.setText(groupList[position].getNumber().toString());
@@ -63,13 +66,12 @@ public class GroupListViewAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Log.i("group", "search group click");
+                groupList[position].addView();
+                Group.update(groupList[position]);
                 FragmentTransaction ft = fm.beginTransaction();
                 GroupDetailFragment groupDetailFragment = new GroupDetailFragment();
                 Bundle bundle = new Bundle();
-                bundle.putString("title", String.valueOf(groupName.getText()));
-                bundle.putString("creator", String.valueOf(groupCreator.getText()));
-                bundle.putString("desc", String.valueOf(groupDescription.getText()));
-                bundle.putStringArray("subtopics",groupList[position].getSubTopics());
+                bundle.putString("group", JSON.toJSONString(groupList[position]));
                 groupDetailFragment.setArguments(bundle);
                 ft.replace(R.id.navigation_host, groupDetailFragment)
                         .commit();

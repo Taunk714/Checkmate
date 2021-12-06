@@ -1,26 +1,23 @@
 package com.teamred.checkmate.data;
 
-import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.alibaba.fastjson.JSON;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.Source;
 import com.teamred.checkmate.SyncHelper;
+import com.teamred.checkmate.data.model.Group;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 public class FireStoreDataSource {
     private static FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -59,7 +56,7 @@ public class FireStoreDataSource {
                     Map<String, Object> data = task.getResult().getData();
                     map.put("search", (String) data.get("search"));
                     map.put("admin", (String) data.get("admin"));
-                    AlgoliaDataSource.getInstance(null);
+                    AlgoliaDataSource.getInstance();
                     Log.i(TAG, "Fetch algolia key");
 //                    AlgoliaDataSource.
                 }else{
@@ -80,6 +77,21 @@ public class FireStoreDataSource {
 //        return (String) data.get(type);
 
     }
+
+    public static void updateGroup(Group group){
+        db.collection(CheckmateKey.GROUP_FIREBASE).document(group.getObjectID()).set(JSON.toJSON(group)).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e(TAG, "group update fail");
+            }
+        });
+    }
+
+    public static Task<DocumentReference>  addGroup(Group group){
+        return db.collection(CheckmateKey.GROUP_FIREBASE).add(JSON.toJSON(group));
+    }
+
+
 
 
 

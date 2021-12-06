@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -13,8 +14,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Checkmate.NoActionBar">
         <activity
+            android:name=".MyGroupsActivity"
+            android:label="My groups"
+            android:exported="false" />
+        <activity
             android:name=".OnboardingActivity"
             android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".ui.group.CreateGroupActivity"
@@ -24,11 +34,6 @@
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/title_activity_main">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".ui.login.LoginActivity"
@@ -37,14 +42,18 @@
         <activity
             android:name=".ui.calendar.CalendarActivity"
             android:exported="true"
-            android:theme="@style/Theme.Checkmate.NoActionBar"
-            android:label="@string/title_calendar_login" />
-<!--        <activity-->
-<!--            android:name=".ui.notifications.NotificationsFragment"-->
-<!--            android:exported="true"-->
-<!--            android:theme="@style/Theme.Checkmate.NoActionBar"-->
-<!--            android:label="@string/title_calendar_login" />-->
-        <!--Intent filter to capture System Browser or Authenticator calling back to our app after sign-in-->
+            android:label="@string/title_calendar_login"
+            android:theme="@style/Theme.Checkmate.NoActionBar" />
+        <activity
+            android:name=".ui.notifications.NotificationsFragment"
+            android:exported="true"
+            android:label="@string/title_calendar_login"
+            android:theme="@style/Theme.Checkmate.NoActionBar" />
+        <activity
+            android:name=".ui.login.AfterRegisterActivity"
+            android:exported="true"
+            android:label="@string/title_activity_after_register" />
+        <receiver android:name=".services.NoteReviewReceiver"/>
         <activity
             android:name="com.microsoft.identity.client.BrowserTabActivity"
             android:exported="true">
@@ -65,4 +74,5 @@
             </intent-filter>
         </activity>
     </application>
+
 </manifest>

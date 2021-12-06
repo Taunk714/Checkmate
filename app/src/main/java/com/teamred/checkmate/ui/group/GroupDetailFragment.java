@@ -1,5 +1,9 @@
 package com.teamred.checkmate.ui.group;
 
+import static com.teamred.checkmate.data.model.Group.isJoined;
+import static com.teamred.checkmate.data.model.Group.joinGroup;
+import static com.teamred.checkmate.data.model.Group.removeGroup;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +24,8 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.alibaba.fastjson.JSON;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
@@ -30,6 +36,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.teamred.checkmate.R;
 import com.teamred.checkmate.Searchable;
 import com.teamred.checkmate.data.AlgoliaDataSource;
+import com.teamred.checkmate.data.Constant;
+import com.teamred.checkmate.data.model.Group;
 import com.teamred.checkmate.data.model.Group;
 import com.teamred.checkmate.data.model.Post;
 import com.teamred.checkmate.data.model.Ranking;
@@ -62,13 +70,13 @@ public class GroupDetailFragment extends Fragment implements Searchable {
     private Spinner filter;
     private Spinner ranking;
 
-    private String[] subtopics;
+    private boolean joined;
+
+    private String creatorId;
+
+    private Group group;
+
     private boolean[] groupStatusSelected = new boolean[]{true, true};
-
-
-    /* Actual stuff */
-    private String TAG = "GroupDETAIL";
-    private Group groupRef; // selected Group
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -77,60 +85,68 @@ public class GroupDetailFragment extends Fragment implements Searchable {
         binding = FragmentGroupDetailBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+
+        // binding
+        title = binding.groupDetailTitle;
+        creator = binding.groupDetailCreator;
+        desc = binding.groupDetailDesc;
+
+        ranking = binding.noteListRanking;
+        filter = binding.noteListFilter;
+
         Bundle arguments = getArguments();
-        if (arguments != null) {
-            String groupDocID = arguments.getString("groupDocID");
+        if (arguments!= null){
+            group = JSON.parseObject(arguments.getString("group"), Group.class);
+            title.setText(group.getGroupName());
+            creator.setText(group.getCreator());
+            desc.setText(group.getDescription());
 
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            DocumentReference docRef = db.collection("Groups").document(groupDocID);
-            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
-                        if (document.exists()) {
-                            Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                            Map<String, Object> data = document.getData();
-                            groupRef = new Group(groupDocID, data.get("groupName").toString(),
-                                    (String[]) data.get("tags"),
-                                    data.get("creatorUsername").toString(),
-                                    data.get("description").toString());
+            PostListViewModel postListModel = new ViewModelProvider(requireActivity()).get(PostListViewModel.class);
+            postListModel.init(group.getObjectID());
 
-                            binding.groupDetailTitle.setText(groupRef.getGroupName());
-                            binding.groupDetailCreator.setText(groupRef.getCreatorUsername());
-                            binding.groupDetailDescription.setText(groupRef.getDescription());
-                            binding.groupDetailNumMembers.setText(data.get("numMembers").toString());
-                        } else {
-                            Log.d(TAG, "No such document");
-                        }
-                    } else {
-                        Log.d(TAG, "get failed with ", task.getException());
-                    }
-
-                    PostListViewModel postListModel = new ViewModelProvider(requireActivity()).get(PostListViewModel.class);
-                    postListModel.init(groupDocID);
-
-                    postListModel.getPosts().observe(getViewLifecycleOwner(), posts -> {
-                        // Update UI
-                        noteAdapter = new PostListViewAdapter(getContext(), posts.toArray((new Post[posts.size()])), postListModel);
-                        listView.setAdapter(noteAdapter);
-                    });
-                }
+            postListModel.getPosts().observe(getViewLifecycleOwner(), posts -> {
+                // Update UI
+                noteAdapter = new PostListViewAdapter(getContext(), posts.toArray((new Post[posts.size()])), postListModel);
+                listView.setAdapter(noteAdapter);
             });
         }
 
+        desc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (desc.getMaxLines() == 3){
+                    desc.setMaxLines(99);
+                }else{
+                    desc.setMaxLines(3);
+                }
+            }
+        });
+
 
         searchKeywords = binding.searchNote;
-        listView = binding.noteListView;
-//        searchType = binding.searchType;
-        filter = binding.noteListFilter;
-        ranking = binding.noteListRanking;
+        String numThreads = group.getSubTopics().length + " Available Threads";
+        binding.numberOfThread.setText(numThreads);
+        binding.noteListFilter.setAdapter(
+                new ArrayAdapter<String>(
+                        getContext(),
+                        R.layout.support_simple_spinner_dropdown_item,
+                        generateAdapterArray(group.getSubTopics())));
+
+        creator.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // go to user profile
+                // uid is creatorId
+                String uid = creatorId;
+            }
+        });
+
 
         binding.createNoteFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // Go to Create Note fragment
-                Fragment createNoteFragment = CreateNoteFragment.newInstance(groupRef.getGroupDocumentID());
+                Fragment createNoteFragment = CreateNoteFragment.newInstance(group.getObjectID());
 
                 FragmentManager manager = getParentFragmentManager();
 
@@ -143,12 +159,19 @@ public class GroupDetailFragment extends Fragment implements Searchable {
         });
 
 
-// enter keywords and search
+
+//
+//        if (noteList != null && noteList.length > 0){
+//            noteAdapter = new NoteListViewAdapter(getContext(), noteList);
+//            listView.setAdapter(noteAdapter);
+//        }
+
+        // enter keywords and search
         searchKeywords.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-// search algolia
-                Toast.makeText(getContext(), "search algolia " + s, Toast.LENGTH_LONG).show();
+                // search algolia
+                Toast.makeText(getContext(), "search algolia "+ s, Toast.LENGTH_LONG).show();
 //                String filters = generateFilterString();
 //                AlgoliaDataSource.getInstance(getContext()).searchGroup(SearchGroupFragment.this, "group", s, queryType, filters);
 ////                updateSearchResult(demos);
@@ -159,6 +182,36 @@ public class GroupDetailFragment extends Fragment implements Searchable {
             @Override
             public boolean onQueryTextChange(String s) {
                 return false;
+            }
+        });
+
+        joined = isJoined(group.getObjectID(), Constant.getInstance().getCurrentUser().getGroupJoined());
+        if (joined){
+            disableJoined();
+        }else{
+            enableJoined();
+        }
+
+        binding.joinGroupButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                binding.joinGroupButton.setEnabled(false);
+                if (joined){
+                    removeGroup(Constant.getInstance().getCurrentUser(), group.getObjectID());
+                    FirebaseFirestore.getInstance().collection("user").document(Constant.getInstance().getCurrentUser().getUid()).set(JSON.toJSON(Constant.getInstance().getCurrentUser()));
+                    group.removeMember();
+                    Group.update(group);
+                    binding.joinGroupButton.setEnabled(true);
+                    enableJoined();
+
+                }else{
+                    joinGroup(Constant.getInstance().getCurrentUser(), group.getObjectID());
+                    FirebaseFirestore.getInstance().collection("user").document(Constant.getInstance().getCurrentUser().getUid()).set(JSON.toJSON(Constant.getInstance().getCurrentUser()));
+                    Group.update(group);
+                    binding.joinGroupButton.setEnabled(true);
+                    disableJoined();
+
+                }
             }
         });
 
@@ -196,9 +249,9 @@ public class GroupDetailFragment extends Fragment implements Searchable {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Ranking selected = rankingAdapter[position];
-                AlgoliaDataSource.getInstance(getContext()).setCustomRanking(
+                AlgoliaDataSource.getInstance().setCustomRanking(
                         GroupDetailFragment.this,
-                        title + ":note",
+                        title+":note",
                         selected.getOrder(),
                         selected.getAttr());
             }
@@ -231,12 +284,32 @@ public class GroupDetailFragment extends Fragment implements Searchable {
         binding = null;
     }
 
-    private void updateResult() {
+    private void updateResult(){
 
     }
 
     @Override
     public void updateSearchResult(JSONObject content) {
 
+    }
+
+    private String[] generateAdapterArray(String[] subtopics){
+        String[] ret = new String[1 + subtopics.length];
+        ret[0] = "All";
+        if (subtopics.length == 0){
+            return ret;
+        }
+        System.arraycopy(subtopics, 0, ret, 1, subtopics.length);
+        return ret;
+    }
+
+    private void enableJoined(){
+        binding.joinGroupButton.setText("JOINED");
+        binding.joinGroupButton.setBackgroundResource(R.color.background);
+    }
+
+    private void disableJoined(){
+        binding.joinGroupButton.setText("JOINED");
+        binding.joinGroupButton.setBackgroundResource(R.color.background);
     }
 }

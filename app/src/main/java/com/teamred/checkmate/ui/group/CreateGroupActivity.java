@@ -1,8 +1,11 @@
 package com.teamred.checkmate.ui.group;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -10,7 +13,14 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.teamred.checkmate.data.AlgoliaDataSource;
+import com.teamred.checkmate.data.CheckmateKey;
+import com.teamred.checkmate.data.Constant;
+import com.teamred.checkmate.data.FireStoreDataSource;
 import com.teamred.checkmate.data.model.Group;
 import com.teamred.checkmate.databinding.ActivityCreateGroupBinding;
 
@@ -19,6 +29,7 @@ import java.util.Date;
 public class CreateGroupActivity extends AppCompatActivity {
 
     private ActivityCreateGroupBinding binding;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,21 +52,40 @@ public class CreateGroupActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String name = String.valueOf(groupName.getText());
-                String[] tags = groupTag.getText().toString().split(";");
+                String[] tags = groupTag.getText().toString().split(",");
                 String description = String.valueOf(groupDescription.getText());
                 Toast.makeText(getApplicationContext(), "send group info to algolia", Toast.LENGTH_LONG).show();
                 // upload to firebase
                 Group group = new Group();
                 group.setGroupName(name);
                 group.setDescription(description);
-                group.setTags(tags);
-//                group.setSubTopics(new String[]{});
-                group.setCreatorUsername(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+                group.setSubTopics(new String[]{});
+                group.setCreator(Constant.getInstance().getCurrentUser().getUsername());
+                group.setCreatorId(Constant.getInstance().getCurrentUser().getUid());
                 group.setCreateDate(new Date());
                 group.setUpdateDate(new Date());
-                String s = JSON.toJSONString(group);
-                AlgoliaDataSource.getInstance(getApplicationContext()).addRecord("group", s);
-                finish();
+                group.setTags(tags);
+
+                Task<DocumentReference> documentReferenceTask = FireStoreDataSource.addGroup(group);
+                documentReferenceTask.addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentReference> task) {
+                        String id = task.getResult().getId();
+                        group.setObjectID(id);
+                        String s = JSON.toJSONString(group);
+                        AlgoliaDataSource.getInstance().addRecord(CheckmateKey.GROUP_ALGOLIA, s);
+                        Group.joinGroup(Constant.getInstance().getCurrentUser(), group.getObjectID());
+                        FirebaseFirestore.getInstance().collection("user")
+                                .document(Constant.getInstance().getCurrentUser().getUid())
+                                .set(JSON.toJSON(Constant.getInstance().getCurrentUser())).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                finish();
+                            }
+                        });
+//                        finish();
+                    }
+                });
             }
         });
     }

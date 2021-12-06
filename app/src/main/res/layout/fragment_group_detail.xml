@@ -4,8 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:backgroundTintMode="screen"
     android:background="#FFFFFF"
-    android:backgroundTintMode="screen">
+    tools:context="Active">
+
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/createNoteFab"
@@ -22,7 +24,6 @@
         tools:ignore="SpeakableTextPresentCheck" />
 
     <LinearLayout
-        android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="10dp"
@@ -39,6 +40,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="5dp"
             android:layout_marginBottom="20dp"
             android:background="@color/background">
@@ -53,38 +55,46 @@
             android:background="#FFFEFE"
             android:orientation="vertical">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp">
+
+                <TextView
+                    android:id="@+id/group_detail_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Title"
+                    android:textColor="@color/black"
+                    android:textSize="24sp" />
+
+                <Button
+                    android:id="@+id/join_group_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_margin="1dp"
+                    android:background="@color/blue_a400"
+                    android:elevation="10dp"
+                    android:text="Join" />
+
+            </LinearLayout>
+
             <TextView
-                android:id="@+id/group_detail_title"
+                android:id="@+id/group_detail_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Title"
-                android:textColor="@color/black"
-                android:textSize="24sp" />
-
-            <!--            <TextView-->
-            <!--                android:id="@+id/group_detail_desc"-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:maxLines="3"-->
-            <!--                android:text="desc" />-->
-
-            <!--            <TextView-->
-            <!--                android:id="@+id/textView8"-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:text="TextView" />-->
+                android:ellipsize="end"
+                android:maxLines="3"
+                android:text="desc" />
 
             <TextView
                 android:id="@+id/group_detail_creator"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="creator" />
-
-            <TextView
-                android:id="@+id/group_detail_description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="lorem ipsum description" />
 
             <View
                 android:layout_width="fill_parent"
@@ -93,16 +103,22 @@
                 android:layout_marginBottom="5dp"
                 android:background="#F2F3F7" />
 
+            <TextView
+                android:id="@+id/numberOfThread"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="5 Available Threads" />
+
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginTop="5dp"
-            android:layout_marginRight="5dp"
+            android:layout_marginRight="10dp"
             android:layout_marginBottom="5dp"
-            android:gravity="center"
             android:orientation="horizontal">
 
             <TextView

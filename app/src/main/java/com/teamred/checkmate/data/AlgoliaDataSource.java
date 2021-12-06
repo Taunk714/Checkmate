@@ -1,6 +1,5 @@
 package com.teamred.checkmate.data;
 
-import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -12,8 +11,10 @@ import com.algolia.search.saas.Client;
 import com.algolia.search.saas.CompletionHandler;
 import com.algolia.search.saas.Index;
 import com.algolia.search.saas.Query;
+import com.alibaba.fastjson.JSON;
 import com.teamred.checkmate.Searchable;
 import com.teamred.checkmate.SyncHelper;
+import com.teamred.checkmate.data.model.Group;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -72,7 +73,7 @@ public class AlgoliaDataSource {
         adminClient.initIndex(index);
     }
 
-    public static AlgoliaDataSource getInstance(Context context){
+    public static AlgoliaDataSource getInstance(){
         if (_instance == null){
 //            initAlgolia(context);
             _instance = new AlgoliaDataSource(1);
@@ -184,5 +185,29 @@ public class AlgoliaDataSource {
                                 .setFilters(filters)  // set filter
                         , completionHandler);
 
+    }
+
+    public void updateGroup(Group group){
+        CompletionHandler completionHandler = new CompletionHandler() {
+            @Override
+            public void requestCompleted(JSONObject content, AlgoliaException error) {
+                // [...]
+                if (error == null){
+                    Log.i(TAG, "update group success");
+                }else{
+                    Log.e(TAG, "update group fail");
+                    error.printStackTrace();
+                }
+            }
+        };
+        try {
+            adminClient.getIndex("group")
+                    .partialUpdateObjectAsync(
+                            new JSONObject(JSON.toJSONString(group))
+                            , group.getObjectID()
+                            , completionHandler);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }

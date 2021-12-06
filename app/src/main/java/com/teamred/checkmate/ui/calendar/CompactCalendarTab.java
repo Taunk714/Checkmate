@@ -16,7 +16,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -26,6 +28,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
+//import com.github.sundeepk.compactcalendarview.CompactCalendarController;
 import com.github.sundeepk.compactcalendarview.domain.Event;
 
 import org.jetbrains.annotations.Nullable;
@@ -45,13 +48,15 @@ import com.teamred.checkmate.R;
 
 public class CompactCalendarTab extends Fragment {
 
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "CalendarTabActivity";
     private Calendar currentCalender = Calendar.getInstance(Locale.getDefault());
     private SimpleDateFormat dateFormatForDisplaying = new SimpleDateFormat("dd-M-yyyy hh:mm:ss a", Locale.getDefault());
     private SimpleDateFormat dateFormatForMonth = new SimpleDateFormat("MMM - yyyy", Locale.getDefault());
     private boolean shouldShow = false;
     private CompactCalendarView compactCalendarView;
     private ActionBar toolbar;
+
+    //private GestureDetector GD;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -62,14 +67,16 @@ public class CompactCalendarTab extends Fragment {
         final ListView bookingsListView = mainTabView.findViewById(R.id.bookings_listview);
         final Button showPreviousMonthBut = mainTabView.findViewById(R.id.prev_button);
         final Button showNextMonthBut = mainTabView.findViewById(R.id.next_button);
-        final Button slideCalendarBut = mainTabView.findViewById(R.id.slide_calendar);
+        //final Button slideCalendarBut = mainTabView.findViewById(R.id.slide_calendar);
         final Button showCalendarWithAnimationBut = mainTabView.findViewById(R.id.show_with_animation_calendar);
-        final Button setLocaleBut = mainTabView.findViewById(R.id.set_locale);
-        final Button removeAllEventsBut = mainTabView.findViewById(R.id.remove_all_events);
+        /*final Button setLocaleBut = mainTabView.findViewById(R.id.set_locale);
+        final Button removeAllEventsBut = mainTabView.findViewById(R.id.remove_all_events);*/
 
         final ArrayAdapter adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, mutableBookings);
         bookingsListView.setAdapter(adapter);
         compactCalendarView = mainTabView.findViewById(R.id.compactcalendar_view);
+
+        //GD = new GestureDetector(this, this);
 
         // below allows you to configure color for the current day in the month
         // compactCalendarView.setCurrentDayBackgroundColor(getResources().getColor(R.color.black));
@@ -117,7 +124,6 @@ public class CompactCalendarTab extends Fragment {
                     }
                     adapter.notifyDataSetChanged();
                 }
-
             }
 
             @Override
@@ -140,8 +146,8 @@ public class CompactCalendarTab extends Fragment {
             }
         });
 
-        final View.OnClickListener showCalendarOnClickLis = getCalendarShowLis();
-        slideCalendarBut.setOnClickListener(showCalendarOnClickLis);
+        /*final View.OnClickListener showCalendarOnClickLis = getCalendarShowLis();
+        slideCalendarBut.setOnClickListener(showCalendarOnClickLis);*/
 
         final View.OnClickListener exposeCalendarListener = getCalendarExposeLis();
         showCalendarWithAnimationBut.setOnClickListener(exposeCalendarListener);
@@ -156,12 +162,14 @@ public class CompactCalendarTab extends Fragment {
             }
         });
 
-        setLocaleBut.setOnClickListener(new View.OnClickListener() {
+/*        setLocaleBut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Locale locale = Locale.FRANCE;
                 dateFormatForDisplaying = new SimpleDateFormat("dd-M-yyyy hh:mm:ss a", locale);
-                TimeZone timeZone = TimeZone.getTimeZone("Europe/Paris");
+                //TimeZone timeZone = TimeZone.getTimeZone("Europe/Paris");
+                //TimeZone.getDefault()
+                TimeZone timeZone = TimeZone.getDefault();
                 dateFormatForDisplaying.setTimeZone(timeZone);
                 dateFormatForMonth.setTimeZone(timeZone);
                 compactCalendarView.setLocale(timeZone, locale);
@@ -178,7 +186,7 @@ public class CompactCalendarTab extends Fragment {
             public void onClick(View v) {
                 compactCalendarView.removeAllEvents();
             }
-        });
+        });*/
 
 
         // uncomment below to show indicators above small indicator events
@@ -187,10 +195,56 @@ public class CompactCalendarTab extends Fragment {
         // uncomment below to open onCreate
         //openCalendarOnCreate(v);
 
+        final GestureDetector gesture = new GestureDetector(getActivity(),
+                new GestureDetector.SimpleOnGestureListener() {
+
+                    @Override
+                    public boolean onDown(MotionEvent e) {
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+                                           float velocityY) {
+                        Log.i(TAG, "onFling has been called");
+                        final int SWIPE_MIN_DISTANCE = 100;
+                        final int SWIPE_THRESHOLD_VELOCITY = 200;
+                        try {
+                            if (e1.getY() - e2.getY() > SWIPE_MIN_DISTANCE
+                                    && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
+                                if (!compactCalendarView.isAnimating()) {
+                                    compactCalendarView.hideCalendarWithAnimation();
+                                    Log.i(TAG, "fling up detected");
+                                }
+                                return true;
+                            }
+                            else if (e2.getY() - e1.getY() > SWIPE_MIN_DISTANCE
+                                    && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
+                                if (!compactCalendarView.isAnimating()) {
+                                    compactCalendarView.showCalendarWithAnimation();
+                                    Log.i(TAG, "fling down detected");
+                                }
+                                return true;
+                            }
+                            return false;
+                        } catch (Exception e) {
+                            // nothing
+                        }
+                        return super.onFling(e1, e2, velocityX, velocityY);
+                    }
+                });
+
+        mainTabView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return gesture.onTouchEvent(event);
+            }
+        });
+
         return mainTabView;
     }
 
-    @NonNull
+    /*@NonNull
     private View.OnClickListener getCalendarShowLis() {
         return new View.OnClickListener() {
             @Override
@@ -205,7 +259,7 @@ public class CompactCalendarTab extends Fragment {
                 }
             }
         };
-    }
+    }*/
 
     @NonNull
     private View.OnClickListener getCalendarExposeLis() {
@@ -223,6 +277,7 @@ public class CompactCalendarTab extends Fragment {
             }
         };
     }
+
 
     private void openCalendarOnCreate(View v) {
         final RelativeLayout layout = v.findViewById(R.id.main_content);

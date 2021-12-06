@@ -6,9 +6,14 @@ public class FriendlyMessage {
     private String photoUrl;
     private String imageUrl;
 
+    private String from;
+    private String to;
+
     public FriendlyMessage() { }
 
-    public FriendlyMessage(String text, String name, String photoUrl, String imageUrl) {
+    public FriendlyMessage(String from, String to, String text, String name, String photoUrl, String imageUrl) {
+        this.from = from;
+        this.to = to;
         this.text = text;
         this.name = name;
         this.photoUrl = photoUrl;
@@ -45,5 +50,21 @@ public class FriendlyMessage {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getFrom() {
+        return from;
+    }
+
+    public void setFrom(String from) {
+        this.from = from;
+    }
+
+    public String getTo() {
+        return to;
+    }
+
+    public void setTo(String to) {
+        this.to = to;
     }
 }
