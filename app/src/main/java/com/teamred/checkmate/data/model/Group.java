@@ -3,6 +3,7 @@ package com.teamred.checkmate.data.model;
 import java.util.Date;
 
 public class Group {
+    private String id;
     private String groupName;
     private String description;
     private Date createDate;
@@ -111,5 +112,17 @@ public class Group {
 
     public void setNumView(Integer numView) {
         this.numView = numView;
+    }
+
+    public void addView(){
+        this.numView++;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

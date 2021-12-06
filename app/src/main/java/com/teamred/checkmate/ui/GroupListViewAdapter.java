@@ -14,6 +14,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.teamred.checkmate.R;
+import com.teamred.checkmate.data.AlgoliaDataSource;
+import com.teamred.checkmate.data.FireStoreDataSource;
 import com.teamred.checkmate.data.model.Group;
 import com.teamred.checkmate.ui.group.GroupDetailFragment;
 import com.teamred.checkmate.util.DateUtil;
@@ -64,6 +66,9 @@ public class GroupListViewAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Log.i("group", "search group click");
+                groupList[position].addView();
+                AlgoliaDataSource.getInstance().updateGroup(groupList[position]);
+                FireStoreDataSource.updateGroup(groupList[position]);
                 FragmentTransaction ft = fm.beginTransaction();
                 GroupDetailFragment groupDetailFragment = new GroupDetailFragment();
                 Bundle bundle = new Bundle();

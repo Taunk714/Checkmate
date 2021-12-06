@@ -158,7 +158,7 @@ public class GroupDetailFragment extends Fragment implements Searchable {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Ranking selected = rankingAdapter[position];
-                AlgoliaDataSource.getInstance(getContext()).setCustomRanking(
+                AlgoliaDataSource.getInstance().setCustomRanking(
                         GroupDetailFragment.this,
                         title+":note",
                         selected.getOrder(),

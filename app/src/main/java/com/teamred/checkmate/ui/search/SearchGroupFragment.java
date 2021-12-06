@@ -20,7 +20,6 @@ import androidx.fragment.app.Fragment;
 import com.teamred.checkmate.R;
 import com.teamred.checkmate.Searchable;
 import com.teamred.checkmate.data.AlgoliaDataSource;
-import com.teamred.checkmate.data.LoginDataSource;
 import com.teamred.checkmate.data.model.Group;
 import com.teamred.checkmate.data.model.Ranking;
 import com.teamred.checkmate.databinding.FragmentSearchGroupBinding;
@@ -83,7 +82,7 @@ public class SearchGroupFragment extends Fragment implements FilterDialogFragmen
                 // search algolia
                 Toast.makeText(getContext(), "search algolia "+ s, Toast.LENGTH_LONG).show();
                 String filters = generateFilterString();
-                AlgoliaDataSource.getInstance(getContext()).search(SearchGroupFragment.this, "group", s, queryType, filters);
+                AlgoliaDataSource.getInstance().search(SearchGroupFragment.this, "group", s, queryType, filters);
 //                updateSearchResult(demos);
                 searchKeywords.clearFocus();
                 return false;
@@ -129,7 +128,7 @@ public class SearchGroupFragment extends Fragment implements FilterDialogFragmen
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Ranking selected = rankingAdapter[position];
-                AlgoliaDataSource.getInstance(getContext()).setCustomRanking(
+                AlgoliaDataSource.getInstance().setCustomRanking(
                         SearchGroupFragment.this,
                         "group",
                         selected.getOrder(),
