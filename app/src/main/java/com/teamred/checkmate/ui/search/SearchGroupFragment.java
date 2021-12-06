@@ -178,31 +178,11 @@ public class SearchGroupFragment extends Fragment implements FilterDialogFragmen
             int size = hits.length();
             Group[] groups = new Group[size];
             for (int i = 0; i < hits.length(); i++) { // change json to object
-//                Group group = new Group();
                 String hitObj = hits.getString(i);
                 Group group = JSON.parseObject(hitObj, Group.class);
-//                group.setGroupName(hitObj.getString("groupName"));
-//                group.setDescription(hitObj.getString("description"));
-//                group.setCreator(hitObj.getString("creator"));
-//                group.setCreateDate(new Date(hitObj.getLong("createDate")));
-//                group.setUpdateDate(new Date(hitObj.getLong("createDate")));
-//                group.setStatus(hitObj.getInt("status"));
-////                group.setSubTopics();
-//                List<String> tagList = new ArrayList<>();
-//                JSONArray subtopics = hitObj.getJSONArray("subTopics");
-//                String[] sub = new String[subtopics.length()];
-//
-//                for (int j = 0; j < subtopics.length(); j++) {
-//                    sub[i] = subtopics.getString(j);
-//                }
-//
-//                for (int j = 0; j < arr.length(); j++) {
-//                    tagList.add(arr.getString(j));
-//                }
-//                group.setSubTopics(sub);
                 groups[i] = group;
             }
-            groupAdapter = new GroupListViewAdapter(getContext(), groups, getParentFragmentManager());
+            groupAdapter = new GroupListViewAdapter(getContext(), groups, getActivity().getSupportFragmentManager());
             listView.setAdapter(groupAdapter);
         } catch (JSONException e) {
             e.printStackTrace();

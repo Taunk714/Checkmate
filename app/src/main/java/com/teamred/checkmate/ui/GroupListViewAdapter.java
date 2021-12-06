@@ -74,6 +74,8 @@ public class GroupListViewAdapter extends BaseAdapter {
                 bundle.putString("group", JSON.toJSONString(groupList[position]));
                 groupDetailFragment.setArguments(bundle);
                 ft.replace(R.id.navigation_host, groupDetailFragment)
+                        .setReorderingAllowed(true)
+                        .addToBackStack(null)
                         .commit();
             }
         });
