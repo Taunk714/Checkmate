@@ -18,14 +18,9 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import com.alibaba.fastjson.JSON;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.teamred.checkmate.R;
 import com.teamred.checkmate.Searchable;
 import com.teamred.checkmate.data.AlgoliaDataSource;
-import com.teamred.checkmate.data.FireStoreDataSource;
 import com.teamred.checkmate.data.model.Group;
 import com.teamred.checkmate.data.model.Ranking;
 import com.teamred.checkmate.databinding.FragmentSearchGroupBinding;
@@ -36,9 +31,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 public class SearchGroupFragment extends Fragment implements FilterDialogFragment.FilterDialogListener, Searchable {
 
@@ -57,7 +50,6 @@ public class SearchGroupFragment extends Fragment implements FilterDialogFragmen
 
     private boolean[] groupStatusSelected = new boolean[]{true, true};
 
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -72,17 +64,6 @@ public class SearchGroupFragment extends Fragment implements FilterDialogFragmen
         searchType = binding.searchType;
         filter = binding.btnFilter;
         ranking = binding.spnRanking;
-
-        FireStoreDataSource.getGroup();
-
-
-
-
-//
-//        if (noteList != null && noteList.length > 0){
-//            noteAdapter = new NoteListViewAdapter(getContext(), noteList);
-//            listView.setAdapter(noteAdapter);
-//        }
 
         // enter keywords and search
         searchKeywords.setOnQueryTextListener(new SearchView.OnQueryTextListener() {

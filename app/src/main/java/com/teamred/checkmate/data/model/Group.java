@@ -57,7 +57,7 @@ public class Group {
     }
 
     public static void removeGroup(User user, String groupId) {
-        user.quiteGroup(groupId);
+        user.leaveGroup(groupId);
     }
 
     public static void joinGroup(User user, String groupId) {

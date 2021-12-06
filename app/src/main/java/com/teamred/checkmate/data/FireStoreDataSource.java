@@ -13,6 +13,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Source;
 import com.teamred.checkmate.SyncHelper;
@@ -67,16 +68,6 @@ public class FireStoreDataSource {
 
             }
         });
-//        try {
-//            Tasks.await(documentSnapshotTask);
-//        } catch (ExecutionException e) {
-//            e.printStackTrace();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//        Map<String, Object> data = result.getData();
-//        return (String) data.get(type);
-
     }
 
     public static void updateGroup(Group group){
@@ -95,24 +86,4 @@ public class FireStoreDataSource {
         return db.collection(CheckmateKey.GROUP_FIREBASE).add(groupDoc);
 
     }
-
-    public static void getGroup(){
-
-        db.collection(CheckmateKey.GROUP_FIREBASE).document("0JG8VeJxHYJ83y9nZF3Y").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                Map<String, Object> data = task.getResult().getData();
-                Group group = new Group();
-                Group group1 = task.getResult().toObject(Group.class);
-                group1.setObjectID("0JG8VeJxHYJ83y9nZF3Y");
-                AlgoliaDataSource.getInstance().addRecord("group", JSON.toJSONString(group1), null);
-            }
-        });
-    }
-
-
-
-
-
-
 }
