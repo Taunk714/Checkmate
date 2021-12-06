@@ -8,12 +8,22 @@ import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.ActionBar;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.sql.Array;
 import java.text.DateFormatSymbols;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MyGroupsActivity extends AppCompatActivity {
     String[] testArray = {"Android","IPhone","WindowsMobile","Blackberry",
@@ -21,6 +31,9 @@ public class MyGroupsActivity extends AppCompatActivity {
 
     ListView lvMonth;
     String[] months;
+    ArrayList<String> groups = new ArrayList<>();
+    String[] groupsPrint;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,12 +41,39 @@ public class MyGroupsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_my_groups);
         lvMonth = findViewById(R.id.lvMonth);
         months = new DateFormatSymbols().getMonths();
-        ArrayAdapter<String> monthAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, testArray);
-        lvMonth.setAdapter(monthAdapter);
+
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("Groups")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d("test", document.getId() + " => " + document.getData().get("groupName"));
+                                System.out.println(document.getData().get("groupName"));
+                                groups.add(document.getData().get("groupName").toString());
+                            }
+                            groupsPrint = groups.toArray(new String[groups.size()]);
+
+                            System.out.println("check here");
+                            System.out.println(Arrays.toString(groupsPrint));
+                            System.out.println(groupsPrint);
+
+                            ArrayAdapter<String> monthAdapter = new ArrayAdapter<>(getApplication().getApplicationContext(),
+                                    android.R.layout.simple_list_item_1, groupsPrint);
+                            lvMonth.setAdapter(monthAdapter);
+                        } else {
+                            Log.w("test", "Error getting documents.", task.getException());
+                        }
+                    }
+                });
+
     }
 
     @Override

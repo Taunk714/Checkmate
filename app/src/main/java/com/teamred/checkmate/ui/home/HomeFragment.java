@@ -7,7 +7,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,11 +29,19 @@ import com.teamred.checkmate.databinding.FragmentHomeBinding;
 import com.teamred.checkmate.ui.login.LoginActivity;
 import com.teamred.checkmate.MyGroupsActivity;
 
+import java.text.DateFormatSymbols;
+
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
 
     //private Button calenderHeatmap;
+
+//    String[] testArray = {"Android","IPhone","WindowsMobile","Blackberry",
+//            "WebOS","Ubuntu","Windows7","Max OS X"};
+//
+//    ListView lvMonth;
+//    String[] months;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -85,6 +95,15 @@ public class HomeFragment extends Fragment {
         return root;
     }
 
+//    @Override
+//    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+//        super.onViewCreated(view, savedInstanceState);
+//        lvMonth = view.findViewById(R.id.lvMonth);
+//        months = new DateFormatSymbols().getMonths();
+//        ArrayAdapter<String> monthAdapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),
+//                android.R.layout.simple_list_item_1, testArray);
+//        lvMonth.setAdapter(monthAdapter);
+//    }
 
     @Override
     public void onDestroyView() {
