@@ -52,7 +52,6 @@ public class CreateGroupActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         final TextView groupName = binding.groupName;
-//        TextView postTag = binding.postTag;
         TextView groupDescription = binding.groupDescription;
         TextView groupTag = binding.groupTags;
         Button create = binding.createGroup;
@@ -97,8 +96,6 @@ public class CreateGroupActivity extends AppCompatActivity {
                                 }
                             }
                         });
-
-//                        finish();
                     }
                 });
             }

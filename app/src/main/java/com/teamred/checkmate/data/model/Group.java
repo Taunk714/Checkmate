@@ -9,7 +9,6 @@ import java.util.List;
 
 public class Group {
     private String objectID;
-    private String groupDocumentID;
     private String groupName;
     private String description;
     private Date createDate;
@@ -27,14 +26,12 @@ public class Group {
     }
 
     /**
-     * @param groupDocumentID docrefid
      * @param groupName       groupname
      * @param tags            tags array
      * @param creatorUsername creator's username (firebase)
      * @param description     description of group
      */
     public Group(String groupDocumentID, String groupName, String[] tags, String creatorUsername, String description) {
-        this.groupDocumentID = groupDocumentID;
         this.groupName = groupName;
         this.description = description;
         this.createDate = new Date();
@@ -131,14 +128,6 @@ public class Group {
 
     public String getObjectID() {
         return objectID;
-    }
-
-    public String getGroupDocumentID() {
-        return groupDocumentID;
-    }
-
-    public void setGroupDocumentID(String groupDocumentID) {
-        this.groupDocumentID = groupDocumentID;
     }
 
     public Date getCreateDate() {

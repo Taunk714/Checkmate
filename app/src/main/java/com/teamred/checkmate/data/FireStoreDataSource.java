@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -22,7 +23,6 @@ import java.util.Map;
 
 public class FireStoreDataSource {
     private static FirebaseFirestore db = FirebaseFirestore.getInstance();
-//    private static FirebaseDatabase mdb = FirebaseDatabase.getInstance();
 
     private final static String TAG_SUCCESS = "Add firebase data";
     private final static String TAG_FAIL = "Firebase add data fail";
@@ -89,7 +89,11 @@ public class FireStoreDataSource {
     }
 
     public static Task<DocumentReference>  addGroup(Group group){
-        return db.collection(CheckmateKey.GROUP_FIREBASE).add(JSON.toJSON(group));
+        JSONObject groupDoc = (JSONObject) JSON.toJSON(group);
+        groupDoc.fluentRemove("objectID");
+        Log.i(TAG, "addGroup: adding group to firebase, " + groupDoc.toString());
+        return db.collection(CheckmateKey.GROUP_FIREBASE).add(groupDoc);
+
     }
 
     public static void getGroup(){
