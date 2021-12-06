@@ -50,19 +50,7 @@ private Button edit;
 
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        relative = binding.backgroundLayout;
-        relative.setBackgroundResource(R.drawable.background);
-
-        tName = binding.Name;
-        tName.setText(name);
-
-        tUsername = binding.Username;
-        tUsername.setText(username);
-
-        tAbout_me = binding.aboutme;
-        tAbout_me.setText("About me: ");
-
-        list = binding.l;
+        list = binding.reminderlist;
         ArrayAdapter<String> arr;
         arr = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_multiple_choice, items);
         list.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
@@ -71,7 +59,7 @@ private Button edit;
 
 
 
-        edit = binding.edit;
+        edit = binding.editProfileBtn;
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
