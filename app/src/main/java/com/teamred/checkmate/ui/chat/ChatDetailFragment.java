@@ -28,6 +28,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -39,6 +40,7 @@ import com.google.firebase.storage.UploadTask;
 import com.teamred.checkmate.data.AlgoliaDataSource;
 import com.teamred.checkmate.data.Constant;
 import com.teamred.checkmate.data.LoginDataSource;
+import com.teamred.checkmate.data.model.Chat;
 import com.teamred.checkmate.data.model.FriendlyMessage;
 import com.teamred.checkmate.data.model.User;
 import com.teamred.checkmate.databinding.FragmentChatBinding;
@@ -91,6 +93,7 @@ public class ChatDetailFragment extends Fragment {
 
         mdb = FirebaseDatabase.getInstance();
         DatabaseReference messagesRef = mdb.getReference().child(MESSAGES_CHILD).child(MESSAGE_REF);
+//        DatabaseReference chatRef = mdb.getReference().child(ChatFragment.CHAT_LIST).child(Constant.getInstance().getCurrentUser().getUid()).child(otherUser.getUid());
 
         FirebaseRecyclerOptions<FriendlyMessage> options = new FirebaseRecyclerOptions.Builder<FriendlyMessage>()
                 .setQuery(messagesRef, FriendlyMessage.class)
@@ -127,6 +130,24 @@ public class ChatDetailFragment extends Fragment {
                         .push()
                         .setValue(friendlyMessage);
                 binding.messageEditText.setText("");
+                Chat chat = new Chat(
+                        Constant.getInstance().getCurrentUser().getUid(),
+                        otherUser.getUid(),
+                        friendlyMessage.getText());
+                mdb.getReference()
+                        .child(ChatFragment.CHAT_LIST)
+                        .child(Constant.getInstance().getCurrentUser().getUid())
+                        .child(otherUser.getUid())
+                        .setValue(chat);
+                Chat otherChat = new Chat(
+                        otherUser.getUid(),
+                        Constant.getInstance().getCurrentUser().getUid(),
+                        friendlyMessage.getText(), 1);
+                mdb.getReference()
+                        .child(ChatFragment.CHAT_LIST)
+                        .child(otherUser.getUid())
+                        .child(Constant.getInstance().getCurrentUser().getUid())
+                        .setValue(otherChat);
             }
         });
 
@@ -257,9 +278,9 @@ public class ChatDetailFragment extends Fragment {
 
     private String generateMessageRef(String uid1, String uid2){
         if (uid1.compareTo(uid2) > 0){
-            return uid1 + uid2;
+            return uid1 + "+" + uid2;
         }else{
-            return uid2 + uid1;
+            return uid2 + "+" + uid1;
         }
     }
 
