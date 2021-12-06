@@ -93,6 +93,7 @@ public class GroupDetailFragment extends Fragment implements Searchable {
 
         ranking = binding.noteListRanking;
         filter = binding.noteListFilter;
+        listView = binding.noteListView;
 
         Bundle arguments = getArguments();
         if (arguments!= null){
@@ -124,7 +125,7 @@ public class GroupDetailFragment extends Fragment implements Searchable {
 
 
         searchKeywords = binding.searchNote;
-        String numThreads = group.getSubTopics().length + " Available Threads";
+        String numThreads = group.getSubTopics().size() + " Available Threads";
         binding.numberOfThread.setText(numThreads);
         binding.noteListFilter.setAdapter(
                 new ArrayAdapter<String>(
@@ -293,13 +294,13 @@ public class GroupDetailFragment extends Fragment implements Searchable {
 
     }
 
-    private String[] generateAdapterArray(String[] subtopics){
-        String[] ret = new String[1 + subtopics.length];
+    private String[] generateAdapterArray(List<String> subtopics){
+        String[] ret = new String[1 + subtopics.size()];
         ret[0] = "All";
-        if (subtopics.length == 0){
+        if (subtopics.size() == 0){
             return ret;
         }
-        System.arraycopy(subtopics, 0, ret, 1, subtopics.length);
+        System.arraycopy(subtopics, 0, ret, 1, subtopics.size());
         return ret;
     }
 

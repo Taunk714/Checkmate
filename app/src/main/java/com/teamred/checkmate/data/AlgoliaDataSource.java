@@ -125,10 +125,10 @@ public class AlgoliaDataSource {
      * @param index index to search
      * @param jsonString record
      */
-    public void addRecord(String index, String jsonString){
+    public void addRecord(String index, String jsonString, CompletionHandler handler){
         Index target = adminClient.getIndex(index);
         try {
-            target.addObjectAsync(new JSONObject(jsonString), null);
+            target.addObjectAsync(new JSONObject(jsonString), handler);
         } catch (JSONException e) {
             e.printStackTrace();
         }

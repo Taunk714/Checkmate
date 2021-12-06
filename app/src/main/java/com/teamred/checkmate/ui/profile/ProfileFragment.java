@@ -83,7 +83,7 @@ private Button edit;
                 bundle.putString("name", String.valueOf(tName.getText()));
                 bundle.putString("tAbout_me", String.valueOf(tAbout_me.getText()));
                 epf.setArguments(bundle);
-                ft.replace(R.id.nav_host_fragment_container, epf)
+                ft.replace(R.id.navigation_host, epf)
                         .commit();
             }
         });

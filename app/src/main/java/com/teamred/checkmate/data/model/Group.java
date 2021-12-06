@@ -5,6 +5,7 @@ import com.teamred.checkmate.data.FireStoreDataSource;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Group {
     private String objectID;
@@ -13,8 +14,8 @@ public class Group {
     private String description;
     private Date createDate;
     private Date updateDate;
-    private String[] subTopics = new String[]{};
-    private String[] tags;
+    private List<String> subTopics = new ArrayList<>();
+    private List<String> tags = new ArrayList<>();
     private String creator; // creatorUsername on Shirene's
     private String creatorId;
     private Integer status = 0;
@@ -49,7 +50,7 @@ public class Group {
         this.status = 0;
     }
 
-    public static boolean isJoined(String groupId, String[] joined) {
+    public static boolean isJoined(String groupId, List<String> joined) {
         for (String s : joined) {
             if (s.equals(groupId)) {
                 return true;
@@ -59,21 +60,11 @@ public class Group {
     }
 
     public static void removeGroup(User user, String groupId) {
-        ArrayList<String> groups = new ArrayList<>();
-        for (int i = 0; i < user.getGroupJoined().length; i++) {
-            if (groupId.equals(user.getGroupJoined()[i])) {
-                continue;
-            }
-            groups.add(user.getGroupJoined()[i]);
-        }
-        user.setGroupJoined(groups.toArray(new String[0]));
+        user.quiteGroup(groupId);
     }
 
     public static void joinGroup(User user, String groupId) {
-        String[] group = new String[user.getGroupJoined().length + 1];
-        System.arraycopy(user.getGroupJoined(), 0, group, 0, user.getGroupJoined().length);
-        group[group.length - 1] = groupId;
-        user.setGroupJoined(group);
+        user.joinGroup(groupId);
     }
 
     public static void update(Group group) {
@@ -81,11 +72,11 @@ public class Group {
         AlgoliaDataSource.getInstance().updateGroup(group);
     }
 
-    public void setTags(String[] tags) {
+    public void setTags(List<String> tags) {
         this.tags = tags;
     }
 
-    public String[] getTags() {
+    public List<String> getTags() {
         return tags;
     }
 
@@ -114,11 +105,11 @@ public class Group {
         this.updateDate = updateDate;
     }
 
-    public String[] getSubTopics() {
+    public List<String> getSubTopics() {
         return subTopics;
     }
 
-    public void setSubTopics(String[] subTopics) {
+    public void setSubTopics(List<String> subTopics) {
         this.subTopics = subTopics;
     }
 
@@ -140,6 +131,50 @@ public class Group {
 
     public String getObjectID() {
         return objectID;
+    }
+
+    public String getGroupDocumentID() {
+        return groupDocumentID;
+    }
+
+    public void setGroupDocumentID(String groupDocumentID) {
+        this.groupDocumentID = groupDocumentID;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public Integer getNumMember() {
+        return numMember;
+    }
+
+    public void setNumMember(Integer numMember) {
+        this.numMember = numMember;
+    }
+
+    public Integer getNumView() {
+        return numView;
+    }
+
+    public void setNumView(Integer numView) {
+        this.numView = numView;
+    }
+
+    public String getCreatorId() {
+        return creatorId;
     }
 
     public void setObjectID(String objectID) {

@@ -2,6 +2,7 @@ package com.teamred.checkmate.ui.group;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -11,6 +12,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.algolia.search.saas.AlgoliaException;
+import com.algolia.search.saas.CompletionHandler;
 import com.alibaba.fastjson.JSON;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -24,7 +27,12 @@ import com.teamred.checkmate.data.FireStoreDataSource;
 import com.teamred.checkmate.data.model.Group;
 import com.teamred.checkmate.databinding.ActivityCreateGroupBinding;
 
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 public class CreateGroupActivity extends AppCompatActivity {
 
@@ -52,14 +60,14 @@ public class CreateGroupActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String name = String.valueOf(groupName.getText());
-                String[] tags = groupTag.getText().toString().split(",");
+                List<String> tags = Arrays.asList(groupTag.getText().toString().split("[,; ]"));
                 String description = String.valueOf(groupDescription.getText());
                 Toast.makeText(getApplicationContext(), "send group info to algolia", Toast.LENGTH_LONG).show();
                 // upload to firebase
                 Group group = new Group();
                 group.setGroupName(name);
                 group.setDescription(description);
-                group.setSubTopics(new String[]{});
+                group.setSubTopics(new ArrayList<>());
                 group.setCreator(Constant.getInstance().getCurrentUser().getUsername());
                 group.setCreatorId(Constant.getInstance().getCurrentUser().getUid());
                 group.setCreateDate(new Date());
@@ -73,16 +81,23 @@ public class CreateGroupActivity extends AppCompatActivity {
                         String id = task.getResult().getId();
                         group.setObjectID(id);
                         String s = JSON.toJSONString(group);
-                        AlgoliaDataSource.getInstance().addRecord(CheckmateKey.GROUP_ALGOLIA, s);
-                        Group.joinGroup(Constant.getInstance().getCurrentUser(), group.getObjectID());
-                        FirebaseFirestore.getInstance().collection("user")
-                                .document(Constant.getInstance().getCurrentUser().getUid())
-                                .set(JSON.toJSON(Constant.getInstance().getCurrentUser())).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        AlgoliaDataSource.getInstance().addRecord(CheckmateKey.GROUP_ALGOLIA, s, new CompletionHandler() {
                             @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                finish();
+                            public void requestCompleted(@Nullable JSONObject jsonObject, @Nullable AlgoliaException e) {
+                                if (e == null){
+                                    Group.joinGroup(Constant.getInstance().getCurrentUser(), group.getObjectID());
+                                    FirebaseFirestore.getInstance().collection("user")
+                                            .document(Constant.getInstance().getCurrentUser().getUid())
+                                            .update("groupJoined", Constant.getInstance().getCurrentUser().getGroupJoined()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            finish();
+                                        }
+                                    });
+                                }
                             }
                         });
+
 //                        finish();
                     }
                 });

@@ -88,6 +88,8 @@ public class FireStoreDataSource {
     }
 
     public static Task<DocumentReference>  addGroup(Group group){
+        Object o = JSON.toJSON(group);
+        String s = o.toString();
         return db.collection(CheckmateKey.GROUP_FIREBASE).add(JSON.toJSON(group));
     }
 
