@@ -17,7 +17,6 @@ import com.teamred.checkmate.data.AlgoliaDataSource;
 import com.teamred.checkmate.data.CheckmateKey;
 import com.teamred.checkmate.data.Constant;
 import com.teamred.checkmate.data.FireStoreDataSource;
-import com.teamred.checkmate.data.LoginDataSource;
 import com.teamred.checkmate.data.model.Group;
 import com.teamred.checkmate.databinding.ActivityCreateGroupBinding;
 
@@ -56,7 +55,7 @@ public class CreateGroupActivity extends AppCompatActivity {
                 Group group = new Group();
                 group.setGroupName(name);
                 group.setDescription(description);
-//                group.setSubTopics(new String[]{});
+                group.setSubTopics(new String[]{});
                 group.setCreator(Constant.getInstance().getCurrentUser().getUsername());
                 group.setCreatorId(Constant.getInstance().getCurrentUser().getUid());
                 group.setCreateDate(new Date());
@@ -67,7 +66,7 @@ public class CreateGroupActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<DocumentReference> task) {
                         String id = task.getResult().getId();
-                        group.setId(id);
+                        group.setObjectID(id);
                         String s = JSON.toJSONString(group);
                         AlgoliaDataSource.getInstance().addRecord(CheckmateKey.GROUP_ALGOLIA, s);
                         finish();

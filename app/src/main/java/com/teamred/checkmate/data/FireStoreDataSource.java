@@ -79,7 +79,7 @@ public class FireStoreDataSource {
     }
 
     public static void updateGroup(Group group){
-        db.collection(CheckmateKey.GROUP_FIREBASE).document(group.getId()).set(JSON.toJSON(group)).addOnFailureListener(new OnFailureListener() {
+        db.collection(CheckmateKey.GROUP_FIREBASE).document(group.getObjectID()).set(JSON.toJSON(group)).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.e(TAG, "group update fail");

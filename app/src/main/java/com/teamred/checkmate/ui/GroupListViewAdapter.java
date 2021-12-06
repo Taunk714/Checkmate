@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.alibaba.fastjson.JSON;
 import com.teamred.checkmate.R;
 import com.teamred.checkmate.data.AlgoliaDataSource;
 import com.teamred.checkmate.data.FireStoreDataSource;
@@ -67,16 +68,11 @@ public class GroupListViewAdapter extends BaseAdapter {
             public void onClick(View v) {
                 Log.i("group", "search group click");
                 groupList[position].addView();
-                AlgoliaDataSource.getInstance().updateGroup(groupList[position]);
-                FireStoreDataSource.updateGroup(groupList[position]);
+                Group.update(groupList[position]);
                 FragmentTransaction ft = fm.beginTransaction();
                 GroupDetailFragment groupDetailFragment = new GroupDetailFragment();
                 Bundle bundle = new Bundle();
-                bundle.putString("title", groupList[position].getGroupName());
-                bundle.putString("creator", groupList[position].getCreator());
-                bundle.putString("desc", groupList[position].getDescription());
-                bundle.putStringArray("subtopics",groupList[position].getSubTopics());
-                bundle.putString("creatorId", groupList[position].getCreatorId());
+                bundle.putString("group", JSON.toJSONString(groupList[position]));
                 groupDetailFragment.setArguments(bundle);
                 ft.replace(R.id.nav_host_fragment_activity_main2, groupDetailFragment)
                         .commit();

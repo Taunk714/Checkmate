@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:backgroundTintMode="screen">
+    android:backgroundTintMode="screen"
+    tools:context="Active">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -41,15 +42,27 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp">
 
                 <TextView
                     android:id="@+id/group_detail_title"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:text="Title"
                     android:textColor="@color/black"
                     android:textSize="24sp" />
+
+                <Button
+                    android:id="@+id/join_group_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_margin="1dp"
+                    android:background="@color/blue_a400"
+                    android:elevation="10dp"
+                    android:text="Join" />
 
             </LinearLayout>
 

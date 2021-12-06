@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
+import com.alibaba.fastjson.JSON;
 import com.teamred.checkmate.R;
 import com.teamred.checkmate.Searchable;
 import com.teamred.checkmate.data.AlgoliaDataSource;
@@ -188,28 +189,28 @@ public class SearchGroupFragment extends Fragment implements FilterDialogFragmen
             int size = hits.length();
             Group[] groups = new Group[size];
             for (int i = 0; i < hits.length(); i++) { // change json to object
-                Group group = new Group();
-                JSONObject hitObj = hits.getJSONObject(i);
-                group.setGroupName(hitObj.getString("groupName"));
-                group.setDescription(hitObj.getString("description"));
-                group.setCreator(hitObj.getString("creator"));
-                group.setCreateDate(new Date(hitObj.getLong("createDate")));
-                group.setUpdateDate(new Date(hitObj.getLong("createDate")));
-                group.setStatus(hitObj.getInt("status"));
-//                group.setSubTopics();
-                JSONArray arr = hitObj.getJSONArray("tags");
-                List<String> tagList = new ArrayList<>();
-                JSONArray subtopics = hitObj.getJSONArray("subTopics");
-                String[] sub = new String[subtopics.length()];
-
-                for (int j = 0; j < subtopics.length(); j++) {
-                    sub[i] = subtopics.getString(j);
-                }
-
-                for (int j = 0; j < arr.length(); j++) {
-                    tagList.add(arr.getString(j));
-                }
-                group.setSubTopics(sub);
+//                Group group = new Group();
+                String hitObj = hits.getString(i);
+                Group group = JSON.parseObject(hitObj, Group.class);
+//                group.setGroupName(hitObj.getString("groupName"));
+//                group.setDescription(hitObj.getString("description"));
+//                group.setCreator(hitObj.getString("creator"));
+//                group.setCreateDate(new Date(hitObj.getLong("createDate")));
+//                group.setUpdateDate(new Date(hitObj.getLong("createDate")));
+//                group.setStatus(hitObj.getInt("status"));
+////                group.setSubTopics();
+//                List<String> tagList = new ArrayList<>();
+//                JSONArray subtopics = hitObj.getJSONArray("subTopics");
+//                String[] sub = new String[subtopics.length()];
+//
+//                for (int j = 0; j < subtopics.length(); j++) {
+//                    sub[i] = subtopics.getString(j);
+//                }
+//
+//                for (int j = 0; j < arr.length(); j++) {
+//                    tagList.add(arr.getString(j));
+//                }
+//                group.setSubTopics(sub);
                 groups[i] = group;
             }
             groupAdapter = new GroupListViewAdapter(getContext(), groups, getParentFragmentManager());
