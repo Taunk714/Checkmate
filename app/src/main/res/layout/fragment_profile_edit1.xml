@@ -6,17 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".ui.profile.ProfileFragment">
 
-    <View
-        android:id="@+id/view"
-        android:layout_width="411dp"
-        android:layout_height="0dp"
-        android:background="#F2F3F7"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eAboutme" />
-
     <EditText
-        android:id="@+id/editTextTextPersonName"
+        android:id="@+id/photourl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -39,19 +30,18 @@
         android:inputType="textPersonName"
         android:text="Name"
         app:layout_constraintBottom_toTopOf="@+id/eUsername"
-        app:layout_constraintStart_toStartOf="@+id/editTextTextPersonName"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName" />
+        app:layout_constraintStart_toStartOf="@+id/photourl"
+        app:layout_constraintTop_toBottomOf="@+id/photourl" />
 
     <EditText
         android:id="@+id/eAboutme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="2dp"
-        android:layout_marginBottom="98dp"
+        android:layout_marginTop="32dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:text="About me:"
-        app:layout_constraintBottom_toTopOf="@+id/view"
         app:layout_constraintStart_toStartOf="@+id/eUsername"
         app:layout_constraintTop_toBottomOf="@+id/eUsername" />
 
@@ -69,12 +59,13 @@
 
     <Button
         android:id="@+id/save"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="273dp"
-        android:text="Button"
+        android:layout_width="404dp"
+        android:layout_height="46dp"
+        android:layout_marginBottom="16dp"
+        android:text="save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.428"
         app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
