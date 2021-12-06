@@ -256,7 +256,7 @@ public class LoginActivity extends AppCompatActivity {
                                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                                     Map<String, Object> data = documentSnapshot.getData();
                                     LoginDataSource.setUser(data);
-//                                    loginViewModel.setLoginResult(new Result.Success<>(user));
+                                    loginViewModel.setLoginResult(new Result.Success<>(user));
                                 }
                             });
                             updateUI(user);

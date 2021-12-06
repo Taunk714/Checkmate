@@ -204,7 +204,7 @@ public class AlgoliaDataSource {
             adminClient.getIndex("group")
                     .partialUpdateObjectAsync(
                             new JSONObject(JSON.toJSONString(group))
-                            , group.getId()
+                            , group.getObjectID()
                             , completionHandler);
         } catch (JSONException e) {
             e.printStackTrace();

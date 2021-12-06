@@ -1,9 +1,13 @@
 package com.teamred.checkmate.data.model;
 
+import com.teamred.checkmate.data.AlgoliaDataSource;
+import com.teamred.checkmate.data.FireStoreDataSource;
+
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Group {
-    private String id;
+    private String objectID;
     private String groupName;
     private String description;
     private Date createDate;
@@ -118,11 +122,53 @@ public class Group {
         this.numView++;
     }
 
-    public String getId() {
-        return id;
+    public String getObjectID() {
+        return objectID;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setObjectID(String objectID) {
+        this.objectID = objectID;
+    }
+
+    public static boolean isJoined(String groupId, String[] joined){
+        for (String s : joined) {
+            if (s.equals(groupId)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static void removeGroup(User user, String groupId){
+        ArrayList<String> groups = new ArrayList<>();
+        for (int i = 0; i < user.getGroupJoined().length; i++) {
+            if (groupId.equals(user.getGroupJoined()[i])){
+                continue;
+            }
+            groups.add(user.getGroupJoined()[i]);
+        }
+        user.setGroupJoined(groups.toArray(new String[0]));
+    }
+
+    public static void joinGroup(User user, String groupId){
+        String[] group = new String[user.getGroupJoined().length+1];
+        System.arraycopy(user.getGroupJoined(), 0, group, 0, user.getGroupJoined().length);
+        group[group.length-1] = groupId;
+        user.setGroupJoined(group);
+    }
+
+    public int addMember(){
+        numMember++;
+        return numMember;
+    }
+
+    public int removeMember(){
+        numMember--;
+        return numMember;
+    }
+
+    public static void update(Group group){
+        FireStoreDataSource.updateGroup(group);
+        AlgoliaDataSource.getInstance().updateGroup(group);
     }
 }

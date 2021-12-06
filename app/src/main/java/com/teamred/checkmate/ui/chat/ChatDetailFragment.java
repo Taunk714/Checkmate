@@ -19,15 +19,19 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.alibaba.fastjson.JSON;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -43,6 +47,9 @@ import com.teamred.checkmate.ui.calendar.CalendarActivity;
 import com.teamred.checkmate.ui.group.CreateGroupActivity;
 import com.teamred.checkmate.ui.login.LoginActivity;
 
+import java.util.ArrayList;
+import java.util.Map;
+
 public class ChatDetailFragment extends Fragment {
     private FragmentChatBinding binding;
     private FirebaseAuth mAuth;
@@ -52,7 +59,9 @@ public class ChatDetailFragment extends Fragment {
 
     private String MESSAGE_REF;
 
-    private String otherUserUid = null;
+    private User otherUser = new User();
+
+//    private String otherUserUid = null;
 //    private
     private ActivityResultLauncher<String[]> openDocument = registerForActivityResult(new MyOpenDocumentContract(), new ActivityResultCallback<Uri>() {
         @Override
@@ -76,13 +85,12 @@ public class ChatDetailFragment extends Fragment {
 
         Bundle arguments = getArguments();
         assert arguments != null;
-        this.otherUserUid = arguments.getString("otherUserUid");
-        LoginDataSource.getUser(this.otherUserUid);
-        MESSAGE_REF = generateMessageRef(otherUserUid, Constant.getInstance().getCurrentUser().getUid());
+        String otherUserString = arguments.getString("otherUser");
+        otherUser = JSON.parseObject(otherUserString, User.class);
+        MESSAGE_REF = generateMessageRef(otherUser.getUid(), Constant.getInstance().getCurrentUser().getUid());
 
         mdb = FirebaseDatabase.getInstance();
         DatabaseReference messagesRef = mdb.getReference().child(MESSAGES_CHILD).child(MESSAGE_REF);
-//        Query messagesRef = FirebaseStorage.getInstance().getReference().child(MESSAGES_CHILD);
 
         FirebaseRecyclerOptions<FriendlyMessage> options = new FirebaseRecyclerOptions.Builder<FriendlyMessage>()
                 .setQuery(messagesRef, FriendlyMessage.class)
@@ -108,7 +116,7 @@ public class ChatDetailFragment extends Fragment {
             public void onClick(View v) {
                 FriendlyMessage friendlyMessage = new FriendlyMessage(
                         FirebaseAuth.getInstance().getUid(),
-                        otherUserUid,
+                        otherUser.getUid(),
                         binding.messageEditText.getText().toString(),
                         getUserName(),
                         getPhotoUrl(),
@@ -162,7 +170,7 @@ public class ChatDetailFragment extends Fragment {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         FriendlyMessage friendlyMessage = new FriendlyMessage(
                 FirebaseAuth.getInstance().getUid(),
-                otherUserUid,
+                otherUser.getUid(),
                 null,
                 getUserName(),
                 getPhotoUrl(),
@@ -181,8 +189,9 @@ public class ChatDetailFragment extends Fragment {
                         String key = ref.getKey();
                         StorageReference child =
                                 FirebaseStorage.getInstance()
-                                        .getReference("avatar")
-                                        .child(currentUser.getUid());
+                                        .getReference(currentUser.getUid())
+                                        .child(key)
+                                        .child(uri.getLastPathSegment());
                         putImageInStorage(child, uri, key);
 
                     }
@@ -197,12 +206,16 @@ public class ChatDetailFragment extends Fragment {
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        taskSnapshot
+                                .getMetadata()
+                                .getReference()
+                                .getDownloadUrl()
+                                .addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
                                 FriendlyMessage friendlyMessage = new FriendlyMessage(
                                         FirebaseAuth.getInstance().getUid(),
-                                        otherUserUid,
+                                        otherUser.getUid(),
                                         null,
                                         getUserName(),
                                         getPhotoUrl(),
@@ -210,6 +223,7 @@ public class ChatDetailFragment extends Fragment {
                                 mdb.getReference()
                                         .child(MESSAGES_CHILD)
                                         .child(MESSAGE_REF)
+                                        .child(key)
                                         .setValue(friendlyMessage);
                             }
                         });

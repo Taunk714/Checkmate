@@ -2,6 +2,8 @@ package com.teamred.checkmate;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -31,4 +33,5 @@ public class MyGroupsActivity extends AppCompatActivity {
 //        ListView listView = (ListView) findViewById(R.id.activity_listview);
 //        listView.setAdapter(adapter);
     }
+
 }

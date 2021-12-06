@@ -135,7 +135,7 @@ public class LoginDataSource {
     }
 
 
-    public static User getUser(String uid){
+    public static Task<DocumentSnapshot> getUser(String uid){
         User user = new User();
         Source source = Source.SERVER;
         Task<DocumentSnapshot> documentSnapshotTask = FirebaseFirestore.getInstance().collection("user").document(uid).get();
@@ -159,7 +159,7 @@ public class LoginDataSource {
 
             }
         });
-        return user;
+        return documentSnapshotTask;
     }
 
     public static Task<DocumentSnapshot> getTargetUser(String uid){
@@ -203,6 +203,10 @@ public class LoginDataSource {
         user.setName(firebaseUser.getUid());
         user.setEmail(firebaseUser.getEmail());
         return user;
+    }
+
+    public static Task<DocumentSnapshot> getUserTask(String uid){
+        return FirebaseFirestore.getInstance().collection("user").document(uid).get();
     }
 
     public static void addUser(FirebaseUser firebaseUser){

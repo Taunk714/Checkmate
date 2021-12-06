@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -13,10 +14,11 @@ import com.alibaba.fastjson.JSON;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.teamred.checkmate.data.AlgoliaDataSource;
 import com.teamred.checkmate.data.CheckmateKey;
+import com.teamred.checkmate.data.Constant;
 import com.teamred.checkmate.data.FireStoreDataSource;
-import com.teamred.checkmate.data.LoginDataSource;
 import com.teamred.checkmate.data.model.Group;
 import com.teamred.checkmate.databinding.ActivityCreateGroupBinding;
 
@@ -55,8 +57,9 @@ public class CreateGroupActivity extends AppCompatActivity {
                 Group group = new Group();
                 group.setGroupName(name);
                 group.setDescription(description);
-//                group.setSubTopics(new String[]{});
-                group.setCreator(LoginDataSource.getUserResult().getUsername());
+                group.setSubTopics(new String[]{});
+                group.setCreator(Constant.getInstance().getCurrentUser().getUsername());
+                group.setCreatorId(Constant.getInstance().getCurrentUser().getUid());
                 group.setCreateDate(new Date());
                 group.setUpdateDate(new Date());
 
@@ -65,10 +68,17 @@ public class CreateGroupActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<DocumentReference> task) {
                         String id = task.getResult().getId();
-                        group.setId(id);
+                        group.setObjectID(id);
                         String s = JSON.toJSONString(group);
                         AlgoliaDataSource.getInstance().addRecord(CheckmateKey.GROUP_ALGOLIA, s);
-                        finish();
+                        Group.joinGroup(Constant.getInstance().getCurrentUser(), group.getObjectID());
+                        FirebaseFirestore.getInstance().collection("user").document(Constant.getInstance().getCurrentUser().getUid()).set(JSON.toJSON(Constant.getInstance().getCurrentUser())).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                finish();
+                            }
+                        });
+//                        finish();
                     }
                 });
             }

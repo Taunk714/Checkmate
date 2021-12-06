@@ -1,5 +1,9 @@
 package com.teamred.checkmate.ui.group;
 
+import static com.teamred.checkmate.data.model.Group.isJoined;
+import static com.teamred.checkmate.data.model.Group.joinGroup;
+import static com.teamred.checkmate.data.model.Group.removeGroup;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,9 +20,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.alibaba.fastjson.JSON;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.teamred.checkmate.R;
 import com.teamred.checkmate.Searchable;
 import com.teamred.checkmate.data.AlgoliaDataSource;
+import com.teamred.checkmate.data.Constant;
+import com.teamred.checkmate.data.model.Group;
 import com.teamred.checkmate.data.model.Ranking;
 import com.teamred.checkmate.databinding.FragmentGroupDetailBinding;
 
@@ -42,7 +50,12 @@ public class GroupDetailFragment extends Fragment implements Searchable {
     private Spinner filter;
     private Spinner ranking;
 
-    private String[] subtopics;
+    private boolean joined;
+
+    private String creatorId;
+
+    private Group group;
+
     private boolean[] groupStatusSelected = new boolean[]{true, true};
 
 
@@ -64,10 +77,10 @@ public class GroupDetailFragment extends Fragment implements Searchable {
 
         Bundle arguments = getArguments();
         if (arguments!= null){
-            title.setText(arguments.getString("title"));
-            creator.setText(arguments.getString("creator"));
-            desc.setText(arguments.getString("desc"));
-            subtopics = arguments.getStringArray("subtopics");
+            group = JSON.parseObject(arguments.getString("group"), Group.class);
+            title.setText(group.getGroupName());
+            creator.setText(group.getCreator());
+            desc.setText(group.getDescription());
         }
 
         desc.setOnClickListener(new View.OnClickListener() {
@@ -83,13 +96,22 @@ public class GroupDetailFragment extends Fragment implements Searchable {
 
 
         searchKeywords = binding.searchNote;
-        String numThreads = subtopics.length + " Available Threads";
+        String numThreads = group.getSubTopics().length + " Available Threads";
         binding.numberOfThread.setText(numThreads);
         binding.noteListFilter.setAdapter(
                 new ArrayAdapter<String>(
                         getContext(),
                         R.layout.support_simple_spinner_dropdown_item,
-                        generateAdapterArray(subtopics)));
+                        generateAdapterArray(group.getSubTopics())));
+
+        creator.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // go to user profile
+                // uid is creatorId
+                String uid = creatorId;
+            }
+        });
 
 //        listView = binding.searchResultList;
 //        searchType = binding.searchType;
@@ -121,6 +143,36 @@ public class GroupDetailFragment extends Fragment implements Searchable {
             @Override
             public boolean onQueryTextChange(String s) {
                 return false;
+            }
+        });
+
+        joined = isJoined(group.getObjectID(), Constant.getInstance().getCurrentUser().getGroupJoined());
+        if (joined){
+            disableJoined();
+        }else{
+            enableJoined();
+        }
+
+        binding.joinGroupButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                binding.joinGroupButton.setEnabled(false);
+                if (joined){
+                    removeGroup(Constant.getInstance().getCurrentUser(), group.getObjectID());
+                    FirebaseFirestore.getInstance().collection("user").document(Constant.getInstance().getCurrentUser().getUid()).set(JSON.toJSON(Constant.getInstance().getCurrentUser()));
+                    group.removeMember();
+                    Group.update(group);
+                    binding.joinGroupButton.setEnabled(true);
+                    enableJoined();
+
+                }else{
+                    joinGroup(Constant.getInstance().getCurrentUser(), group.getObjectID());
+                    FirebaseFirestore.getInstance().collection("user").document(Constant.getInstance().getCurrentUser().getUid()).set(JSON.toJSON(Constant.getInstance().getCurrentUser()));
+                    Group.update(group);
+                    binding.joinGroupButton.setEnabled(true);
+                    disableJoined();
+
+                }
             }
         });
 
@@ -210,5 +262,15 @@ public class GroupDetailFragment extends Fragment implements Searchable {
         }
         System.arraycopy(subtopics, 0, ret, 1, subtopics.length);
         return ret;
+    }
+
+    private void enableJoined(){
+        binding.joinGroupButton.setText("JOINED");
+        binding.joinGroupButton.setBackgroundResource(R.color.background);
+    }
+
+    private void disableJoined(){
+        binding.joinGroupButton.setText("JOINED");
+        binding.joinGroupButton.setBackgroundResource(R.color.background);
     }
 }
