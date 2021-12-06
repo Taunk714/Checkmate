@@ -162,11 +162,15 @@ public class GroupDetailFragment extends Fragment implements Searchable {
                     FirebaseFirestore.getInstance().collection("user").document(Constant.getInstance().getCurrentUser().getUid()).set(JSON.toJSON(Constant.getInstance().getCurrentUser()));
                     group.removeMember();
                     Group.update(group);
+                    binding.joinGroupButton.setEnabled(true);
+                    enableJoined();
 
                 }else{
                     joinGroup(Constant.getInstance().getCurrentUser(), group.getObjectID());
                     FirebaseFirestore.getInstance().collection("user").document(Constant.getInstance().getCurrentUser().getUid()).set(JSON.toJSON(Constant.getInstance().getCurrentUser()));
                     Group.update(group);
+                    binding.joinGroupButton.setEnabled(true);
+                    disableJoined();
 
                 }
             }
