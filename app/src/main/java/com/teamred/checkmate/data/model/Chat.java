@@ -1,29 +1,41 @@
 package com.teamred.checkmate.data.model;
 
+import java.security.PublicKey;
 import java.util.Date;
 
 public class Chat {
-    String currentUser;
-    String otherUser;
+    private String currentUser;
+    private String otherUser;
     String lastMessage;
-    Date time;
-    String lastType;
-    int unread;
+    Date time = new Date();
+//    String lastType;
+    int unread = 0;
 
-    public String getCurrentUser() {
-        return currentUser;
-    }
+    public Chat(){}
 
-    public void setCurrentUser(String currentUser) {
+    public Chat(String currentUser, String otherUser, String lastMessage) {
         this.currentUser = currentUser;
-    }
-
-    public String getOtherUser() {
-        return otherUser;
-    }
-
-    public void setOtherUser(String otherUser) {
         this.otherUser = otherUser;
+        this.lastMessage = lastMessage;
+//        this.lastType = lastType;
+    }
+
+
+    public Chat(String currentUser, String otherUser, String lastMessage,int unread) {
+        this.currentUser = currentUser;
+        this.otherUser = otherUser;
+        this.lastMessage = lastMessage;
+//        this.lastType = lastType;
+        this.unread = unread;
+    }
+
+    public Chat(String currentUser, String otherUser, String lastMessage, Date time, int unread) {
+        this.currentUser = currentUser;
+        this.otherUser = otherUser;
+        this.lastMessage = lastMessage;
+        this.time = time;
+//        this.lastType = lastType;
+        this.unread = unread;
     }
 
     public String getLastMessage() {
@@ -42,12 +54,28 @@ public class Chat {
         this.time = time;
     }
 
-    public String getLastType() {
-        return lastType;
+//    public String getLastType() {
+//        return lastType;
+//    }
+//
+//    public void setLastType(String lastType) {
+//        this.lastType = lastType;
+//    }
+
+    public String getCurrentUser() {
+        return currentUser;
     }
 
-    public void setLastType(String lastType) {
-        this.lastType = lastType;
+    public void setCurrentUser(String currentUser) {
+        this.currentUser = currentUser;
+    }
+
+    public String getOtherUser() {
+        return otherUser;
+    }
+
+    public void setOtherUser(String otherUser) {
+        this.otherUser = otherUser;
     }
 
     public int getUnread() {

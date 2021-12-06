@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/big_cons_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="10dp">
@@ -29,10 +30,11 @@
         android:id="@+id/last_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         app:layout_constraintStart_toEndOf="@+id/chatAvatar"
         app:layout_constraintTop_toBottomOf="@+id/otherUsername"
-        tools:text="@string/message"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+        tools:text="@string/message" />
 
     <TextView
         android:id="@+id/unread_number"

@@ -48,7 +48,7 @@ public class ChatFragment extends Fragment {
 
     private String MESSAGE_REF;
 
-    private String CHAT_LIST= "chatList";
+    public static String CHAT_LIST= "chatList";
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -70,49 +70,51 @@ public class ChatFragment extends Fragment {
 //        MESSAGE_REF = generateMessageRef(otherUserUid, Constant.getInstance().getCurrentUser().getUid());
 
         mdb = FirebaseDatabase.getInstance();
-        DatabaseReference messagesRef = mdb.getReference().child(CHAT_LIST);
+        DatabaseReference messagesRef = mdb.getReference().child(CHAT_LIST).child(Constant.getInstance().getCurrentUser().getUid());
 //        Query messagesRef = FirebaseStorage.getInstance().getReference().child(MESSAGES_CHILD);
 
         FirebaseRecyclerOptions<Chat> options = new FirebaseRecyclerOptions.Builder<Chat>()
                 .setQuery(messagesRef, Chat.class)
                 .build();
 
-        adapter = new ChatAdapter(options);
+        adapter = new ChatAdapter(options, getParentFragmentManager());
         manager = new LinearLayoutManager(getContext());
         manager.setStackFromEnd(true);
         binding.chatListview.setLayoutManager(manager);
         binding.chatListview.setAdapter(adapter);
 
-        adapter.registerAdapterDataObserver(
-                new MyScrollToButtonObserver<ChatAdapter>(binding.chatListview, adapter, manager)
-        );
 
-        binding.onlyForTest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentManager parentFragmentManager = getParentFragmentManager();
-                FragmentTransaction ft = parentFragmentManager.beginTransaction();
-                Task<DocumentSnapshot> userTask = LoginDataSource.getUserTask("BcQuTHa00chEi2fuGNlTgPoUmfz1");
-                userTask.addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        User user = new User();
-                        Map<String, Object> data = task.getResult().getData();
-                        user.setName((String) data.get("name"));
-                        user.setPhotoUrl((String) data.get("photoUrl"));
-                        user.setUid((String) data.get("uid"));
-                        user.setUsername((String) data.get("username"));
-                        Bundle bundle = new Bundle();
-                        bundle.putString("otherUser", JSON.toJSONString(user));
-                        ChatDetailFragment chatDetailFragment = new ChatDetailFragment();
-                        chatDetailFragment.setArguments(bundle);
-                        ft.add(R.id.nav_host_fragment_container, chatDetailFragment)
-                                .commit();
-                    }
-                });
 
-            }
-        });
+//        adapter.registerAdapterDataObserver(
+//                new MyScrollToTopObserver<ChatAdapter>(binding.chatListview, adapter, manager)
+//        );
+
+//        binding.onlyForTest.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                FragmentManager parentFragmentManager = getParentFragmentManager();
+//                FragmentTransaction ft = parentFragmentManager.beginTransaction();
+//                Task<DocumentSnapshot> userTask = LoginDataSource.getUserTask("BcQuTHa00chEi2fuGNlTgPoUmfz1");
+//                userTask.addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                        User user = new User();
+//                        Map<String, Object> data = task.getResult().getData();
+//                        user.setName((String) data.get("name"));
+//                        user.setPhotoUrl((String) data.get("photoUrl"));
+//                        user.setUid((String) data.get("uid"));
+//                        user.setUsername((String) data.get("username"));
+//                        Bundle bundle = new Bundle();
+//                        bundle.putString("otherUser", JSON.toJSONString(user));
+//                        ChatDetailFragment chatDetailFragment = new ChatDetailFragment();
+//                        chatDetailFragment.setArguments(bundle);
+//                        ft.add(R.id.nav_host_fragment_activity_main2, chatDetailFragment)
+//                                .commit();
+//                    }
+//                });
+//
+//            }
+//        });
 
 //        binding.sendButton.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -142,4 +144,26 @@ public class ChatFragment extends Fragment {
 
         return root;
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
+    public void onStart() {
+        super.onStart();
+
+    }
+
+    public void onPause() {
+        adapter.stopListening();
+        super.onPause();
+    }
+    //
+    public void onResume(){
+        super.onResume();
+        adapter.startListening();
+    }
+
 }
