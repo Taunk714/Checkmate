@@ -79,9 +79,15 @@ public class OnboardingActivity extends AppCompatActivity {
         // title, then color of background is passed ,
         // then the image to show on the screen is passed
         // and at last icon to navigate from one screen to other
-        PaperOnboardingPage source = new PaperOnboardingPage("Learn", "Strike up motivation to work on the things you need to most.", Color.parseColor("#03A9F4"),R.drawable.onboard1_img, R.drawable.circle);
-        PaperOnboardingPage source1 = new PaperOnboardingPage("Daily", "Create and check-in to events with others to boost productivity.", Color.parseColor("#22eaaa"),R.drawable.onboard2_img, R.drawable.circle);
-        PaperOnboardingPage source2 = new PaperOnboardingPage("Share", "Upload resources to help everyone accomplish their goals.", Color.parseColor("#ee5a5a"),R.drawable.onboard3_img, R.drawable.circle);
+        PaperOnboardingPage source = new PaperOnboardingPage("Learn",
+                "Strike up motivation to work on the things you need to most.",
+                Color.parseColor("#03A9F4"),R.drawable.onboard1_img, R.drawable.circle);
+        PaperOnboardingPage source1 = new PaperOnboardingPage("Daily",
+                "Create and check-in to events with others to boost productivity.",
+                Color.parseColor("#22eaaa"),R.drawable.onboard2_img, R.drawable.circle);
+        PaperOnboardingPage source2 = new PaperOnboardingPage("Share",
+                "Upload resources to help everyone accomplish their goals.",
+                Color.parseColor("#ee5a5a"),R.drawable.onboard3_img, R.drawable.circle);
 
         // array list is used to store
         // data of onbaording screen
@@ -92,6 +98,7 @@ public class OnboardingActivity extends AppCompatActivity {
         elements.add(source);
         elements.add(source1);
         elements.add(source2);
+
         return elements;
     }
 }
