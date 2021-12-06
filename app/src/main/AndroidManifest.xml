@@ -13,6 +13,7 @@
         android:theme="@style/Theme.Checkmate">
         <activity
             android:name=".MyGroupsActivity"
+            android:label="My groups"
             android:exported="false" />
         <activity
             android:name=".OnboardingActivity"
