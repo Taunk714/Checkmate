@@ -12,6 +12,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Source;
 import com.teamred.checkmate.SyncHelper;
 import com.teamred.checkmate.data.model.Group;
@@ -88,10 +89,23 @@ public class FireStoreDataSource {
     }
 
     public static Task<DocumentReference>  addGroup(Group group){
-        Object o = JSON.toJSON(group);
-        String s = o.toString();
         return db.collection(CheckmateKey.GROUP_FIREBASE).add(JSON.toJSON(group));
     }
+
+    public static void getGroup(){
+
+        db.collection(CheckmateKey.GROUP_FIREBASE).document("0JG8VeJxHYJ83y9nZF3Y").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                Map<String, Object> data = task.getResult().getData();
+                Group group = new Group();
+                Group group1 = task.getResult().toObject(Group.class);
+                group1.setObjectID("0JG8VeJxHYJ83y9nZF3Y");
+                AlgoliaDataSource.getInstance().addRecord("group", JSON.toJSONString(group1), null);
+            }
+        });
+    }
+
 
 
 
