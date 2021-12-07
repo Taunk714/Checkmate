@@ -34,6 +34,7 @@ import java.util.Map;
 
 public class PostFragment extends Fragment {
 
+    PostsViewModel postListModel;
     private FragmentPostBinding binding;
     private Post post;
     final String TAG = "PostFragment";
@@ -48,7 +49,7 @@ public class PostFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        PostListViewModel postListModel = new ViewModelProvider(requireActivity()).get(PostListViewModel.class);
+        postListModel = new ViewModelProvider(requireActivity()).get(PostsViewModel.class);
         this.post = postListModel.getSelected();
     }
 
@@ -100,7 +101,8 @@ public class PostFragment extends Fragment {
                     data.put("isAuthor", isAuthor);
                     data.put("isStarred", true);
                     data.put("starredDate", Calendar.getInstance().getTime());
-
+                    data.put("numTimesReviewed", 0);
+                    data.put("groupIDPostBelongsTo", postListModel.getGroupID());
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
                     CollectionReference posts = db.collection("user").document(currentUser.getUid()).collection("savedPosts");

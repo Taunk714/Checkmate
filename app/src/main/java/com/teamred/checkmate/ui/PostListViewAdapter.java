@@ -17,7 +17,7 @@ import androidx.fragment.app.FragmentManager;
 import com.teamred.checkmate.R;
 import com.teamred.checkmate.data.model.Post;
 import com.teamred.checkmate.ui.notes.PostFragment;
-import com.teamred.checkmate.ui.notes.PostListViewModel;
+import com.teamred.checkmate.ui.notes.PostsViewModel;
 import com.teamred.checkmate.util.DateUtil;
 
 import java.util.List;
@@ -28,17 +28,17 @@ import java.util.List;
 public class PostListViewAdapter extends BaseAdapter {
 
     private Post[] postList;
-    private PostListViewModel postListViewModel;
+    private PostsViewModel postsViewModel;
 
     Context context;   //Creating a reference to our context object, so we only have to get it once.  Context enables access to application specific resources.
 
-    public PostListViewAdapter(Context context, Post[] postList, PostListViewModel postListViewModel) {
+    public PostListViewAdapter(Context context, Post[] postList, PostsViewModel postsViewModel) {
         this.postList = postList;
         for (Post p: postList) {
             Log.i(TAG, "PostListViewAdapter: Post's subtopic: " + p.getsubtopic());
         }
         this.context = context;
-        this.postListViewModel = postListViewModel;
+        this.postsViewModel = postsViewModel;
     }
 
     @Override
@@ -79,7 +79,7 @@ public class PostListViewAdapter extends BaseAdapter {
 //                Intent i = new Intent(this, )
                 Log.d("Post", "Clicked position " + position);
 
-                postListViewModel.select(position);
+                postsViewModel.select(position);
 
                 Fragment postFragment = new PostFragment();
 

@@ -2,6 +2,7 @@ package com.teamred.checkmate.ui.home;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,9 +22,17 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.alibaba.fastjson.JSON;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.teamred.checkmate.R;
+import com.teamred.checkmate.data.CheckmateKey;
+import com.teamred.checkmate.data.model.Group;
 import com.teamred.checkmate.ui.calendar.CalendarActivity;
 import com.teamred.checkmate.ui.group.CreateGroupActivity;
 import com.teamred.checkmate.data.AlgoliaDataSource;
@@ -33,18 +42,19 @@ import com.teamred.checkmate.ui.login.LoginActivity;
 import com.teamred.checkmate.MyGroupsActivity;
 
 import java.text.DateFormatSymbols;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class HomeFragment extends Fragment {
 
+    private static final String TAG = "HOME";
     private FragmentHomeBinding binding;
 
     //private Button calenderHeatmap;
 
 //    String[] testArray = {"Android","IPhone","WindowsMobile","Blackberry",
 //            "WebOS","Ubuntu","Windows7","Max OS X"};
-//
-//    ListView lvMonth;
-//    String[] months;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -56,16 +66,6 @@ public class HomeFragment extends Fragment {
         //calenderHeatmap = (Button) getView().findViewById(R.id.calendarheatmap);
         Button calendarHeatmap = binding.calendarheatmap;
 
-        Button myGroups = binding.myGroupsBtn;
-
-        myGroups.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getActivity(), MyGroupsActivity.class);
-                startActivity(i);
-            }
-        });
-
         calendarHeatmap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -73,25 +73,6 @@ public class HomeFragment extends Fragment {
                 startActivity(i);
             }
         });
-
-//        Button tempGroupDetailBtn = binding.groupDetailButton;
-//        tempGroupDetailBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Fragment fragment = new GroupDetailFragment();
-//
-//                Bundle bundle = new Bundle();
-//                bundle.putString("groupDocID", "0JG8VeJxHYJ83y9nZF3Y");
-//                fragment.setArguments(bundle);
-//                FragmentManager manager = getParentFragmentManager();
-//
-//                manager.beginTransaction()
-//                        .replace(R.id.navigation_host, fragment, null)
-//                        .setReorderingAllowed(true)
-//                        .addToBackStack(null)
-//                        .commit();
-//            }
-//        });
 
         FloatingActionButton btnAddPost = binding.btnAddGroup;
         btnAddPost.setOnClickListener(new View.OnClickListener() {
@@ -110,19 +91,37 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        // Get list view for all groups available
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection(CheckmateKey.GROUP_FIREBASE)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            List<Group> groups = new ArrayList<>();
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                Map<String, Object> data = document.getData();
+                                ArrayList<String> tags = (ArrayList<String>) data.get("tags");
+                                Group g = new Group(
+                                        document.getId().toString(),
+                                        data.get("groupName").toString(),
+                                        tags,
+                                        data.get("creator").toString(),
+                                        data.get("description").toString()
+                                );
+                                Log.i(TAG, "onComplete: GOT GROUP" + g.getTags().toString());
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
 
         return root;
     }
 
-//    @Override
-//    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-//        super.onViewCreated(view, savedInstanceState);
-//        lvMonth = view.findViewById(R.id.lvMonth);
-//        months = new DateFormatSymbols().getMonths();
-//        ArrayAdapter<String> monthAdapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),
-//                android.R.layout.simple_list_item_1, testArray);
-//        lvMonth.setAdapter(monthAdapter);
-//    }
 
     @Override
     public void onDestroyView() {

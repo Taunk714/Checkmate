@@ -34,7 +34,7 @@ import com.teamred.checkmate.data.model.Ranking;
 import com.teamred.checkmate.databinding.FragmentGroupDetailBinding;
 import com.teamred.checkmate.ui.PostListViewAdapter;
 import com.teamred.checkmate.ui.notes.CreatePostFragment;
-import com.teamred.checkmate.ui.notes.PostListViewModel;
+import com.teamred.checkmate.ui.notes.PostsViewModel;
 
 import org.json.JSONObject;
 
@@ -89,12 +89,12 @@ public class GroupDetailFragment extends Fragment implements Searchable {
             creator.setText(group.getCreator());
             desc.setText(group.getDescription());
 
-            PostListViewModel postListModel = new ViewModelProvider(requireActivity()).get(PostListViewModel.class);
-            postListModel.init(group.getObjectID());
+            PostsViewModel postsViewModel = new ViewModelProvider(requireActivity()).get(PostsViewModel.class);
+            postsViewModel.init(group.getObjectID());
 
-            postListModel.getPosts().observe(getViewLifecycleOwner(), posts -> {
+            postsViewModel.getPosts().observe(getViewLifecycleOwner(), posts -> {
                 // Update UI
-                noteAdapter = new PostListViewAdapter(getContext(), posts.toArray((new Post[posts.size()])), postListModel);
+                noteAdapter = new PostListViewAdapter(getContext(), posts.toArray((new Post[posts.size()])), postsViewModel);
                 listView.setAdapter(noteAdapter);
             });
         }

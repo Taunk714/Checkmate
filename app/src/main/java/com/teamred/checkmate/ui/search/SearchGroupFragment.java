@@ -44,7 +44,6 @@ public class SearchGroupFragment extends Fragment implements FilterDialogFragmen
 
 //    private Note[] noteList;
 
-    private ListAdapter noteAdapter;
     private ListAdapter groupAdapter;
     private ListView listView;
     private SearchView searchKeywords;

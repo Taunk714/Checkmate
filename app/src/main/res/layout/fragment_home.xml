@@ -37,11 +37,10 @@
             android:layout_marginBottom="4dp"
             android:text="CALENDAR HEATMAP" />
 
-        <Button
-            android:id="@+id/myGroupsBtn"
-            android:layout_width="121dp"
-            android:layout_height="48dp"
-            android:text="My groups" />
+        <ListView
+            android:id="@+id/allgroups_listview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
     </LinearLayout>
 
