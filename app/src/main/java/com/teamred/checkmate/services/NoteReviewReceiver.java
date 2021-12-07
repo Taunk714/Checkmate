@@ -5,6 +5,7 @@ import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES.KITKAT;
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 
+import static com.teamred.checkmate.App.CHANNEL_1_ID;
 import static com.teamred.checkmate.App.CHANNEL_2_ID;
 
 import android.app.AlarmManager;
@@ -22,12 +23,15 @@ import android.util.SparseBooleanArray;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-//import com.teamred.checkmate.data.model.Post;
+import com.teamred.checkmate.data.CheckmateKey;
+import com.teamred.checkmate.data.Constant;
+import com.teamred.checkmate.data.model.Post;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
@@ -44,25 +48,36 @@ public class NoteReviewReceiver extends BroadcastReceiver {
 
     private static final String TAG = "NoteReviewReceiver";
 
-    private static final String BUNDLE_EXTRA = "bundle_extra";
-    private static final String ALARM_KEY = "alarm_key";
+    //private static final String GROUP_ID = "Group_id";
+    private static final String POST_ID = "Post_id";
+    //private static final String ALARM_KEY = "alarm_key";
+    DocumentReference docRef;
+    Post post;
+
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    //db.collection(CheckmateKey.GROUP_FIREBASE).document(this.group_ID).collection("posts").
 
     @Override
     public void onReceive(Context context, Intent intent) {
 
-         String p = intent.getStringExtra("a");
+        Bundle extras = intent.getExtras();
+        String postid = extras.getString(POST_ID);
+
+        // intent.getExtra(BUNDLE_EXTRA);
+        docRef = db.collection(CheckmateKey.USER_FIREBASE).document(Constant.getInstance().getCurrentUser().getUid())
+                .collection("savedPosts").document(extras.getString(POST_ID));
+
 
         // (data.get("dateLastReviewed") == Calendar.getInstance().getTime())
 
         final NotificationManager manager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_2_ID);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_1_ID);
         builder.setSmallIcon(R.drawable.ic_algolia_icon);
         builder.setColor(ContextCompat.getColor(context, R.color.blue_300));
         builder.setContentTitle(context.getString(R.string.app_name));
-        builder.setContentText("the note brief");
-        //builder.setTicker(alarm.getLabel());
+        builder.setContentText("Time to Review your Notes!");
         builder.setVibrate(new long[]{1000, 500, 1000, 500, 1000, 500});
         builder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
         //builder.setContentIntent(launchAlarmLandingPage(context, alarm));
@@ -71,15 +86,22 @@ public class NoteReviewReceiver extends BroadcastReceiver {
 
         manager.notify(2, builder.build());
 
-        //updateReviewDate(Post p);
+        updateReviewDate(docRef);
 
     }
 
-    /*private void updateReviewDate(Post p){
-        if (data.get("dateLastReviewed") == Calendar.getInstance().getTime()){
-            data.put("dateLastReviewed", Calendar.getInstance().getTime());
-        }
-    }*/
+    private void updateReviewDate(DocumentReference docRef){
+        docRef.update("dateLastReviewed", Calendar.getInstance().getTime());
+        docRef.get().addOnCompleteListener(
+                new OnCompleteListener<DocumentSnapshot>() {
+                   @Override
+                   public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                       DocumentSnapshot result1 = task.getResult();
+                       int timesReviewed = Integer.parseInt((String) result1.get("numTimesReviewed"));
+                       docRef.update("numTimesReviewed", timesReviewed);
+                   }
+               });
+    }
 
 
 
