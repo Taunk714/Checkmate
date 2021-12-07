@@ -65,7 +65,7 @@ public class PostListViewAdapter extends BaseAdapter {
 //        TextView postNumber = row.findViewById(R.id.post_number);
         postContent.setText(postList[position].getContent());
         postAuthor.setText(postList[position].getAuthor());
-        postDate.setText(DateUtil.getSimpleDateString(postList[position].getCreateDate()));
+        postDate.setText(postList[position].getCreateDate().toString());
         postTitle.setText(postList[position].getTitle());
         postTags.setText(parseTags(postList[position].getTags()));
         Log.i(TAG, "getView: postlist position subtopic" + postList[position].getsubtopic());
