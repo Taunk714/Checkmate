@@ -5,6 +5,7 @@ import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES.KITKAT;
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 
+import static com.teamred.checkmate.App.CHANNEL_1_ID;
 import static com.teamred.checkmate.App.CHANNEL_2_ID;
 
 import android.app.AlarmManager;
@@ -57,7 +58,7 @@ public class NoteReviewReceiver extends BroadcastReceiver {
         final NotificationManager manager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_2_ID);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_1_ID);
         builder.setSmallIcon(R.drawable.ic_algolia_icon);
         builder.setColor(ContextCompat.getColor(context, R.color.blue_300));
         builder.setContentTitle(context.getString(R.string.app_name));

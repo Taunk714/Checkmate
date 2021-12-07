@@ -97,6 +97,18 @@ public class PostFragment extends Fragment {
                 // reminder state to true, along with the date that this was saved.
                 // if user unchecks or rechecks this, the entry will be replaced
                 User currentUser = Constant.getInstance().getCurrentUser();
+
+                AlarmManager alarmManager;
+
+                Intent i = new Intent(getContext(), NoteReviewReceiver.class);
+                PendingIntent pi = PendingIntent.getBroadcast(getContext(), 0, i, 0);
+
+                alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+
+                long timeAtSwitchOn = System.currentTimeMillis();
+
+                long tenSeconds = 1000 * 10;
+
                 if (binding.reminderSwitch.isChecked()) {
                     Log.d(TAG, "onClick: Is checked");
                     final boolean isAuthor = post.getAuthor() == currentUser.getUsername();
@@ -113,20 +125,14 @@ public class PostFragment extends Fragment {
                     CollectionReference posts = db.collection("user").document(currentUser.getUid()).collection("savedPosts");
                     posts.document(post.getPostID()).set(data);
 
-                    Toast.makeText(getContext(), "Reminder Set.", Toast.LENGTH_SHORT).show();
-
-                    Intent i = new Intent(getContext(), NoteReviewReceiver.class);
-                    PendingIntent pi = PendingIntent.getBroadcast(getContext(), 0, i, 0);
-
-                    AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-
-                    long timeAtSwitchOn = System.currentTimeMillis();
-
-                    long tenSeconds = 1000 * 10;
+                    Toast.makeText(getContext(), "Reminder Set!", Toast.LENGTH_SHORT).show();
 
                     alarmManager.set(AlarmManager.RTC_WAKEUP, timeAtSwitchOn + tenSeconds, pi);
 
                 } else {
+                    Toast.makeText(getContext(), "Reminder Canceled.", Toast.LENGTH_SHORT).show();
+                    alarmManager.cancel(pi);
+
                     Log.d(TAG, "onClick: Is not checked");
                     db.collection("user").document(currentUser.getUid())
                             .collection("savedPosts").document(post.getPostID()).delete().addOnSuccessListener(
