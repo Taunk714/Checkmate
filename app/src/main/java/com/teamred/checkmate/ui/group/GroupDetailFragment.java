@@ -67,7 +67,7 @@ public class GroupDetailFragment extends Fragment implements Searchable {
 
     private boolean joined;
 
-    private String creatorId;
+//    private String creatorId;
 
     private Group group;
 
@@ -138,7 +138,7 @@ public class GroupDetailFragment extends Fragment implements Searchable {
             public void onClick(View v) {
                 // go to user profile
                 // uid is creatorId
-                String uid = creatorId;
+                String uid = group.getCreatorId();
                 if (uid.equals(Constant.getInstance().getCurrentUser().getUid())){
                     // go to profile
                 }else{
@@ -158,7 +158,7 @@ public class GroupDetailFragment extends Fragment implements Searchable {
                             bundle.putString("otherUser", JSON.toJSONString(user));
                             ChatDetailFragment chatDetailFragment = new ChatDetailFragment();
                             chatDetailFragment.setArguments(bundle);
-                            ft.add(R.id.navigation_host, chatDetailFragment)
+                            ft.replace(R.id.navigation_host, chatDetailFragment)
                                     .commit();
                         }
                     });
