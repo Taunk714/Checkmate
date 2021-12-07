@@ -152,12 +152,7 @@ public class ChatDetailFragment extends Fragment {
             }
         });
 
-        binding.addMessageImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openDocument.launch(new String[]{"image/*"});
-            }
-        });
+
 
         return root;
     }
