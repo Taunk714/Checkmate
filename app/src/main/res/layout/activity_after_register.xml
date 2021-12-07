@@ -32,7 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
-        android:text="Welcome to Cehckmate!"
+        android:text="Welcome to Checkmate!"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/nickname_label"
         app:layout_constraintEnd_toEndOf="parent"

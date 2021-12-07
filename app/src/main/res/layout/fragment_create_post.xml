@@ -140,7 +140,7 @@
         android:layout_marginStart="116dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="116dp"
-        android:text="Selected OneNote Page TItle"
+        android:text=""
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

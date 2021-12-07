@@ -366,9 +366,20 @@ public class CompactCalendarTab extends Fragment {
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     List<Event> events = new ArrayList<>();
                     List<DocumentSnapshot> documents = task.getResult().getDocuments();
+                    int size = documents.size();
+                    int argb = Color.argb(255, 169, 68, 65);
+                    if (size >= 3){
+                        argb = Color.argb(255, 169, 68, 65);
+                    }else if (size >=2 ){
+                        argb = Color.argb(255, 169/3*2, 68, 65);
+                    }else if (size >= 1){
+                        argb = Color.argb(255, 169/3, 68, 65);
+                    }
+
                     for (DocumentSnapshot document : documents) {
                         ReviewRecord reviewRecord = document.toObject(ReviewRecord.class);
-                        Event event = new Event(Color.argb(255, 169, 68, 65)
+
+                        Event event = new Event(argb
                                 , reviewRecord.getTime().getTime()
                                 , "Review " + reviewRecord.getPostId() + " the " + reviewRecord.getTimes() + "th times at " + reviewRecord.getTime());
                         events.add(event);

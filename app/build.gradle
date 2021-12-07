@@ -21,6 +21,11 @@ allprojects {
 }
 
 android {
+    signingConfigs {
+        debug {
+            storeFile file('/Users/takunyalin/debug.keystore')
+        }
+    }
     compileSdk 31
 
     defaultConfig {
