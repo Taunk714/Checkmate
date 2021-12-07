@@ -1,35 +1,21 @@
 package com.teamred.checkmate.services;
 
-import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
-import static android.os.Build.VERSION.SDK_INT;
-import static android.os.Build.VERSION_CODES.KITKAT;
-import static android.os.Build.VERSION_CODES.LOLLIPOP;
-
 import static com.teamred.checkmate.App.CHANNEL_1_ID;
-import static com.teamred.checkmate.App.CHANNEL_2_ID;
 
-import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.os.Bundle;
-import android.util.Log;
-import android.util.SparseBooleanArray;
 
 import com.alibaba.fastjson.JSON;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.teamred.checkmate.data.CheckmateKey;
 import com.teamred.checkmate.data.Constant;
 import com.teamred.checkmate.data.model.Post;
@@ -44,16 +30,15 @@ import com.teamred.checkmate.util.DateUtil;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
-
 
 
 public class NoteReviewReceiver extends BroadcastReceiver {
 
     private static final String TAG = "NoteReviewReceiver";
 
-    //private static final String GROUP_ID = "Group_id";
+    private static final String GROUP_ID = "Group_id";
     private static final String POST_ID = "Post_id";
+//    private static final String GROUP
     //private static final String ALARM_KEY = "alarm_key";
     DocumentReference docRef;
     Post post;
@@ -70,7 +55,7 @@ public class NoteReviewReceiver extends BroadcastReceiver {
         //String postid = extras.getString(POST_ID);
 
         // intent.getExtra(BUNDLE_EXTRA);
-        postId = extras.getString(POST_ID);
+        postId = extras.getString("post_title");
         if( extras != null){
         docRef = db.collection(CheckmateKey.USER_FIREBASE).document(Constant.getInstance().getCurrentUser().getUid())
                 .collection("savedPosts").document(extras.getString(POST_ID));
@@ -111,8 +96,8 @@ public class NoteReviewReceiver extends BroadcastReceiver {
                        String simpleDateString = DateUtil.getSimpleDateString(new Date());
                        ReviewRecord reviewRecord = new ReviewRecord();
                        reviewRecord.setTime(new Date());
-                       reviewRecord.setTimes(timesReviewed);
-                       reviewRecord.setPostTitle(postId);
+                       reviewRecord.setTimes(timesReviewed+1);
+                       reviewRecord.setPostId(postId);
                        db.collection(CheckmateKey.REVIEW_RECORD)
                                .document(Constant.getInstance().getCurrentUser().getUid())
                                .collection(simpleDateString).add(JSON.toJSON(reviewRecord));

@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment;
 /*import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;*/
 
-import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.Log;
@@ -35,13 +34,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -153,6 +149,7 @@ public class CompactCalendarTab extends Fragment {
             @Override
             public void onClick(View v) {
                 compactCalendarView.scrollRight();
+                logEventsByMonth(compactCalendarView);
             }
         });
 
@@ -373,7 +370,7 @@ public class CompactCalendarTab extends Fragment {
                         ReviewRecord reviewRecord = document.toObject(ReviewRecord.class);
                         Event event = new Event(Color.argb(255, 169, 68, 65)
                                 , reviewRecord.getTime().getTime()
-                                , "Review " + reviewRecord.getPostTitle() + " the " + reviewRecord.getTimes() + "th times at " + reviewRecord.getTime());
+                                , "Review " + reviewRecord.getPostId() + " the " + reviewRecord.getTimes() + "th times at " + reviewRecord.getTime());
                         events.add(event);
                     }
                     compactCalendarView.addEvents(events);

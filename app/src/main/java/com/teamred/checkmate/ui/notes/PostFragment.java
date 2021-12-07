@@ -109,6 +109,7 @@ public class PostFragment extends Fragment {
                 //PendingIntent pi = PendingIntent.getBroadcast(getContext(), 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
                 i.putExtra("Group_id", postListModel.getGroupID());
                 i.putExtra("Post_id", post.getPostID());
+                i.putExtra("post_title", post.getTitle());
                 PendingIntent pi = PendingIntent.getBroadcast(getContext(), UUID.randomUUID().hashCode(),
                         i, PendingIntent.FLAG_UPDATE_CURRENT);
 

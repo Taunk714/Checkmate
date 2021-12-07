@@ -82,6 +82,8 @@ private Button edit;
     TextView numGroupsTxtView;
     // Integer numGroups;
 
+    String groupIDPostBelongsTo = null;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
 
@@ -141,6 +143,8 @@ private Button edit;
                                             if (task.isSuccessful()) {
                                                 for (QueryDocumentSnapshot document : task.getResult()) {
                                                     Log.d("ptest3", document.getId() + " => " + document.getData());
+
+                                                    groupIDPostBelongsTo = document.getData().get("groupIDPostBelongsTo").toString();
 
                                                     DocumentReference docRef = db.collection("groups").document(document.getData().get("groupIDPostBelongsTo").toString()).collection("posts").document(document.getId());
                                                     docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -259,6 +263,8 @@ private Button edit;
                 Intent i = new Intent(getContext(), NoteReviewReceiver.class);
                 //PendingIntent pi = PendingIntent.getBroadcast(getContext(), 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
                 i.putExtra("Post_id", savedPIDs.get(position));
+                i.putExtra("Group_id", groupIDPostBelongsTo);
+                i.putExtra("post_title", savedPNames.get(position));
                 PendingIntent pi = PendingIntent.getBroadcast(getContext(), UUID.randomUUID().hashCode(),
                         i, PendingIntent.FLAG_UPDATE_CURRENT);
 
