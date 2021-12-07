@@ -228,6 +228,7 @@ private Button edit;
         } else {
             // No user is signed in
         }
+
         binding.signoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
