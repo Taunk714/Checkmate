@@ -97,10 +97,10 @@ public class CompactCalendarTab extends Fragment {
         compactCalendarView.displayOtherMonthDays(false);
         //compactCalendarView.setIsRtl(true);
         loadEvents();
-        loadEventsForYear(2017);
+//        loadEventsForYear(2017);
         compactCalendarView.invalidate();
 
-        logEventsByMonth(compactCalendarView);
+//        logEventsByMonth(compactCalendarView);
 
         // below line will display Sunday as the first day of the week
         // compactCalendarView.setShouldShowMondayAsFirstDay(false);
@@ -314,14 +314,14 @@ public class CompactCalendarTab extends Fragment {
 
     private void loadEvents() {
         addEvents(-1, -1);
-        addEvents(Calendar.DECEMBER, -1);
-        addEvents(Calendar.AUGUST, -1);
+//        addEvents(Calendar.DECEMBER, -1);
+//        addEvents(Calendar.AUGUST, -1);
     }
 
-    private void loadEventsForYear(int year) {
-        addEvents(Calendar.DECEMBER, year);
-        addEvents(Calendar.AUGUST, year);
-    }
+//    private void loadEventsForYear(int year) {
+//        addEvents(Calendar.DECEMBER, year);
+//        addEvents(Calendar.AUGUST, year);
+//    }
 
     private void logEventsByMonth(CompactCalendarView compactCalendarView) {
         currentCalender.setTime(new Date());
@@ -352,17 +352,9 @@ public class CompactCalendarTab extends Fragment {
         int i = 1;
         while(currentCalender.before(instance) || currentCalender.get(Calendar.DAY_OF_MONTH) == instance.get(Calendar.DAY_OF_MONTH)){
 
-            currentCalender.set(Calendar.DAY_OF_MONTH, i);
-            i++;
-//            currentCalender.setTime(firstDayOfMonth);
-//            if (month > -1) {
-//                currentCalender.set(Calendar.MONTH, month);
-//            }
-//            if (year > -1) {
-//                currentCalender.set(Calendar.ERA, GregorianCalendar.AD);
-//                currentCalender.set(Calendar.YEAR, year);
-//            }
-//            currentCalender.add(Calendar.DATE, i);
+//            currentCalender.set(Calendar.DAY_OF_MONTH, i);
+//            i++;
+
             setToMidnight(currentCalender);
             long timeInMillis = currentCalender.getTimeInMillis();
 
@@ -379,61 +371,62 @@ public class CompactCalendarTab extends Fragment {
                         ReviewRecord reviewRecord = document.toObject(ReviewRecord.class);
                         Event event = new Event(Color.argb(255, 169, 68, 65)
                                 , reviewRecord.getTime().getTime()
-                                , "Review the " + reviewRecord.getTimes() + " times");
+                                , "Review " + reviewRecord.getPostTitle() + " the " + reviewRecord.getTimes() + "th times at " + reviewRecord.getTime());
                         events.add(event);
                     }
                     compactCalendarView.addEvents(events);
                 }
             });
+            currentCalender.add(Calendar.DATE, 1);
 
         }
     }
-
-    private List<Event> getEvents(long timeInMillis, int day) {
-<<<<<<< HEAD
-        String simpleDateString = DateUtil.getSimpleDateString(new Date(timeInMillis));
-        final List<Event>[] ret = new List[]{null};
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                FirebaseFirestore.getInstance().collection(CheckmateKey.REVIEW_RECORD)
-                        .document(Constant.getInstance().getCurrentUser().getUid())
-                        .collection(simpleDateString).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        List<Event> events = new ArrayList<>();
-                        List<DocumentSnapshot> documents = task.getResult().getDocuments();
-                        for (DocumentSnapshot document : documents) {
-                            ReviewRecord reviewRecord = document.toObject(ReviewRecord.class);
-                            Event event = new Event(Color.argb(255, 169, 68, 65)
-                                    , reviewRecord.getTime().getTime()
-                                    , "Review the " + reviewRecord.getTimes() + " times");
-                            events.add(event);
-                        }
-                        ret[0] = events;
-                    }
-                });
-            }
-        }).start();
-
-        while(true){
-            if (ret[0] != null){
-                return  ret[0];
-            }
-=======
-        if (day < 2) {
-            return Arrays.asList(new Event(Color.argb(255, 169, 68, 65), timeInMillis, "Event at " + new Date(timeInMillis)));
-        } else if ( day > 2 && day <= 4) {
-            return Arrays.asList(
-                    new Event(Color.argb(255, 169, 68, 65), timeInMillis, "Event at " + new Date(timeInMillis)),
-                    new Event(Color.argb(255, 100, 68, 65), timeInMillis, "Event 2 at " + new Date(timeInMillis)));
-        } else {
-            return Arrays.asList(
-                    new Event(Color.argb(255, 169, 68, 65), timeInMillis, "Event at " + new Date(timeInMillis)),
-                    new Event(Color.argb(255, 100, 68, 65), timeInMillis, "Event 2 at " + new Date(timeInMillis)),
-                    new Event(Color.argb(255, 70, 68, 65), timeInMillis, "Event 3 at " + new Date(timeInMillis)));
->>>>>>> d1c27b97d7c64e27bc6639ef7e2e92f6fc8b8431
-        }
+//
+//    private List<Event> getEvents(long timeInMillis, int day) {
+////<<<<<<< HEAD
+//        String simpleDateString = DateUtil.getSimpleDateString(new Date(timeInMillis));
+//        final List<Event>[] ret = new List[]{null};
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                FirebaseFirestore.getInstance().collection(CheckmateKey.REVIEW_RECORD)
+//                        .document(Constant.getInstance().getCurrentUser().getUid())
+//                        .collection(simpleDateString).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        List<Event> events = new ArrayList<>();
+//                        List<DocumentSnapshot> documents = task.getResult().getDocuments();
+//                        for (DocumentSnapshot document : documents) {
+//                            ReviewRecord reviewRecord = document.toObject(ReviewRecord.class);
+//                            Event event = new Event(Color.argb(255, 169, 68, 65)
+//                                    , reviewRecord.getTime().getTime()
+//                                    , "Review the " + reviewRecord.getTimes() + " times");
+//                            events.add(event);
+//                        }
+//                        ret[0] = events;
+//                    }
+//                });
+//            }
+//        }).start();
+//
+//        while(true){
+//            if (ret[0] != null){
+//                return  ret[0];
+//            }
+//=======
+//        if (day < 2) {
+//            return Arrays.asList(new Event(Color.argb(255, 169, 68, 65), timeInMillis, "Event at " + new Date(timeInMillis)));
+//        } else if ( day > 2 && day <= 4) {
+//            return Arrays.asList(
+//                    new Event(Color.argb(255, 169, 68, 65), timeInMillis, "Event at " + new Date(timeInMillis)),
+//                    new Event(Color.argb(255, 100, 68, 65), timeInMillis, "Event 2 at " + new Date(timeInMillis)));
+//        } else {
+//            return Arrays.asList(
+//                    new Event(Color.argb(255, 169, 68, 65), timeInMillis, "Event at " + new Date(timeInMillis)),
+//                    new Event(Color.argb(255, 100, 68, 65), timeInMillis, "Event 2 at " + new Date(timeInMillis)),
+//                    new Event(Color.argb(255, 70, 68, 65), timeInMillis, "Event 3 at " + new Date(timeInMillis)));
+//>>>>>>> d1c27b97d7c64e27bc6639ef7e2e92f6fc8b8431
+//        }
 
 
 
@@ -449,7 +442,7 @@ public class CompactCalendarTab extends Fragment {
 //                    new Event(Color.argb(255, 100, 68, 65), timeInMillis, "Event 2 at " + new Date(timeInMillis)),
 //                    new Event(Color.argb(255, 70, 68, 65), timeInMillis, "Event 3 at " + new Date(timeInMillis)));
 //        }
-    }
+//    }
 
     private void setToMidnight(Calendar calendar) {
         calendar.set(Calendar.HOUR_OF_DAY, 0);
