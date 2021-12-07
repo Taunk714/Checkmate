@@ -31,19 +31,12 @@ public class Group {
      * @param creatorUsername creator's username (firebase)
      * @param description     description of group
      */
-    public Group(String groupDocumentID, String groupName, String[] tags, String creatorUsername, String description) {
+    public Group(String groupDocumentID, String groupName, ArrayList<String> tags, String creatorUsername, String description) {
         this.groupName = groupName;
         this.description = description;
         this.createDate = new Date();
         this.updateDate = new Date();
-        this.status = 0;
-    }
-
-    public Group(String groupName, String[] tags, String description, Date createDate, Date updateDate) {
-        this.groupName = groupName;
-        this.description = description;
-        this.createDate = createDate;
-        this.updateDate = updateDate;
+        this.tags = tags;
         this.status = 0;
     }
 

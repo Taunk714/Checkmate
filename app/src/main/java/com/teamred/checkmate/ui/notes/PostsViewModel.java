@@ -24,12 +24,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class PostListViewModel extends ViewModel {
+/**
+ * This class expects there to be a group ID when the view model is Initialized
+ */
+public class PostsViewModel extends ViewModel {
     private MutableLiveData<List<Post>> posts;
     private Post selectedPost;
     private String groupID;
     DocumentReference docRef;
-    final private String TAG = "PostListViewModel";
+    final private String TAG = "PostsViewModel";
 
     public void init(String groupID) {
         this.groupID = groupID;
@@ -107,5 +110,9 @@ public class PostListViewModel extends ViewModel {
                         }
                     }
                 });
+    }
+
+    public String getGroupID() {
+        return groupID;
     }
 }
