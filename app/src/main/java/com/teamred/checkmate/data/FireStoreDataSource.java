@@ -116,12 +116,6 @@ public class FireStoreDataSource {
 //<<<<<<< HEAD
 
 
-    public static Task<Void> updateUser(String uid, String username){
-        return FirebaseFirestore.getInstance()
-                .collection("user")
-                .document(uid)
-                .update("username", username);
-    }
 
     public static Task<QuerySnapshot> getGroups(){
         return db.collection(CheckmateKey.GROUP_FIREBASE).get();

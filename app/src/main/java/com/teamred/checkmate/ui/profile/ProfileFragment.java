@@ -235,16 +235,9 @@ private Button edit;
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i("profile", "edit profile click");
-                FragmentManager fm = null;
-                FragmentTransaction ft = fm.beginTransaction();
-                EditProfileFragment epf = new EditProfileFragment();
-                Bundle bundle = new Bundle();
-                bundle.putString("name", String.valueOf(tName.getText()));
-                bundle.putString("tAbout_me", String.valueOf(tAbout_me.getText()));
-                epf.setArguments(bundle);
-                ft.replace(R.id.navigation_host, epf)
-                        .commit();
+                Intent i = new Intent(getActivity(), EditProfileActivity.class);
+                Toast.makeText(getContext(), "Edit Profile", Toast.LENGTH_LONG).show();
+                startActivity(i);
             }
         });
 
