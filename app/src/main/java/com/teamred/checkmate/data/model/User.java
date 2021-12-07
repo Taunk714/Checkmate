@@ -1,6 +1,5 @@
 package com.teamred.checkmate.data.model;
 
-import com.google.firebase.firestore.DocumentId;
 import com.teamred.checkmate.data.SavedPost;
 
 import java.util.List;
@@ -76,7 +75,7 @@ public class User {
         this.getGroupJoined().add(groupId);
     }
 
-    public void quiteGroup(String groupId){
+    public void leaveGroup(String groupId){
         this.getGroupJoined().remove(groupId);
     }
 }

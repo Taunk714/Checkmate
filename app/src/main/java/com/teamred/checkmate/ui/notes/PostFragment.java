@@ -23,7 +23,9 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.teamred.checkmate.data.Constant;
 import com.teamred.checkmate.data.model.Post;
+import com.teamred.checkmate.data.model.User;
 import com.teamred.checkmate.databinding.FragmentPostBinding;
 
 import java.util.Calendar;
@@ -63,9 +65,11 @@ public class PostFragment extends Fragment {
         binding.postContentTV.setText(this.post.getContent());
         binding.postSubTopic.setText(this.post.getsubtopic());
 
-        // TODO: Use state of logged in user for document path
-        DocumentReference userPost = db.collection("user").document("c1tw3AB25SRVEqBNBw6GXoDc6X23").collection("savedPosts").document(post.getPostID());
-        userPost.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        User currentUser = Constant.getInstance().getCurrentUser();
+
+        /* Checks to see if the user has saved the post */
+        DocumentReference userSavedPost = db.collection("user").document(currentUser.getUid()).collection("savedPosts").document(post.getPostID());
+        userSavedPost.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
@@ -86,11 +90,10 @@ public class PostFragment extends Fragment {
                 // if state is checked, then add this to user's posts collection and set the
                 // reminder state to true, along with the date that this was saved.
                 // if user unchecks or rechecks this, the entry will be replaced
+                User currentUser = Constant.getInstance().getCurrentUser();
                 if (binding.reminderSwitch.isChecked()) {
                     Log.d(TAG, "onClick: Is checked");
-
-                    // TODO: Use state of logged in user for isAuthor.
-                    final boolean isAuthor = post.getAuthor() == "";
+                    final boolean isAuthor = post.getAuthor() == currentUser.getUsername();
 
                     Map<String, Object> data = new HashMap<>();
                     data.put("dateLastReviewed", Calendar.getInstance().getTime());
@@ -100,12 +103,11 @@ public class PostFragment extends Fragment {
 
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-                    // TODO: Use state of logged in user for document path
-                    CollectionReference posts = db.collection("user").document("c1tw3AB25SRVEqBNBw6GXoDc6X23").collection("savedPosts");
+                    CollectionReference posts = db.collection("user").document(currentUser.getUid()).collection("savedPosts");
                     posts.document(post.getPostID()).set(data);
                 } else {
                     Log.d(TAG, "onClick: Is not checked");
-                    db.collection("user").document("c1tw3AB25SRVEqBNBw6GXoDc6X23")
+                    db.collection("user").document(currentUser.getUid())
                             .collection("savedPosts").document(post.getPostID()).delete().addOnSuccessListener(
                             new OnSuccessListener<Void>() {
                                 @Override

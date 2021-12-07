@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements FilterDialogFragm
 //        filterDialogFragment.setGroupStatusSelect(groupStatusSelected);
 //        List<Fragment> fragments = getSupportFragmentManager().getFragments();
 //        SearchGroupFragment fragmentById = (SearchGroupFragment) (getSupportFragmentManager().findFragmentById(R.id.navigation_search));
-        SearchGroupFragment fragmentById = (SearchGroupFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_container).getChildFragmentManager().getPrimaryNavigationFragment();
+        SearchGroupFragment fragmentById = (SearchGroupFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_host).getChildFragmentManager().getPrimaryNavigationFragment();
         assert fragmentById != null;
         fragmentById.setGroupStatusSelected(filterDialogFragment.getGroupStatusSelect().clone());
     }
@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements FilterDialogFragm
     public void onDialogNegativeClick(DialogFragment dialog) {
         FilterDialogFragment filterDialogFragment = (FilterDialogFragment) dialog;
 
-        SearchGroupFragment fragmentById = (SearchGroupFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_container).getChildFragmentManager().getPrimaryNavigationFragment();
+        SearchGroupFragment fragmentById = (SearchGroupFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_host).getChildFragmentManager().getPrimaryNavigationFragment();
         assert fragmentById != null;
         filterDialogFragment.setGroupStatusSelect(fragmentById.getGroupStatusSelected());
     }

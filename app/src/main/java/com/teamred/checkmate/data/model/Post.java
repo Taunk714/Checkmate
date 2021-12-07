@@ -22,7 +22,7 @@ public class Post {
         this.title = title;
         this.tags = tags;
         this.content = content;
-        this.author = author;
+        this.author = author; // Author will be the USERNAME, not name, not email, USERNAME.
         this.createDate = new Date();
         this.subtopic = subtopic;
         this.onenoteAppURL = onenoteWebURL;

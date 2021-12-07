@@ -105,7 +105,6 @@ public class HomeFragment extends Fragment {
                     startActivity(login);
                 }else{
                     Intent i = new Intent(getActivity(), CreateGroupActivity.class);
-                    Toast.makeText(getContext(), "click create group", Toast.LENGTH_LONG).show();
                     startActivity(i);
                 }
             }

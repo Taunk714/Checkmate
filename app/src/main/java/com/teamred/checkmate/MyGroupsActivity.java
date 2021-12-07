@@ -19,6 +19,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.teamred.checkmate.data.CheckmateKey;
 
 import java.sql.Array;
 import java.text.DateFormatSymbols;
@@ -44,7 +45,7 @@ public class MyGroupsActivity extends AppCompatActivity {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        db.collection("Groups")
+        db.collection(CheckmateKey.GROUP_FIREBASE)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override

@@ -20,7 +20,6 @@ import androidx.fragment.app.Fragment;
 import com.alibaba.fastjson.JSON;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.teamred.checkmate.R;
@@ -37,9 +36,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 public class SearchGroupFragment extends Fragment implements FilterDialogFragment.FilterDialogListener, Searchable {
 
@@ -58,7 +55,6 @@ public class SearchGroupFragment extends Fragment implements FilterDialogFragmen
 
     private boolean[] groupStatusSelected = new boolean[]{true, true};
 
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -73,7 +69,6 @@ public class SearchGroupFragment extends Fragment implements FilterDialogFragmen
         searchType = binding.searchType;
         filter = binding.btnFilter;
         ranking = binding.spnRanking;
-
 
         // enter keywords and search
         searchKeywords.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -203,31 +198,11 @@ public class SearchGroupFragment extends Fragment implements FilterDialogFragmen
             int size = hits.length();
             Group[] groups = new Group[size];
             for (int i = 0; i < hits.length(); i++) { // change json to object
-//                Group group = new Group();
                 String hitObj = hits.getString(i);
                 Group group = JSON.parseObject(hitObj, Group.class);
-//                group.setGroupName(hitObj.getString("groupName"));
-//                group.setDescription(hitObj.getString("description"));
-//                group.setCreator(hitObj.getString("creator"));
-//                group.setCreateDate(new Date(hitObj.getLong("createDate")));
-//                group.setUpdateDate(new Date(hitObj.getLong("createDate")));
-//                group.setStatus(hitObj.getInt("status"));
-////                group.setSubTopics();
-//                List<String> tagList = new ArrayList<>();
-//                JSONArray subtopics = hitObj.getJSONArray("subTopics");
-//                String[] sub = new String[subtopics.length()];
-//
-//                for (int j = 0; j < subtopics.length(); j++) {
-//                    sub[i] = subtopics.getString(j);
-//                }
-//
-//                for (int j = 0; j < arr.length(); j++) {
-//                    tagList.add(arr.getString(j));
-//                }
-//                group.setSubTopics(sub);
                 groups[i] = group;
             }
-            groupAdapter = new GroupListViewAdapter(getContext(), groups, getParentFragmentManager());
+            groupAdapter = new GroupListViewAdapter(getContext(), groups, getActivity().getSupportFragmentManager());
             listView.setAdapter(groupAdapter);
         } catch (JSONException e) {
             e.printStackTrace();

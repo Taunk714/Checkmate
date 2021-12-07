@@ -44,11 +44,11 @@
             android:exported="true"
             android:label="@string/title_calendar_login"
             android:theme="@style/Theme.Checkmate.NoActionBar" />
-        <activity
-            android:name=".ui.notifications.NotificationsFragment"
-            android:exported="true"
-            android:label="@string/title_calendar_login"
-            android:theme="@style/Theme.Checkmate.NoActionBar" />
+<!--        <activity-->
+<!--            android:name=".ui.notifications.NotificationsFragment"-->
+<!--            android:exported="true"-->
+<!--            android:label="@string/title_calendar_login"-->
+<!--            android:theme="@style/Theme.Checkmate.NoActionBar" />-->
         <activity
             android:name=".ui.login.AfterRegisterActivity"
             android:exported="true"

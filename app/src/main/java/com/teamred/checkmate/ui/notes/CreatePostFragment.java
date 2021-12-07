@@ -14,12 +14,7 @@ import android.widget.SearchView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.microsoft.identity.client.AuthenticationCallback;
 import com.microsoft.identity.client.IAccount;
@@ -33,11 +28,11 @@ import com.microsoft.identity.client.exception.MsalException;
 import com.microsoft.identity.client.exception.MsalServiceException;
 import com.microsoft.identity.client.exception.MsalUiRequiredException;
 import com.teamred.checkmate.R;
-import com.teamred.checkmate.data.model.Post;
-import com.teamred.checkmate.databinding.FragmentCreateNoteBinding;
+import com.teamred.checkmate.data.CheckmateKey;
+import com.teamred.checkmate.data.Constant;
+import com.teamred.checkmate.databinding.FragmentCreatePostBinding;
 import com.teamred.checkmate.util.MSGraphRequestWrapper;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -47,11 +42,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CreateNoteFragment extends Fragment {
+public class CreatePostFragment extends Fragment {
 
-    FragmentCreateNoteBinding binding;
+    FragmentCreatePostBinding binding;
 
-    final String TAG = "CreateNoteFragment";
+    final String TAG = "CreatePostFragment";
 
     private String groupID;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -63,7 +58,7 @@ public class CreateNoteFragment extends Fragment {
     private ISingleAccountPublicClientApplication mSingleAccountApp;
     private IAccount mAccount;
 
-    public CreateNoteFragment() {
+    public CreatePostFragment() {
         // Required empty public constructor
     }
 
@@ -72,11 +67,10 @@ public class CreateNoteFragment extends Fragment {
      * this fragment using the provided parameters.
      *
      * @param groupID GroupID
-     * @return A new instance of fragment CreateNoteFragment.
+     * @return A new instance of fragment CreatePostFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static CreateNoteFragment newInstance(String groupID) {
-        CreateNoteFragment fragment = new CreateNoteFragment();
+    public static CreatePostFragment newInstance(String groupID) {
+        CreatePostFragment fragment = new CreatePostFragment();
         Bundle args = new Bundle();
         args.putString("groupID", groupID);
         fragment.setArguments(args);
@@ -94,7 +88,7 @@ public class CreateNoteFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentCreateNoteBinding.inflate(getLayoutInflater());
+        binding = FragmentCreatePostBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
 
         binding.submit.setOnClickListener(new View.OnClickListener() {
@@ -111,11 +105,11 @@ public class CreateNoteFragment extends Fragment {
                 data.put("tags", tags);
                 data.put("content", content);
                 data.put("createdDate", Calendar.getInstance().getTime());
-                data.put("author", "TODO Author");
+                data.put("author", Constant.getInstance().getCurrentUser().getUsername());
                 data.put("onenoteWebURL", selectedWebURL);
                 data.put("onenoteAppURL", selectedAppURL);
 
-                CollectionReference posts = db.collection("Groups").document(groupID).collection("posts");
+                CollectionReference posts = db.collection(CheckmateKey.GROUP_FIREBASE).document(groupID).collection("posts");
                 posts.add(data);
 
                 getParentFragmentManager().popBackStack();
@@ -174,7 +168,6 @@ public class CreateNoteFragment extends Fragment {
 
                     @Override
                     public void onError(@NonNull MsalException exception) {
-                        // TODO: displayError(exception);
                     }
                 });
             }

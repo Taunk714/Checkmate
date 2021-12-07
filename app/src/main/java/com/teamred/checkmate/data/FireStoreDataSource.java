@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -12,6 +13,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Source;
 import com.teamred.checkmate.SyncHelper;
@@ -22,7 +24,6 @@ import java.util.Map;
 
 public class FireStoreDataSource {
     private static FirebaseFirestore db = FirebaseFirestore.getInstance();
-//    private static FirebaseDatabase mdb = FirebaseDatabase.getInstance();
 
     private final static String TAG_SUCCESS = "Add firebase data";
     private final static String TAG_FAIL = "Firebase add data fail";
@@ -67,7 +68,10 @@ public class FireStoreDataSource {
 
             }
         });
+<<<<<<< HEAD
 
+=======
+>>>>>>> e4155874eb63aa913be26ab98e88f1eb599d244a
     }
 
     public static Task<Void> updateGroupMember(Group group){
@@ -102,8 +106,13 @@ public class FireStoreDataSource {
     }
 
     public static Task<DocumentReference>  addGroup(Group group){
-        return db.collection(CheckmateKey.GROUP_FIREBASE).add(JSON.toJSON(group));
+        JSONObject groupDoc = (JSONObject) JSON.toJSON(group);
+        groupDoc.fluentRemove("objectID");
+        Log.i(TAG, "addGroup: adding group to firebase, " + groupDoc.toString());
+        return db.collection(CheckmateKey.GROUP_FIREBASE).add(groupDoc);
+
     }
+<<<<<<< HEAD
 
 
     public static Task<Void> updateUser(String uid, String username){
@@ -121,4 +130,6 @@ public class FireStoreDataSource {
 
 
 
+=======
+>>>>>>> e4155874eb63aa913be26ab98e88f1eb599d244a
 }

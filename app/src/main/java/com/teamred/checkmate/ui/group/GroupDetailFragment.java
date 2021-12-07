@@ -5,7 +5,6 @@ import static com.teamred.checkmate.data.model.Group.joinGroup;
 import static com.teamred.checkmate.data.model.Group.removeGroup;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,38 +19,26 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.alibaba.fastjson.JSON;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.teamred.checkmate.R;
 import com.teamred.checkmate.Searchable;
 import com.teamred.checkmate.data.AlgoliaDataSource;
 import com.teamred.checkmate.data.Constant;
 import com.teamred.checkmate.data.model.Group;
-import com.teamred.checkmate.data.model.Group;
 import com.teamred.checkmate.data.model.Post;
 import com.teamred.checkmate.data.model.Ranking;
 import com.teamred.checkmate.databinding.FragmentGroupDetailBinding;
 import com.teamred.checkmate.ui.PostListViewAdapter;
-import com.teamred.checkmate.ui.notes.CreateNoteFragment;
-import com.teamred.checkmate.ui.notes.PostFragment;
+import com.teamred.checkmate.ui.notes.CreatePostFragment;
 import com.teamred.checkmate.ui.notes.PostListViewModel;
 
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class GroupDetailFragment extends Fragment implements Searchable {
 
@@ -147,7 +134,7 @@ public class GroupDetailFragment extends Fragment implements Searchable {
             @Override
             public void onClick(View view) {
                 // Go to Create Note fragment
-                Fragment createNoteFragment = CreateNoteFragment.newInstance(group.getObjectID());
+                Fragment createNoteFragment = CreatePostFragment.newInstance(group.getObjectID());
 
                 FragmentManager manager = getParentFragmentManager();
 

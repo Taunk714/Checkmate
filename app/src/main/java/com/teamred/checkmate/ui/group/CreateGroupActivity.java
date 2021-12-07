@@ -25,6 +25,7 @@ import com.teamred.checkmate.data.CheckmateKey;
 import com.teamred.checkmate.data.Constant;
 import com.teamred.checkmate.data.FireStoreDataSource;
 import com.teamred.checkmate.data.model.Group;
+import com.teamred.checkmate.data.model.User;
 import com.teamred.checkmate.databinding.ActivityCreateGroupBinding;
 
 import org.json.JSONObject;
@@ -52,7 +53,6 @@ public class CreateGroupActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         final TextView groupName = binding.groupName;
-//        TextView postTag = binding.postTag;
         TextView groupDescription = binding.groupDescription;
         TextView groupTag = binding.groupTags;
         Button create = binding.createGroup;
@@ -86,9 +86,10 @@ public class CreateGroupActivity extends AppCompatActivity {
                             public void requestCompleted(@Nullable JSONObject jsonObject, @Nullable AlgoliaException e) {
                                 if (e == null){
                                     Group.joinGroup(Constant.getInstance().getCurrentUser(), group.getObjectID());
+                                    User currentUser = Constant.getInstance().getCurrentUser();
                                     FirebaseFirestore.getInstance().collection("user")
-                                            .document(Constant.getInstance().getCurrentUser().getUid())
-                                            .update("groupJoined", Constant.getInstance().getCurrentUser().getGroupJoined()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            .document(currentUser.getUid())
+                                            .update("groupJoined", currentUser.getGroupJoined()).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             finish();
@@ -97,8 +98,6 @@ public class CreateGroupActivity extends AppCompatActivity {
                                 }
                             }
                         });
-
-//                        finish();
                     }
                 });
             }
