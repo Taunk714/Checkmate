@@ -110,6 +110,7 @@ public class HomeFragment extends Fragment {
 //                                Map<String, Object> data = document.getData();
 //                                ArrayList<String> tags = (ArrayList<String>) data.get("tags");
                                 Group g = document.toObject(Group.class);
+                                g.setObjectID(document.getId());
 //                                document.
 //                                g.setCreatorId((String) data.get("creatorId"));
                                 allGroups.add(g);
@@ -131,5 +132,37 @@ public class HomeFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        allGroups = new ArrayList<>();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection(CheckmateKey.GROUP_FIREBASE)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            allGroups = new ArrayList<>();
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+//                                Map<String, Object> data = document.getData();
+//                                ArrayList<String> tags = (ArrayList<String>) data.get("tags");
+                                Group g = document.toObject(Group.class);
+                                g.setObjectID(document.getId());
+//                                document.
+//                                g.setCreatorId((String) data.get("creatorId"));
+                                allGroups.add(g);
+                                Log.i(TAG, "onComplete: GOT GROUP" + g.getTags().toString());
+                            }
+                            groupAdapter = new GroupListViewAdapter(getContext(), allGroups.toArray(new Group[allGroups.size()]), getParentFragmentManager());
+                            listview.setAdapter(groupAdapter);
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
     }
 }
