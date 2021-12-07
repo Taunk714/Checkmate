@@ -18,6 +18,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Source;
 import com.teamred.checkmate.SyncHelper;
 import com.teamred.checkmate.data.model.Group;
+import com.teamred.checkmate.data.model.User;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -125,6 +126,18 @@ public class FireStoreDataSource {
     public static Task<QuerySnapshot> getGroups(){
         return db.collection(CheckmateKey.GROUP_FIREBASE).get();
     }
+
+    public static Task<DocumentReference>  addUser(User user){
+        return db.collection(CheckmateKey.USER_FIREBASE).add(JSON.toJSON(user));
+    }
+
+    public static Task<Void> updateUser(String uid, String username){
+        return FirebaseFirestore.getInstance()
+                .collection("user")
+                .document(uid)
+                .update("username", username);
+    }
+
 
 
 

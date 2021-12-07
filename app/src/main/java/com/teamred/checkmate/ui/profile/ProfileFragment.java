@@ -1,5 +1,6 @@
 package com.teamred.checkmate.ui.profile;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +12,8 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -29,9 +32,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.teamred.checkmate.R;
+import com.teamred.checkmate.data.Constant;
 import com.teamred.checkmate.data.model.LoggedInUser;
 import com.teamred.checkmate.data.model.User;
 import com.teamred.checkmate.databinding.FragmentProfileBinding;
+import com.teamred.checkmate.ui.group.CreateGroupActivity;
 import com.teamred.checkmate.ui.group.GroupDetailFragment;
 
 import org.w3c.dom.Text;
@@ -79,6 +84,7 @@ private Button edit;
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         list = binding.reminderlist;
+
         ArrayAdapter<String> arr;
         arr = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_multiple_choice, items);
         list.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);

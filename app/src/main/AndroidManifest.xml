@@ -58,6 +58,12 @@
             android:name=".ui.login.AfterRegisterActivity"
             android:exported="true"
             android:label="@string/title_activity_after_register" />
+
+        <activity
+            android:name=".ui.profile.EditProfileActivity"
+            android:exported="true"
+            android:label="@string/title_activity_login" />
+
         <receiver android:name=".services.NoteReviewReceiver"/>
         <activity
             android:name="com.microsoft.identity.client.BrowserTabActivity"
