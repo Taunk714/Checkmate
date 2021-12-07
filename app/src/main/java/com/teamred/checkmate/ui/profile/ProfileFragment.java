@@ -107,7 +107,7 @@ private Button edit;
 
             userMap.put("uid", user.getUid());
             userMap.put("email", user.getEmail());
-            userMap.put("username", userN);
+            // userMap.put("username", userN);
             // Log.d("ptest", user.getPhotoUrl().toString());
             // Log.d("ptest", user.getDisplayName());
 
@@ -122,6 +122,7 @@ private Button edit;
                         if (document.exists()) {
                             Log.d("ptest2", "DocumentSnapshot data: " + document.getData().get("groupJoined"));
                             userMap.put("groupJoined", document.getData().get("groupJoined"));
+                            userMap.put("username", document.getData().get("username"));
                             Log.d("ptest2", Integer.toString(document.getData().get("groupJoined").toString().split(",")[0].length()));
                             userMap.put("numGroups", document.getData().get("groupJoined").toString().split(",").length);
                             Log.d("ptest2", userMap.toString());
