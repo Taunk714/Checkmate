@@ -22,6 +22,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -33,8 +34,10 @@ import com.teamred.checkmate.data.model.User;
 import com.teamred.checkmate.databinding.FragmentProfileBinding;
 import com.teamred.checkmate.ui.group.GroupDetailFragment;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -60,6 +63,7 @@ private Button edit;
     String username = user.getUsername();
     String profile_pic = user.getPhotoUrl();
     String userN;
+    List<Object> savedP = new ArrayList<>();
 
     public View onCreateView(@NonNull LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
@@ -102,6 +106,67 @@ private Button edit;
                             userMap.put("groupJoined", document.getData().get("groupJoined"));
                             userMap.put("numGroups", document.getData().get("groupJoined").toString().split(",").length);
                             Log.d("ptest2", userMap.toString());
+
+                            db.collection("user").document(user.getUid()).collection("savedPosts")
+                                    .get()
+                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                            if (task.isSuccessful()) {
+                                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                                    Log.d("ptest3", document.getId() + " => " + document.getData());
+
+                                                    DocumentReference docRef = db.collection("groups").document(document.getData().get("groupIDPostBelongsTo").toString()).collection("posts").document(document.getId());
+                                                    docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                            if (task.isSuccessful()) {
+                                                                DocumentSnapshot document = task.getResult();
+                                                                if (document.exists()) {
+                                                                    Log.d("ptest4", "DocumentSnapshot data: " + document.getData());
+                                                                    savedP.add(document.getData());
+                                                                    userMap.put("savedPosts", savedP);
+                                                                    Log.d("ptest4", userMap.toString());
+                                                                } else {
+                                                                    Log.d("ptest4", "No such document");
+                                                                }
+                                                            } else {
+                                                                Log.d("ptest4", "get failed with ", task.getException());
+                                                            }
+                                                        }
+                                                    });
+
+
+
+                                                }
+                                            } else {
+                                                Log.d("ptest3", "Error getting documents: ", task.getException());
+                                            }
+                                        }
+                                    });
+
+                            // CollectionReference docRef = db.collection("user").document(user.getUid()).collection("savedPosts");
+                            // docRef.get().addOnCompleteListener(new OnCompleteListener<CollectionSnapshot>() {
+                            //     @Override
+                            //     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            //         if (task.isSuccessful()) {
+                            //             DocumentSnapshot document = task.getResult();
+                            //             if (document.exists()) {
+                            //                 Log.d("ptest2", "DocumentSnapshot data: " + document.getData().get("groupJoined"));
+                            //                 userMap.put("groupJoined", document.getData().get("groupJoined"));
+                            //                 userMap.put("numGroups", document.getData().get("groupJoined").toString().split(",").length);
+                            //                 Log.d("ptest2", userMap.toString());
+                            //             } else {
+                            //                 Log.d("ptest2", "No such document");
+                            //             }
+                            //         } else {
+                            //             Log.d("ptest2", "get failed with ", task.getException());
+                            //         }
+                            //     }
+                            // });
+
+
+
                         } else {
                             Log.d("ptest2", "No such document");
                         }

@@ -131,6 +131,8 @@
         android:rotation="180"
         android:src="@drawable/ic_baseline_exit_to_app_24"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@drawable/imageview_white_border"
+        android:padding="10dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
