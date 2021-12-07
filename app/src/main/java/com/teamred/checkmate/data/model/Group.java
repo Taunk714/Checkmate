@@ -67,7 +67,7 @@ public class Group {
         FireStoreDataSource.updateGroupView(group).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                AlgoliaDataSource.getInstance().updateGroup(group.objectID, "numView", group.numView.toString());
+                AlgoliaDataSource.getInstance().updateGroupNum(group.objectID, "numView", group.numView);
             }
         });
     }
@@ -76,7 +76,7 @@ public class Group {
         FireStoreDataSource.updateGroupMember(group).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                AlgoliaDataSource.getInstance().updateGroup(group.objectID, "numMember", group.numMember.toString());
+                AlgoliaDataSource.getInstance().updateGroupNum(group.objectID, "numMember", group.numMember);
             }
         });
 

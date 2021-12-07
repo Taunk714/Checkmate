@@ -89,6 +89,7 @@ public class ChatDetailFragment extends Fragment {
         assert arguments != null;
         String otherUserString = arguments.getString("otherUser");
         otherUser = JSON.parseObject(otherUserString, User.class);
+        binding.chatWithWhom.setText(otherUser.getUsername());
         MESSAGE_REF = generateMessageRef(otherUser.getUid(), Constant.getInstance().getCurrentUser().getUid());
 
         mdb = FirebaseDatabase.getInstance();

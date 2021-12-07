@@ -67,6 +67,7 @@ public class NoteReviewReceiver extends BroadcastReceiver {
         docRef = db.collection(CheckmateKey.USER_FIREBASE).document(Constant.getInstance().getCurrentUser().getUid())
                 .collection("savedPosts").document(extras.getString(POST_ID));
 
+
         // (data.get("dateLastReviewed") == Calendar.getInstance().getTime())
 
         final NotificationManager manager =

@@ -20,25 +20,33 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.alibaba.fastjson.JSON;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.teamred.checkmate.R;
 import com.teamred.checkmate.Searchable;
 import com.teamred.checkmate.data.AlgoliaDataSource;
 import com.teamred.checkmate.data.Constant;
+import com.teamred.checkmate.data.LoginDataSource;
 import com.teamred.checkmate.data.model.Group;
 import com.teamred.checkmate.data.model.Post;
 import com.teamred.checkmate.data.model.Ranking;
+import com.teamred.checkmate.data.model.User;
 import com.teamred.checkmate.databinding.FragmentGroupDetailBinding;
 import com.teamred.checkmate.ui.PostListViewAdapter;
+import com.teamred.checkmate.ui.chat.ChatDetailFragment;
 import com.teamred.checkmate.ui.notes.CreatePostFragment;
 import com.teamred.checkmate.ui.notes.PostsViewModel;
 
 import org.json.JSONObject;
 
 import java.util.List;
+import java.util.Map;
 
 public class GroupDetailFragment extends Fragment implements Searchable {
 
@@ -89,6 +97,11 @@ public class GroupDetailFragment extends Fragment implements Searchable {
             creator.setText(group.getCreator());
             desc.setText(group.getDescription());
 
+            group.addView();
+            Group.updateView(group);
+
+            binding.groupDetailNumMembers.setText(group.getNumMember().toString());
+
             PostsViewModel postsViewModel = new ViewModelProvider(requireActivity()).get(PostsViewModel.class);
             postsViewModel.init(group.getObjectID());
 
@@ -126,6 +139,31 @@ public class GroupDetailFragment extends Fragment implements Searchable {
                 // go to user profile
                 // uid is creatorId
                 String uid = creatorId;
+                if (uid.equals(Constant.getInstance().getCurrentUser().getUid())){
+                    // go to profile
+                }else{
+                    FragmentManager fm = getParentFragmentManager();
+                    FragmentTransaction ft = fm.beginTransaction();
+                    Task<DocumentSnapshot> userTask = LoginDataSource.getUserTask(uid);
+                    userTask.addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            User user = new User();
+                            Map<String, Object> data = task.getResult().getData();
+                            user.setName((String) data.get("name"));
+                            user.setPhotoUrl((String) data.get("photoUrl"));
+                            user.setUid((String) data.get("uid"));
+                            user.setUsername((String) data.get("username"));
+                            Bundle bundle = new Bundle();
+                            bundle.putString("otherUser", JSON.toJSONString(user));
+                            ChatDetailFragment chatDetailFragment = new ChatDetailFragment();
+                            chatDetailFragment.setArguments(bundle);
+                            ft.add(R.id.navigation_host, chatDetailFragment)
+                                    .commit();
+                        }
+                    });
+                }
+
             }
         });
 
@@ -192,39 +230,25 @@ public class GroupDetailFragment extends Fragment implements Searchable {
                             .update("groupJoined", Constant.getInstance().getCurrentUser().getGroupJoined());
                     group.removeMember();
                     Group.updateMember(group);
+                    binding.groupDetailNumMembers.setText(group.getNumMember().toString());
                     binding.joinGroupButton.setEnabled(true);
                     enableJoined();
+                    joined = !joined;
 
                 }else{
                     joinGroup(Constant.getInstance().getCurrentUser(), group.getObjectID());
                     FirebaseFirestore.getInstance().collection("user").document(Constant.getInstance().getCurrentUser().getUid()).set(JSON.toJSON(Constant.getInstance().getCurrentUser()));
+                    group.addMember();
                     Group.updateMember(group);
                     binding.joinGroupButton.setEnabled(true);
+                    binding.groupDetailNumMembers.setText(group.getNumMember().toString());
                     disableJoined();
+                    joined = !joined;
 
                 }
             }
         });
 
-//        // dropdown spinner menu. Select the field you want to search
-//        searchType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                String current = getResources().getStringArray(R.array.search_type)[position];
-//                String[] arr = getResources().getStringArray(R.array.search_type);
-//                List<String> list = new ArrayList<>();
-//                if (position == 0){
-//                    queryType = new String[]{"groupName", "creator", "description", "tags"};
-//                }else{
-//                    queryType = new String[]{current.toLowerCase()};
-//                }
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parent) {
-//
-//            }
-//        });
 
         Ranking[] rankingAdapter = new Ranking[]{
                 Ranking.Default,

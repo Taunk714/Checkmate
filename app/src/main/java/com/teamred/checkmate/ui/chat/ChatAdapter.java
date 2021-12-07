@@ -1,5 +1,8 @@
 package com.teamred.checkmate.ui.chat;
 
+import static com.teamred.checkmate.ui.chat.ChatFragment.CHAT_LIST;
+
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,8 +18,11 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.teamred.checkmate.R;
+import com.teamred.checkmate.data.Constant;
 import com.teamred.checkmate.data.LoginDataSource;
 import com.teamred.checkmate.data.model.Chat;
 import com.teamred.checkmate.data.model.FriendlyMessage;
@@ -57,6 +63,13 @@ public class ChatAdapter extends FirebaseRecyclerAdapter<Chat, ChatAdapter.ChatV
         holder.binding.bigConsLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                model.setUnread(0);
+                FirebaseDatabase.getInstance()
+                    .getReference()
+                    .child(CHAT_LIST)
+                    .child(Constant.getInstance().getCurrentUser().getUid())
+                    .child(chat.getOtherUser()).setValue(chat);
+
                 FragmentTransaction ft = fm.beginTransaction();
                 Task<DocumentSnapshot> userTask = LoginDataSource.getUserTask(model.getOtherUser());
                 userTask.addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -95,6 +108,7 @@ public class ChatAdapter extends FirebaseRecyclerAdapter<Chat, ChatAdapter.ChatV
 
             User user = null;
             LoginDataSource.getTargetUser(item.getOtherUser()).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @SuppressLint("ResourceAsColor")
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     Map<String, Object> data = task.getResult().getData();

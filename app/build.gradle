@@ -21,6 +21,11 @@ allprojects {
 }
 
 android {
+    signingConfigs {
+        debug {
+            storeFile file('C:\\Users\\53264\\.android\\debug.keystore')
+        }
+    }
     compileSdk 31
 
     defaultConfig {
@@ -31,6 +36,7 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        signingConfig signingConfigs.debug
     }
 
     buildTypes {

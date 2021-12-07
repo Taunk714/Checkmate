@@ -83,6 +83,7 @@ public class PostFragment extends Fragment {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
+                    String d = (String) document.get("d");
                     if (document.exists()) {
                         // set the checked for "reminder switch" to be true
                         binding.reminderSwitch.setChecked(true);
@@ -133,7 +134,9 @@ public class PostFragment extends Fragment {
                     CollectionReference posts = db.collection("user").document(currentUser.getUid()).collection("savedPosts");
                     posts.document(post.getPostID()).set(data);
 
+
                     Toast.makeText(getContext(), "Reminder Set!", Toast.LENGTH_SHORT).show();
+
                     alarmManager.set(AlarmManager.RTC_WAKEUP, timeAtSwitchOn + tenSeconds, pi);
 
                 } else {

@@ -107,15 +107,11 @@ public class HomeFragment extends Fragment {
                             allGroups = new ArrayList<>();
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
-                                Map<String, Object> data = document.getData();
-                                ArrayList<String> tags = (ArrayList<String>) data.get("tags");
-                                Group g = new Group(
-                                        document.getId().toString(),
-                                        data.get("groupName").toString(),
-                                        tags,
-                                        data.get("creator").toString(),
-                                        data.get("description").toString()
-                                );
+//                                Map<String, Object> data = document.getData();
+//                                ArrayList<String> tags = (ArrayList<String>) data.get("tags");
+                                Group g = document.toObject(Group.class);
+//                                document.
+//                                g.setCreatorId((String) data.get("creatorId"));
                                 allGroups.add(g);
                                 Log.i(TAG, "onComplete: GOT GROUP" + g.getTags().toString());
                             }
