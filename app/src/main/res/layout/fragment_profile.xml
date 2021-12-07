@@ -70,7 +70,7 @@
         android:id="@+id/username_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
+        android:gravity="left"
         android:text="username"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="#000000"
@@ -78,23 +78,23 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.051"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/p_pic"
-        app:layout_constraintVertical_bias="0.333" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/numgroupsjoined"
-        android:layout_width="99dp"
+        android:layout_width="144dp"
         android:layout_height="22dp"
-        android:gravity="center|top|left"
+        android:gravity="left"
         android:text="8 groups joined"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textColor="#515151"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.051"
+        app:layout_constraintHorizontal_bias="0.059"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.296" />
+        app:layout_constraintVertical_bias="0.299" />
 
     <ImageButton
         android:id="@+id/chat_btn"

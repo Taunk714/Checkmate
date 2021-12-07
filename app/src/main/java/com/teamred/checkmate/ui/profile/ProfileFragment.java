@@ -34,6 +34,8 @@ import com.teamred.checkmate.data.model.User;
 import com.teamred.checkmate.databinding.FragmentProfileBinding;
 import com.teamred.checkmate.ui.group.GroupDetailFragment;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -60,10 +62,16 @@ private Button edit;
     Map<String, Object> userMap = new HashMap<>();
     User user = new User();
     String name = user.getName();
-    String username = user.getUsername();
+    // String username = user.getUsername();
     String profile_pic = user.getPhotoUrl();
     String userN;
     List<Object> savedP = new ArrayList<>();
+    List<String> savedPNames = new ArrayList<>();
+
+    TextView usernameTxtView;
+    // String username;
+    TextView numGroupsTxtView;
+    // Integer numGroups;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
@@ -125,8 +133,25 @@ private Button edit;
                                                                 if (document.exists()) {
                                                                     Log.d("ptest4", "DocumentSnapshot data: " + document.getData());
                                                                     savedP.add(document.getData());
+                                                                    savedPNames.add(document.getData().get("postTitle").toString());
                                                                     userMap.put("savedPosts", savedP);
+                                                                    userMap.put("savedPostNames", savedPNames);
                                                                     Log.d("ptest4", userMap.toString());
+
+                                                                    usernameTxtView.setText(userMap.get("username").toString());
+                                                                    numGroupsTxtView.setText(userMap.get("numGroups").toString() + " groups joined");
+
+                                                                    // work on getting things to review today working
+                                                                    // savedPNames.toArray();
+
+                                                                    ArrayAdapter<String> reviewAdapter = new ArrayAdapter<String>(getContext(),
+                                                                            android.R.layout.simple_list_item_multiple_choice, savedPNames);
+                                                                    list.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+                                                                    list.setAdapter(reviewAdapter);
+
+                                                                    // ArrayAdapter<String> monthAdapter = new ArrayAdapter<>(getApplication().getApplicationContext(),
+                                                                    //         android.R.layout.simple_list_item_1, groupsPrint);
+                                                                    // lvMonth.setAdapter(monthAdapter);
                                                                 } else {
                                                                     Log.d("ptest4", "No such document");
                                                                 }
@@ -220,7 +245,15 @@ private Button edit;
         return root;
     }
 
-@Override
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        // set this stuff
+        usernameTxtView = (TextView) getView().findViewById(R.id.username_tv);
+        numGroupsTxtView = (TextView) getView().findViewById(R.id.numgroupsjoined);
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
