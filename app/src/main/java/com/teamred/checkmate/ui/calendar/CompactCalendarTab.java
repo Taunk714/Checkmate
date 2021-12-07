@@ -43,7 +43,16 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.teamred.checkmate.R;
+import com.teamred.checkmate.data.CheckmateKey;
+import com.teamred.checkmate.data.Constant;
+import com.teamred.checkmate.data.model.ReviewRecord;
+import com.teamred.checkmate.util.DateUtil;
 
 
 public class CompactCalendarTab extends Fragment {
@@ -327,41 +336,105 @@ public class CompactCalendarTab extends Fragment {
     }
 
     private void addEvents(int month, int year) {
+//        currentCalender.setTime(new Date());
         currentCalender.setTime(new Date());
         currentCalender.set(Calendar.DAY_OF_MONTH, 1);
-        Date firstDayOfMonth = currentCalender.getTime();
-        for (int i = 0; i < 6; i++) {
-            currentCalender.setTime(firstDayOfMonth);
-            if (month > -1) {
-                currentCalender.set(Calendar.MONTH, month);
-            }
-            if (year > -1) {
-                currentCalender.set(Calendar.ERA, GregorianCalendar.AD);
-                currentCalender.set(Calendar.YEAR, year);
-            }
-            currentCalender.add(Calendar.DATE, i);
+        if (month > -1){
+            currentCalender.set(Calendar.MONTH, month);
+        }
+        if (year > -1){
+            currentCalender.set(Calendar.YEAR, year);
+        }
+
+//        Date firstDayOfMonth = currentCalender.getTime();
+        Calendar instance = Calendar.getInstance();
+        instance.setTime(new Date());
+        int i = 1;
+        while(currentCalender.before(instance) || currentCalender.get(Calendar.DAY_OF_MONTH) == instance.get(Calendar.DAY_OF_MONTH)){
+
+            currentCalender.set(Calendar.DAY_OF_MONTH, i);
+            i++;
+//            currentCalender.setTime(firstDayOfMonth);
+//            if (month > -1) {
+//                currentCalender.set(Calendar.MONTH, month);
+//            }
+//            if (year > -1) {
+//                currentCalender.set(Calendar.ERA, GregorianCalendar.AD);
+//                currentCalender.set(Calendar.YEAR, year);
+//            }
+//            currentCalender.add(Calendar.DATE, i);
             setToMidnight(currentCalender);
             long timeInMillis = currentCalender.getTimeInMillis();
 
-            List<Event> events = getEvents(timeInMillis, i);
+            String simpleDateString = DateUtil.getSimpleDateString(new Date(timeInMillis));
 
-            compactCalendarView.addEvents(events);
+            FirebaseFirestore.getInstance().collection(CheckmateKey.REVIEW_RECORD)
+                    .document(Constant.getInstance().getCurrentUser().getUid())
+                    .collection(simpleDateString).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    List<Event> events = new ArrayList<>();
+                    List<DocumentSnapshot> documents = task.getResult().getDocuments();
+                    for (DocumentSnapshot document : documents) {
+                        ReviewRecord reviewRecord = document.toObject(ReviewRecord.class);
+                        Event event = new Event(Color.argb(255, 169, 68, 65)
+                                , reviewRecord.getTime().getTime()
+                                , "Review the " + reviewRecord.getTimes() + " times");
+                        events.add(event);
+                    }
+                    compactCalendarView.addEvents(events);
+                }
+            });
+
         }
     }
 
     private List<Event> getEvents(long timeInMillis, int day) {
-        if (day < 2) {
-            return Arrays.asList(new Event(Color.argb(255, 169, 68, 65), timeInMillis, "Event at " + new Date(timeInMillis)));
-        } else if ( day > 2 && day <= 4) {
-            return Arrays.asList(
-                    new Event(Color.argb(255, 169, 68, 65), timeInMillis, "Event at " + new Date(timeInMillis)),
-                    new Event(Color.argb(255, 100, 68, 65), timeInMillis, "Event 2 at " + new Date(timeInMillis)));
-        } else {
-            return Arrays.asList(
-                    new Event(Color.argb(255, 169, 68, 65), timeInMillis, "Event at " + new Date(timeInMillis) ),
-                    new Event(Color.argb(255, 100, 68, 65), timeInMillis, "Event 2 at " + new Date(timeInMillis)),
-                    new Event(Color.argb(255, 70, 68, 65), timeInMillis, "Event 3 at " + new Date(timeInMillis)));
+        String simpleDateString = DateUtil.getSimpleDateString(new Date(timeInMillis));
+        final List<Event>[] ret = new List[]{null};
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                FirebaseFirestore.getInstance().collection(CheckmateKey.REVIEW_RECORD)
+                        .document(Constant.getInstance().getCurrentUser().getUid())
+                        .collection(simpleDateString).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        List<Event> events = new ArrayList<>();
+                        List<DocumentSnapshot> documents = task.getResult().getDocuments();
+                        for (DocumentSnapshot document : documents) {
+                            ReviewRecord reviewRecord = document.toObject(ReviewRecord.class);
+                            Event event = new Event(Color.argb(255, 169, 68, 65)
+                                    , reviewRecord.getTime().getTime()
+                                    , "Review the " + reviewRecord.getTimes() + " times");
+                            events.add(event);
+                        }
+                        ret[0] = events;
+                    }
+                });
+            }
+        }).start();
+
+        while(true){
+            if (ret[0] != null){
+                return  ret[0];
+            }
         }
+
+
+
+//        if (day < 2) {
+//            return Arrays.asList(new Event(Color.argb(255, 169, 68, 65), timeInMillis, "Event at " + new Date(timeInMillis)));
+//        } else if ( day > 2 && day <= 4) {
+//            return Arrays.asList(
+//                    new Event(Color.argb(255, 169, 68, 65), timeInMillis, "Event at " + new Date(timeInMillis)),
+//                    new Event(Color.argb(255, 100, 68, 65), timeInMillis, "Event 2 at " + new Date(timeInMillis)));
+//        } else {
+//            return Arrays.asList(
+//                    new Event(Color.argb(255, 169, 68, 65), timeInMillis, "Event at " + new Date(timeInMillis) ),
+//                    new Event(Color.argb(255, 100, 68, 65), timeInMillis, "Event 2 at " + new Date(timeInMillis)),
+//                    new Event(Color.argb(255, 70, 68, 65), timeInMillis, "Event 3 at " + new Date(timeInMillis)));
+//        }
     }
 
     private void setToMidnight(Calendar calendar) {

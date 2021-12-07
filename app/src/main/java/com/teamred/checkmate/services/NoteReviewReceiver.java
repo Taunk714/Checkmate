@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 
+import com.alibaba.fastjson.JSON;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
@@ -38,8 +39,11 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
 import com.teamred.checkmate.R;
+import com.teamred.checkmate.data.model.ReviewRecord;
+import com.teamred.checkmate.util.DateUtil;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 
@@ -54,6 +58,8 @@ public class NoteReviewReceiver extends BroadcastReceiver {
     DocumentReference docRef;
     Post post;
 
+    String postId = null;
+
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     //db.collection(CheckmateKey.GROUP_FIREBASE).document(this.group_ID).collection("posts").
 
@@ -64,6 +70,7 @@ public class NoteReviewReceiver extends BroadcastReceiver {
         //String postid = extras.getString(POST_ID);
 
         // intent.getExtra(BUNDLE_EXTRA);
+        postId = extras.getString(POST_ID);
         if( extras != null){
         docRef = db.collection(CheckmateKey.USER_FIREBASE).document(Constant.getInstance().getCurrentUser().getUid())
                 .collection("savedPosts").document(extras.getString(POST_ID));
@@ -101,6 +108,14 @@ public class NoteReviewReceiver extends BroadcastReceiver {
                        DocumentSnapshot result1 = task.getResult();
                        int timesReviewed = Integer.parseInt(result1.get("numTimesReviewed").toString());
                        docRef.update("numTimesReviewed", timesReviewed);
+                       String simpleDateString = DateUtil.getSimpleDateString(new Date());
+                       ReviewRecord reviewRecord = new ReviewRecord();
+                       reviewRecord.setTime(new Date());
+                       reviewRecord.setTimes(timesReviewed);
+                       reviewRecord.setPostTitle(postId);
+                       db.collection(CheckmateKey.REVIEW_RECORD)
+                               .document(Constant.getInstance().getCurrentUser().getUid())
+                               .collection(simpleDateString).add(JSON.toJSON(reviewRecord));
                    }
                });
     }
