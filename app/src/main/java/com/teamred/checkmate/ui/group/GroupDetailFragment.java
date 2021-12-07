@@ -89,6 +89,11 @@ public class GroupDetailFragment extends Fragment implements Searchable {
             creator.setText(group.getCreator());
             desc.setText(group.getDescription());
 
+            group.addView();
+            Group.updateView(group);
+
+            binding.groupDetailNumMembers.setText(group.getNumMember().toString());
+
             PostsViewModel postsViewModel = new ViewModelProvider(requireActivity()).get(PostsViewModel.class);
             postsViewModel.init(group.getObjectID());
 
@@ -192,39 +197,25 @@ public class GroupDetailFragment extends Fragment implements Searchable {
                             .update("groupJoined", Constant.getInstance().getCurrentUser().getGroupJoined());
                     group.removeMember();
                     Group.updateMember(group);
+                    binding.groupDetailNumMembers.setText(group.getNumMember().toString());
                     binding.joinGroupButton.setEnabled(true);
                     enableJoined();
+                    joined = !joined;
 
                 }else{
                     joinGroup(Constant.getInstance().getCurrentUser(), group.getObjectID());
                     FirebaseFirestore.getInstance().collection("user").document(Constant.getInstance().getCurrentUser().getUid()).set(JSON.toJSON(Constant.getInstance().getCurrentUser()));
+                    group.addMember();
                     Group.updateMember(group);
                     binding.joinGroupButton.setEnabled(true);
+                    binding.groupDetailNumMembers.setText(group.getNumMember().toString());
                     disableJoined();
+                    joined = !joined;
 
                 }
             }
         });
 
-//        // dropdown spinner menu. Select the field you want to search
-//        searchType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                String current = getResources().getStringArray(R.array.search_type)[position];
-//                String[] arr = getResources().getStringArray(R.array.search_type);
-//                List<String> list = new ArrayList<>();
-//                if (position == 0){
-//                    queryType = new String[]{"groupName", "creator", "description", "tags"};
-//                }else{
-//                    queryType = new String[]{current.toLowerCase()};
-//                }
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parent) {
-//
-//            }
-//        });
 
         Ranking[] rankingAdapter = new Ranking[]{
                 Ranking.Default,

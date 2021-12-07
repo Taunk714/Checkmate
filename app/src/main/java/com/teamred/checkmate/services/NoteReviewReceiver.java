@@ -50,7 +50,7 @@ public class NoteReviewReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        // Post p = intent.getExtra(BUNDLE_EXTRA);
+         String p = intent.getStringExtra("a");
 
         // (data.get("dateLastReviewed") == Calendar.getInstance().getTime())
 

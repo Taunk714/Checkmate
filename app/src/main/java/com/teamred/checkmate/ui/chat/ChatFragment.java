@@ -83,65 +83,6 @@ public class ChatFragment extends Fragment {
         binding.chatListview.setLayoutManager(manager);
         binding.chatListview.setAdapter(adapter);
 
-
-
-//        adapter.registerAdapterDataObserver(
-//                new MyScrollToTopObserver<ChatAdapter>(binding.chatListview, adapter, manager)
-//        );
-
-//        binding.onlyForTest.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                FragmentManager parentFragmentManager = getParentFragmentManager();
-//                FragmentTransaction ft = parentFragmentManager.beginTransaction();
-//                Task<DocumentSnapshot> userTask = LoginDataSource.getUserTask("BcQuTHa00chEi2fuGNlTgPoUmfz1");
-//                userTask.addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                        User user = new User();
-//                        Map<String, Object> data = task.getResult().getData();
-//                        user.setName((String) data.get("name"));
-//                        user.setPhotoUrl((String) data.get("photoUrl"));
-//                        user.setUid((String) data.get("uid"));
-//                        user.setUsername((String) data.get("username"));
-//                        Bundle bundle = new Bundle();
-//                        bundle.putString("otherUser", JSON.toJSONString(user));
-//                        ChatDetailFragment chatDetailFragment = new ChatDetailFragment();
-//                        chatDetailFragment.setArguments(bundle);
-//                        ft.add(R.id.nav_host_fragment_activity_main2, chatDetailFragment)
-//                                .commit();
-//                    }
-//                });
-//
-//            }
-//        });
-
-//        binding.sendButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                FriendlyMessage friendlyMessage = new FriendlyMessage(
-//                        FirebaseAuth.getInstance().getUid(),
-//                        otherUserUid,
-//                        binding.messageEditText.getText().toString(),
-//                        getUserName(),
-//                        getPhotoUrl(),
-//                        null);
-//                mdb.getReference()
-//                        .child(MESSAGES_CHILD)
-//                        .child(MESSAGE_REF)
-//                        .push()
-//                        .setValue(friendlyMessage);
-//                binding.messageEditText.setText("");
-//            }
-//        });
-//
-//        binding.addMessageImageView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                openDocument.launch(new String[]{"image/*"});
-//            }
-//        });
-
         return root;
     }
 

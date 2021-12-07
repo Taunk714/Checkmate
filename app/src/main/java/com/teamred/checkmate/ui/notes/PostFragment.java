@@ -80,6 +80,7 @@ public class PostFragment extends Fragment {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
+                    String d = (String) document.get("d");
                     if (document.exists()) {
                         // set the checked for "reminder switch" to be true
                         binding.reminderSwitch.setChecked(true);
@@ -117,6 +118,7 @@ public class PostFragment extends Fragment {
 
                     Intent i = new Intent(getContext(), NoteReviewReceiver.class);
                     PendingIntent pi = PendingIntent.getBroadcast(getContext(), 0, i, 0);
+
 
                     AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
 

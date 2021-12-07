@@ -132,6 +132,7 @@ public class LoginDataSource {
         user.setUid((String) data.get("uid"));
         user.setUsername((String) data.get("username"));
         currentUserResult.setValue(user);
+        Constant.getInstance().setCurrentUser(user);
     }
 
 

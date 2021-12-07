@@ -185,7 +185,7 @@ public class AlgoliaDataSource {
 
     }
 
-    public void updateGroup(String objectId, String... keyValue){
+    public<T> void updateGroupNum(String objectId, T... keyValue){
         CompletionHandler completionHandler = new CompletionHandler() {
             @Override
             public void requestCompleted(JSONObject content, AlgoliaException error) {
@@ -203,7 +203,7 @@ public class AlgoliaDataSource {
         JSONObject jsonObject = new JSONObject();
         for (int i = 0; i < keyValue.length; i = i + 2) {
             try {
-                jsonObject.put(keyValue[i], keyValue[i+1]);
+                jsonObject.put((String) keyValue[i], (int) keyValue[i+1]);
             } catch (JSONException e) {
                 e.printStackTrace();
             }

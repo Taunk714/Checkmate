@@ -20,6 +20,8 @@ import com.teamred.checkmate.data.FireStoreDataSource;
 import com.teamred.checkmate.data.model.Group;
 import com.teamred.checkmate.ui.group.GroupDetailFragment;
 
+import java.util.List;
+
 public class GroupListViewAdapter extends BaseAdapter {
 
     private Group[] groupList;
@@ -55,11 +57,13 @@ public class GroupListViewAdapter extends BaseAdapter {
         TextView groupCreator = (TextView) row.findViewById(R.id.listview_group_creator);
 //        TextView noteDate = row.findViewById(R.id.note_date);
         TextView groupDescription = row.findViewById(R.id.post_content);
+        TextView tag = row.findViewById(R.id.tag);
 //        TextView noteNumber = row.findViewById(R.id.note_number);
         groupDescription.setText(Html.fromHtml(groupList[position].getDescription()));
         groupCreator.setText(Html.fromHtml(groupList[position].getCreator()));
 //        noteDate.setText(DateUtil.getSimpleDateString(groupList[position].getCreateDate()));
         groupName.setText(Html.fromHtml(groupList[position].getGroupName()));
+        tag.setText(generate(groupList[position].getTags()));
 //        noteNumber.setText(groupList[position].getNumber().toString());
 
         row.setOnClickListener(new View.OnClickListener() {
@@ -67,7 +71,7 @@ public class GroupListViewAdapter extends BaseAdapter {
             public void onClick(View v) {
                 Log.i("group", "search group click");
                 groupList[position].addView();
-                Group.updateView(groupList[position]);
+//                Group.updateView(groupList[position]);
                 FragmentTransaction ft = fm.beginTransaction();
                 GroupDetailFragment groupDetailFragment = new GroupDetailFragment();
                 Bundle bundle = new Bundle();
@@ -105,5 +109,17 @@ public class GroupListViewAdapter extends BaseAdapter {
 
     public void setFm(FragmentManager fm) {
         this.fm = fm;
+    }
+
+    public String generate(List<String> tags){
+        StringBuilder sb = new StringBuilder();
+        if (tags.size() > 0){
+            sb.append(tags.get(0));
+        }
+
+        for (int i = 1; i < tags.size(); i++) {
+            sb.append(" | ").append(tags.get(i));
+        }
+        return sb.toString();
     }
 }
