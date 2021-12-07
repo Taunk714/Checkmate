@@ -1,5 +1,6 @@
 package com.teamred.checkmate.ui.profile;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +14,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.alibaba.fastjson.JSON;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.teamred.checkmate.data.AlgoliaDataSource;
@@ -72,16 +75,16 @@ public class EditProfileActivity extends AppCompatActivity {
                 //String uPhoto = photo.getText().toString();
                 Toast.makeText(getApplicationContext(), "Status: saved", Toast.LENGTH_LONG).show();
                 // upload to firebase
-                User user = new User();
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 //user.setName(name);
-                user.setUsername(username);
+                // user.setUsername(username);
                 //user.setPhotoUrl(uPhoto);
 
-                Task<Void> voidTask = FireStoreDataSource.updateUser(user.getUid(), user.getUsername());
+                Task<Void> voidTask = FireStoreDataSource.updateUser(user.getUid(), username);
                 voidTask.addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        finish();
+                        startActivity(new Intent(EditProfileActivity.this, ProfileFragment.class));
                     }
                 });
             }
