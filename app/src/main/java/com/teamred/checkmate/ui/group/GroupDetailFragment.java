@@ -158,7 +158,7 @@ public class GroupDetailFragment extends Fragment implements Searchable {
                             bundle.putString("otherUser", JSON.toJSONString(user));
                             ChatDetailFragment chatDetailFragment = new ChatDetailFragment();
                             chatDetailFragment.setArguments(bundle);
-                            ft.add(R.id.navigation_host, chatDetailFragment)
+                            ft.replace(R.id.navigation_host, chatDetailFragment)
                                     .commit();
                         }
                     });
