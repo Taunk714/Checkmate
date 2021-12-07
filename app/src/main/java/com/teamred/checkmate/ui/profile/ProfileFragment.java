@@ -1,11 +1,15 @@
 package com.teamred.checkmate.ui.profile;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -36,6 +40,7 @@ import com.teamred.checkmate.data.Constant;
 import com.teamred.checkmate.data.model.LoggedInUser;
 import com.teamred.checkmate.data.model.User;
 import com.teamred.checkmate.databinding.FragmentProfileBinding;
+import com.teamred.checkmate.services.NoteReviewReceiver;
 import com.teamred.checkmate.ui.group.CreateGroupActivity;
 import com.teamred.checkmate.ui.group.GroupDetailFragment;
 import com.teamred.checkmate.ui.login.LoginActivity;
@@ -47,6 +52,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class ProfileFragment extends Fragment {
@@ -73,6 +79,7 @@ private Button edit;
     String userN;
     List<Object> savedP = new ArrayList<>();
     List<String> savedPNames = new ArrayList<>();
+    List<String> savedPIDs = new ArrayList<>();
 
     TextView usernameTxtView;
     // String username;
@@ -86,10 +93,10 @@ private Button edit;
         View root = binding.getRoot();
         list = binding.reminderlist;
 
-        ArrayAdapter<String> arr;
+        /*ArrayAdapter<String> arr;
         arr = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_multiple_choice, items);
         list.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-        list.setAdapter(arr);
+        list.setAdapter(arr);*/
 
         // firebase auth to check current user
 
@@ -141,6 +148,7 @@ private Button edit;
                                                                     Log.d("ptest4", "DocumentSnapshot data: " + document.getData());
                                                                     savedP.add(document.getData());
                                                                     savedPNames.add(document.getData().get("postTitle").toString());
+                                                                    savedPIDs.add(document.getId());
                                                                     userMap.put("savedPosts", savedP);
                                                                     userMap.put("savedPostNames", savedPNames);
                                                                     Log.d("ptest4", userMap.toString());
@@ -233,6 +241,40 @@ private Button edit;
                 startActivity(new Intent(getActivity(), LoginActivity.class));
                 getActivity().finish();
             }
+        });
+
+        // list.isItemChecked(position)
+
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parentView, View childView, int position, long id) {
+                // set reminder for next time to review
+                //Object selectedFromList = (list.getItemAtPosition(position));
+                AlarmManager alarmManager;
+
+                Intent i = new Intent(getContext(), NoteReviewReceiver.class);
+                //PendingIntent pi = PendingIntent.getBroadcast(getContext(), 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
+                i.putExtra("Post_id", savedPIDs.get(position));
+                PendingIntent pi = PendingIntent.getBroadcast(getContext(), UUID.randomUUID().hashCode(),
+                        i, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+
+                long timeAtSwitchOn = System.currentTimeMillis();
+
+                long tenSeconds = 1000 * 10;
+
+                if (list.isItemChecked(position)) {
+
+                    Toast.makeText(getContext(), "Reminder Set!", Toast.LENGTH_SHORT).show();
+
+                    alarmManager.set(AlarmManager.RTC_WAKEUP, timeAtSwitchOn + tenSeconds, pi);
+                } else {
+                    Toast.makeText(getContext(), "Reminder Canceled.", Toast.LENGTH_SHORT).show();
+                    alarmManager.cancel(pi);
+                }
+
+
+            } //end onItemClick
         });
 
 

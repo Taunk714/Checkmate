@@ -61,11 +61,13 @@ public class NoteReviewReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
         Bundle extras = intent.getExtras();
-        String postid = extras.getString(POST_ID);
+        //String postid = extras.getString(POST_ID);
 
         // intent.getExtra(BUNDLE_EXTRA);
+        if( extras != null){
         docRef = db.collection(CheckmateKey.USER_FIREBASE).document(Constant.getInstance().getCurrentUser().getUid())
                 .collection("savedPosts").document(extras.getString(POST_ID));
+        }
 
 
         // (data.get("dateLastReviewed") == Calendar.getInstance().getTime())
@@ -97,13 +99,10 @@ public class NoteReviewReceiver extends BroadcastReceiver {
                    @Override
                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                        DocumentSnapshot result1 = task.getResult();
-                       int timesReviewed = Integer.parseInt((String) result1.get("numTimesReviewed"));
+                       int timesReviewed = Integer.parseInt(result1.get("numTimesReviewed").toString());
                        docRef.update("numTimesReviewed", timesReviewed);
                    }
                });
     }
-
-
-
 
 }
