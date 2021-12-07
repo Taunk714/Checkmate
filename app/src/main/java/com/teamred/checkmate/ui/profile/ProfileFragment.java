@@ -268,23 +268,14 @@ private Button edit;
                 long tenSeconds = 1000 * 10;
 
                 if (list.isItemChecked(position)) {
-
                     Toast.makeText(getContext(), "Reminder Set!", Toast.LENGTH_SHORT).show();
-
                     alarmManager.set(AlarmManager.RTC_WAKEUP, timeAtSwitchOn + tenSeconds, pi);
                 } else {
                     Toast.makeText(getContext(), "Reminder Canceled.", Toast.LENGTH_SHORT).show();
                     alarmManager.cancel(pi);
                 }
-
-
             } //end onItemClick
         });
-
-
-
-
-
 
 
         edit = binding.editProfileBtn;
