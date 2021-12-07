@@ -68,10 +68,10 @@ public class FireStoreDataSource {
 
             }
         });
-<<<<<<< HEAD
+/*<<<<<<< HEAD
 
 =======
->>>>>>> e4155874eb63aa913be26ab98e88f1eb599d244a
+>>>>>>> e4155874eb63aa913be26ab98e88f1eb599d244a*/
     }
 
     public static Task<Void> updateGroupMember(Group group){
@@ -112,7 +112,7 @@ public class FireStoreDataSource {
         return db.collection(CheckmateKey.GROUP_FIREBASE).add(groupDoc);
 
     }
-<<<<<<< HEAD
+//<<<<<<< HEAD
 
 
     public static Task<Void> updateUser(String uid, String username){
@@ -130,6 +130,6 @@ public class FireStoreDataSource {
 
 
 
-=======
->>>>>>> e4155874eb63aa913be26ab98e88f1eb599d244a
+/*=======
+>>>>>>> e4155874eb63aa913be26ab98e88f1eb599d244a*/
 }

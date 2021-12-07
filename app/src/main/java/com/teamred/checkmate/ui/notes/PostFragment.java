@@ -1,5 +1,8 @@
 package com.teamred.checkmate.ui.notes;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,6 +18,7 @@ import android.view.ViewGroup;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -27,6 +31,7 @@ import com.teamred.checkmate.data.Constant;
 import com.teamred.checkmate.data.model.Post;
 import com.teamred.checkmate.data.model.User;
 import com.teamred.checkmate.databinding.FragmentPostBinding;
+import com.teamred.checkmate.services.NoteReviewReceiver;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -107,6 +112,20 @@ public class PostFragment extends Fragment {
 
                     CollectionReference posts = db.collection("user").document(currentUser.getUid()).collection("savedPosts");
                     posts.document(post.getPostID()).set(data);
+
+                    Toast.makeText(getContext(), "Reminder Set.", Toast.LENGTH_SHORT).show();
+
+                    Intent i = new Intent(getContext(), NoteReviewReceiver.class);
+                    PendingIntent pi = PendingIntent.getBroadcast(getContext(), 0, i, 0);
+
+                    AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+
+                    long timeAtSwitchOn = System.currentTimeMillis();
+
+                    long tenSeconds = 1000 * 10;
+
+                    alarmManager.set(AlarmManager.RTC_WAKEUP, timeAtSwitchOn + tenSeconds, pi);
+
                 } else {
                     Log.d(TAG, "onClick: Is not checked");
                     db.collection("user").document(currentUser.getUid())
