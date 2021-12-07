@@ -38,6 +38,7 @@ import com.teamred.checkmate.data.model.User;
 import com.teamred.checkmate.databinding.FragmentProfileBinding;
 import com.teamred.checkmate.ui.group.CreateGroupActivity;
 import com.teamred.checkmate.ui.group.GroupDetailFragment;
+import com.teamred.checkmate.ui.login.LoginActivity;
 
 import org.w3c.dom.Text;
 
@@ -225,6 +226,14 @@ private Button edit;
         } else {
             // No user is signed in
         }
+        binding.signoutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(getActivity(), LoginActivity.class));
+                getActivity().finish();
+            }
+        });
 
 
 
