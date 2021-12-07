@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment;
 import com.alibaba.fastjson.JSON;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.teamred.checkmate.R;
@@ -73,16 +74,6 @@ public class SearchGroupFragment extends Fragment implements FilterDialogFragmen
         filter = binding.btnFilter;
         ranking = binding.spnRanking;
 
-        FireStoreDataSource.getGroup();
-
-
-
-
-//
-//        if (noteList != null && noteList.length > 0){
-//            noteAdapter = new NoteListViewAdapter(getContext(), noteList);
-//            listView.setAdapter(noteAdapter);
-//        }
 
         // enter keywords and search
         searchKeywords.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -123,6 +114,22 @@ public class SearchGroupFragment extends Fragment implements FilterDialogFragmen
             }
         });
 
+        FireStoreDataSource.getGroups().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                List<DocumentSnapshot> documents = task.getResult().getDocuments();
+                ArrayList<Group> groups = new ArrayList<>();
+                for (DocumentSnapshot document : documents) {
+                    Group group = document.toObject(Group.class);
+                    group.setObjectID(document.getId());
+                    groups.add(group);
+
+                }
+                listView.setAdapter(new GroupListViewAdapter(getContext(), groups.toArray(new Group[0]), getParentFragmentManager()));
+
+            }
+        });
+
         Ranking[] rankingAdapter = new Ranking[]{
                 Ranking.Default,
                 Ranking.Newest,
@@ -140,8 +147,7 @@ public class SearchGroupFragment extends Fragment implements FilterDialogFragmen
                 AlgoliaDataSource.getInstance().setCustomRanking(
                         SearchGroupFragment.this,
                         "group",
-                        selected.getOrder(),
-                        selected.getAttr());
+                        selected);
             }
 
             @Override

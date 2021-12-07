@@ -67,16 +67,29 @@ public class FireStoreDataSource {
 
             }
         });
-//        try {
-//            Tasks.await(documentSnapshotTask);
-//        } catch (ExecutionException e) {
-//            e.printStackTrace();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//        Map<String, Object> data = result.getData();
-//        return (String) data.get(type);
 
+    }
+
+    public static Task<Void> updateGroupMember(Group group){
+        return updatePartialGroup(group.getObjectID(), "numMember", group.getNumMember());
+    }
+
+    public static Task<Void> updateGroupView(Group group){
+        return updatePartialGroup(group.getObjectID(), "numView", group.getNumView());
+    }
+
+    public static<T> Task<Void> updatePartialGroup(String groupId, String attr, T value){
+        Task<Void> update = db.collection(CheckmateKey.GROUP_FIREBASE)
+                .document(groupId)
+                .update(attr, value);
+        update
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, "group update fail");
+                    }
+                });
+        return update;
     }
 
     public static void updateGroup(Group group){
@@ -92,20 +105,17 @@ public class FireStoreDataSource {
         return db.collection(CheckmateKey.GROUP_FIREBASE).add(JSON.toJSON(group));
     }
 
-    public static void getGroup(){
 
-        db.collection(CheckmateKey.GROUP_FIREBASE).document("0JG8VeJxHYJ83y9nZF3Y").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                Map<String, Object> data = task.getResult().getData();
-                Group group = new Group();
-                Group group1 = task.getResult().toObject(Group.class);
-                group1.setObjectID("0JG8VeJxHYJ83y9nZF3Y");
-                AlgoliaDataSource.getInstance().addRecord("group", JSON.toJSONString(group1), null);
-            }
-        });
+    public static Task<Void> updateUser(String uid, String username){
+        return FirebaseFirestore.getInstance()
+                .collection("user")
+                .document(uid)
+                .update("username", username);
     }
 
+    public static Task<QuerySnapshot> getGroups(){
+        return db.collection(CheckmateKey.GROUP_FIREBASE).get();
+    }
 
 
 

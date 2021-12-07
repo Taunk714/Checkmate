@@ -115,6 +115,7 @@ public class ChatAdapter extends FirebaseRecyclerAdapter<Chat, ChatAdapter.ChatV
                     binding.unreadNumber.setText(unread);
                     if (item.getUnread() == 0) {
                         binding.unreadNumber.setVisibility(View.INVISIBLE);
+                        binding.lastMessage.setTextColor(R.color.colorPrimaryDark);
                     } else {
                         binding.unreadNumber.setVisibility(View.VISIBLE);
                     }

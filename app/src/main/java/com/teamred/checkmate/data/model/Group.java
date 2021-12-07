@@ -1,5 +1,9 @@
 package com.teamred.checkmate.data.model;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.teamred.checkmate.data.AlgoliaDataSource;
 import com.teamred.checkmate.data.FireStoreDataSource;
 
@@ -67,9 +71,23 @@ public class Group {
         user.joinGroup(groupId);
     }
 
-    public static void update(Group group) {
-        FireStoreDataSource.updateGroup(group);
-        AlgoliaDataSource.getInstance().updateGroup(group);
+    public static void updateView(Group group) {
+        FireStoreDataSource.updateGroupView(group).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                AlgoliaDataSource.getInstance().updateGroup(group.objectID, "numView", group.numView.toString());
+            }
+        });
+    }
+
+    public static void updateMember(Group group) {
+        FireStoreDataSource.updateGroupMember(group).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                AlgoliaDataSource.getInstance().updateGroup(group.objectID, "numMember", group.numMember.toString());
+            }
+        });
+
     }
 
     public void setTags(List<String> tags) {

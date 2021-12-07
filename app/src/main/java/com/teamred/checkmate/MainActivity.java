@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements FilterDialogFragm
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_host);
         NavController navController = navHostFragment.getNavController();
         NavigationUI.setupWithNavController(binding.bottomNavView, navController);
+//        navController.navigate(R.id);
 //        BottomNavigationView navView = findViewById(R.id.bottom_nav_view);
 //        // Passing each menu ID as a set of Ids because each
 //        // menu should be considered as top level destinations.

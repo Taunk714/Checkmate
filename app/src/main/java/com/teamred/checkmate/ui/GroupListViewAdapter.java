@@ -67,7 +67,7 @@ public class GroupListViewAdapter extends BaseAdapter {
             public void onClick(View v) {
                 Log.i("group", "search group click");
                 groupList[position].addView();
-                Group.update(groupList[position]);
+                Group.updateView(groupList[position]);
                 FragmentTransaction ft = fm.beginTransaction();
                 GroupDetailFragment groupDetailFragment = new GroupDetailFragment();
                 Bundle bundle = new Bundle();

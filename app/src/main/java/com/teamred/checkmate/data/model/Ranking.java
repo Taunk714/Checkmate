@@ -2,36 +2,31 @@ package com.teamred.checkmate.data.model;
 
 public enum Ranking {
 
-    Newest("desc", "createDate", "Newest"),
-    Oldest("asc", "createDate", "Oldest"),
-    Default("", "", "Default"),
-    Popular("desc", "memberNum", "Most Popular");
+    Newest("Newest", "desc", "createDate" ),
+    Oldest("Oldest","asc", "createDate"),
+    Default("Default"),
+    Popular("Most Popular", "desc", "numMember", "desc", "numView");
 
-    private String order;
-    private String attr;
+    private String[] order;
+//    private String attr;
     private String display;
+    private int numPair;
 
-    Ranking(String order, String attr, String display) {
+    Ranking(String display, String... order) {
         this.order = order;
-        this.attr = attr;
+        assert order.length % 2 == 0;
+//        this.attr = attr;
         this.display = display;
     }
 
-    public String getOrder() {
+    public String[] getOrder() {
         return order;
     }
 
-    public void setOrder(String order) {
+    public void setOrder(String[] order) {
         this.order = order;
     }
 
-    public String getAttr() {
-        return attr;
-    }
-
-    public void setAttr(String attr) {
-        this.attr = attr;
-    }
 
     public String getDisplay() {
         return display;

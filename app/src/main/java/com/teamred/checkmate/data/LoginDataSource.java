@@ -217,6 +217,7 @@ public class LoginDataSource {
         user.setPhotoUrl(firebaseUser.getPhotoUrl() == null? null:firebaseUser.getPhotoUrl().toString());
         user.setName(firebaseUser.getUid());
         user.setEmail(firebaseUser.getEmail());
+
         FirebaseFirestore.getInstance()
             .collection("user")
             .document(firebaseUser.getUid())
@@ -232,6 +233,14 @@ public class LoginDataSource {
                     Log.e(TAG, "fail to add new user to firebase");
                 }
             });
+
+    }
+
+    public static Task<Void> updateUser(String uid, String username){
+        return FirebaseFirestore.getInstance()
+                .collection("user")
+                .document(uid)
+                .update("username", username);
     }
 
 

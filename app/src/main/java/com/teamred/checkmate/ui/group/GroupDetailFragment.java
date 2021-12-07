@@ -199,16 +199,19 @@ public class GroupDetailFragment extends Fragment implements Searchable {
                 binding.joinGroupButton.setEnabled(false);
                 if (joined){
                     removeGroup(Constant.getInstance().getCurrentUser(), group.getObjectID());
-                    FirebaseFirestore.getInstance().collection("user").document(Constant.getInstance().getCurrentUser().getUid()).set(JSON.toJSON(Constant.getInstance().getCurrentUser()));
+                    FirebaseFirestore.getInstance()
+                            .collection("user")
+                            .document(Constant.getInstance().getCurrentUser().getUid())
+                            .update("groupJoined", Constant.getInstance().getCurrentUser().getGroupJoined());
                     group.removeMember();
-                    Group.update(group);
+                    Group.updateMember(group);
                     binding.joinGroupButton.setEnabled(true);
                     enableJoined();
 
                 }else{
                     joinGroup(Constant.getInstance().getCurrentUser(), group.getObjectID());
                     FirebaseFirestore.getInstance().collection("user").document(Constant.getInstance().getCurrentUser().getUid()).set(JSON.toJSON(Constant.getInstance().getCurrentUser()));
-                    Group.update(group);
+                    Group.updateMember(group);
                     binding.joinGroupButton.setEnabled(true);
                     disableJoined();
 
@@ -253,8 +256,7 @@ public class GroupDetailFragment extends Fragment implements Searchable {
                 AlgoliaDataSource.getInstance().setCustomRanking(
                         GroupDetailFragment.this,
                         title+":note",
-                        selected.getOrder(),
-                        selected.getAttr());
+                        selected);
             }
 
             @Override
@@ -305,8 +307,8 @@ public class GroupDetailFragment extends Fragment implements Searchable {
     }
 
     private void enableJoined(){
-        binding.joinGroupButton.setText("JOINED");
-        binding.joinGroupButton.setBackgroundResource(R.color.background);
+        binding.joinGroupButton.setText("JOIN");
+        binding.joinGroupButton.setBackgroundResource(R.color.blue_a400);
     }
 
     private void disableJoined(){

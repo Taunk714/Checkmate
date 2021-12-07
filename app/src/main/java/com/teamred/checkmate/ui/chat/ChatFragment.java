@@ -79,7 +79,7 @@ public class ChatFragment extends Fragment {
 
         adapter = new ChatAdapter(options, getParentFragmentManager());
         manager = new LinearLayoutManager(getContext());
-        manager.setStackFromEnd(true);
+        manager.setStackFromEnd(false);
         binding.chatListview.setLayoutManager(manager);
         binding.chatListview.setAdapter(adapter);
 
