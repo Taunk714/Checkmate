@@ -371,9 +371,9 @@ public class CompactCalendarTab extends Fragment {
                     if (size >= 3){
                         argb = Color.argb(255, 169, 68, 65);
                     }else if (size >=2 ){
-                        argb = Color.argb(255, 169/3*2, 68, 65);
+                        argb = Color.argb(255/3*2, 169/3*2, 68/3*2, 65/3*2);
                     }else if (size >= 1){
-                        argb = Color.argb(255, 169/3, 68, 65);
+                        argb = Color.argb(255/3, 169/3, 68/3, 65/3);
                     }
 
                     for (DocumentSnapshot document : documents) {

@@ -177,7 +177,7 @@ public class CreatePostFragment extends Fragment {
             @Override
             public boolean onQueryTextSubmit(String s) {
                 // Call OneNote API to get result.
-                Log.d(TAG, "onQueryTextSubmit: earadwwrad");
+                Log.d(TAG, "onQueryTextSubmit: " + s);
                 final String resourceURL = String.format("https://graph.microsoft.com/v1.0//me/onenote/pages?$filter=contains(tolower(title),'%s')", s);
                 mSingleAccountApp.acquireTokenSilentAsync(new String[] {"notes.read", "notes.read.all"}, mAccount.getAuthority(), getAuthSilentCallback(resourceURL));
                 return true;
