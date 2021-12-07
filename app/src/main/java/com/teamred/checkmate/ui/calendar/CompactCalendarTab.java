@@ -145,6 +145,7 @@ public class CompactCalendarTab extends Fragment {
             @Override
             public void onClick(View v) {
                 compactCalendarView.scrollLeft();
+                logEventsByMonth(compactCalendarView);
             }
         });
 
@@ -324,15 +325,16 @@ public class CompactCalendarTab extends Fragment {
 //    }
 
     private void logEventsByMonth(CompactCalendarView compactCalendarView) {
-        currentCalender.setTime(new Date());
-        currentCalender.set(Calendar.DAY_OF_MONTH, 1);
-        currentCalender.set(Calendar.MONTH, Calendar.AUGUST);
-        List<String> dates = new ArrayList<>();
-        for (Event e : compactCalendarView.getEventsForMonth(new Date())) {
-            dates.add(dateFormatForDisplaying.format(e.getTimeInMillis()));
-        }
-        Log.d(TAG, "Events for Aug with simple date formatter: " + dates);
-        Log.d(TAG, "Events for Aug month using default local and timezone: " + compactCalendarView.getEventsForMonth(currentCalender.getTime()));
+//        currentCalender.setTime(new Date());
+//        currentCalender.set(Calendar.DAY_OF_MONTH, 1);
+//        currentCalender.set(Calendar.MONTH, Calendar.AUGUST);
+//        List<String> dates = new ArrayList<>();
+//        for (Event e : compactCalendarView.getEventsForMonth(new Date())) {
+//            dates.add(dateFormatForDisplaying.format(e.getTimeInMillis()));
+//        }
+        addEvents(compactCalendarView.getFirstDayOfCurrentMonth().getMonth(), -1);
+//        Log.d(TAG, "Events for Aug with simple date formatter: " + dates);
+//        Log.d(TAG, "Events for Aug month using default local and timezone: " + compactCalendarView.getEventsForMonth(currentCalender.getTime()));
     }
 
     private void addEvents(int month, int year) {
@@ -350,7 +352,7 @@ public class CompactCalendarTab extends Fragment {
         Calendar instance = Calendar.getInstance();
         instance.setTime(new Date());
         int i = 1;
-        while(currentCalender.before(instance) || currentCalender.get(Calendar.DAY_OF_MONTH) == instance.get(Calendar.DAY_OF_MONTH)){
+        while(i< 31 && currentCalender.before(instance) || currentCalender.get(Calendar.DAY_OF_MONTH) == instance.get(Calendar.DAY_OF_MONTH)){
 
 //            currentCalender.set(Calendar.DAY_OF_MONTH, i);
 //            i++;
@@ -378,6 +380,7 @@ public class CompactCalendarTab extends Fragment {
                 }
             });
             currentCalender.add(Calendar.DATE, 1);
+            i++;
 
         }
     }
