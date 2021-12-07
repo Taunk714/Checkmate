@@ -390,6 +390,7 @@ public class CompactCalendarTab extends Fragment {
     }
 
     private List<Event> getEvents(long timeInMillis, int day) {
+<<<<<<< HEAD
         String simpleDateString = DateUtil.getSimpleDateString(new Date(timeInMillis));
         final List<Event>[] ret = new List[]{null};
         new Thread(new Runnable() {
@@ -419,6 +420,19 @@ public class CompactCalendarTab extends Fragment {
             if (ret[0] != null){
                 return  ret[0];
             }
+=======
+        if (day < 2) {
+            return Arrays.asList(new Event(Color.argb(255, 169, 68, 65), timeInMillis, "Event at " + new Date(timeInMillis)));
+        } else if ( day > 2 && day <= 4) {
+            return Arrays.asList(
+                    new Event(Color.argb(255, 169, 68, 65), timeInMillis, "Event at " + new Date(timeInMillis)),
+                    new Event(Color.argb(255, 100, 68, 65), timeInMillis, "Event 2 at " + new Date(timeInMillis)));
+        } else {
+            return Arrays.asList(
+                    new Event(Color.argb(255, 169, 68, 65), timeInMillis, "Event at " + new Date(timeInMillis)),
+                    new Event(Color.argb(255, 100, 68, 65), timeInMillis, "Event 2 at " + new Date(timeInMillis)),
+                    new Event(Color.argb(255, 70, 68, 65), timeInMillis, "Event 3 at " + new Date(timeInMillis)));
+>>>>>>> d1c27b97d7c64e27bc6639ef7e2e92f6fc8b8431
         }
 
 
