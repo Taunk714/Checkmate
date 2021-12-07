@@ -23,7 +23,7 @@ allprojects {
 android {
     signingConfigs {
         debug {
-            storeFile file('C:\\Users\\53264\\.android\\debug.keystore')
+            storeFile file('D:\\school\\2021fall\\cs501\\debug.keystore')
         }
     }
     compileSdk 31
@@ -43,6 +43,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
         }
     }
     compileOptions {
