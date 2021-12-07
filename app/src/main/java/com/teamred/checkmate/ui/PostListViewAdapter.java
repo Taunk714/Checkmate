@@ -83,7 +83,7 @@ public class PostListViewAdapter extends BaseAdapter {
 
                 Fragment postFragment = new PostFragment();
 
-                FragmentManager manager = ((FragmentActivity)context).getSupportFragmentManager();
+                FragmentManager manager = ((FragmentActivity)context).getSupportFragmentManager().findFragmentById(R.id.navigation_host).getChildFragmentManager();
 
                 manager.beginTransaction()
                         .replace(R.id.navigation_host, postFragment, null)

@@ -33,6 +33,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.teamred.checkmate.R;
 import com.teamred.checkmate.data.CheckmateKey;
 import com.teamred.checkmate.data.model.Group;
+import com.teamred.checkmate.ui.GroupListViewAdapter;
 import com.teamred.checkmate.ui.calendar.CalendarActivity;
 import com.teamred.checkmate.ui.group.CreateGroupActivity;
 import com.teamred.checkmate.data.AlgoliaDataSource;
@@ -50,6 +51,9 @@ public class HomeFragment extends Fragment {
 
     private static final String TAG = "HOME";
     private FragmentHomeBinding binding;
+    private List<Group> allGroups;
+    private GroupListViewAdapter groupAdapter;
+    private ListView listview;
 
     //private Button calenderHeatmap;
 
@@ -65,7 +69,7 @@ public class HomeFragment extends Fragment {
 
         //calenderHeatmap = (Button) getView().findViewById(R.id.calendarheatmap);
         Button calendarHeatmap = binding.calendarheatmap;
-
+        listview = binding.allgroupsListview;
         calendarHeatmap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -92,6 +96,7 @@ public class HomeFragment extends Fragment {
         });
 
         // Get list view for all groups available
+        allGroups = new ArrayList<>();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection(CheckmateKey.GROUP_FIREBASE)
                 .get()
@@ -99,7 +104,7 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            List<Group> groups = new ArrayList<>();
+                            allGroups = new ArrayList<>();
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
                                 Map<String, Object> data = document.getData();
@@ -111,8 +116,11 @@ public class HomeFragment extends Fragment {
                                         data.get("creator").toString(),
                                         data.get("description").toString()
                                 );
+                                allGroups.add(g);
                                 Log.i(TAG, "onComplete: GOT GROUP" + g.getTags().toString());
                             }
+                            groupAdapter = new GroupListViewAdapter(getContext(), allGroups.toArray(new Group[allGroups.size()]), getParentFragmentManager());
+                            listview.setAdapter(groupAdapter);
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }

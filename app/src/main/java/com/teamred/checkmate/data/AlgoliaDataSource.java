@@ -110,7 +110,7 @@ public class AlgoliaDataSource {
             adminClient.getIndex(index).setSettingsAsync(ranking, new CompletionHandler() {
                 @Override
                 public void requestCompleted(@Nullable JSONObject jsonObject, @Nullable AlgoliaException e) {
-                    Toast.makeText(fragment.getContext(), "Set rank", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(fragment.getContext(), "Set rank", Toast.LENGTH_SHORT).show();
                 }
             });
         } catch (JSONException e) {

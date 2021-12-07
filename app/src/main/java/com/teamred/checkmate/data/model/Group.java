@@ -36,7 +36,9 @@ public class Group {
      * @param description     description of group
      */
     public Group(String groupDocumentID, String groupName, ArrayList<String> tags, String creatorUsername, String description) {
+        this.objectID = groupDocumentID;
         this.groupName = groupName;
+        this.creator = creatorUsername;
         this.description = description;
         this.createDate = new Date();
         this.updateDate = new Date();

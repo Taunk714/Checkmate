@@ -201,7 +201,7 @@ public class SearchGroupFragment extends Fragment implements FilterDialogFragmen
                 Group group = JSON.parseObject(hitObj, Group.class);
                 groups[i] = group;
             }
-            groupAdapter = new GroupListViewAdapter(getContext(), groups, getActivity().getSupportFragmentManager());
+            groupAdapter = new GroupListViewAdapter(getContext(), groups, getParentFragmentManager());
             listView.setAdapter(groupAdapter);
         } catch (JSONException e) {
             e.printStackTrace();
