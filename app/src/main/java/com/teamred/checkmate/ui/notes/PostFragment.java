@@ -1,5 +1,7 @@
 package com.teamred.checkmate.ui.notes;
 
+import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -36,6 +38,7 @@ import com.teamred.checkmate.services.NoteReviewReceiver;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class PostFragment extends Fragment {
 
@@ -98,10 +101,15 @@ public class PostFragment extends Fragment {
                 // if user unchecks or rechecks this, the entry will be replaced
                 User currentUser = Constant.getInstance().getCurrentUser();
 
+                // set reminder for next time to review
                 AlarmManager alarmManager;
 
                 Intent i = new Intent(getContext(), NoteReviewReceiver.class);
-                PendingIntent pi = PendingIntent.getBroadcast(getContext(), 0, i, 0);
+                //PendingIntent pi = PendingIntent.getBroadcast(getContext(), 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
+                i.putExtra("Group_id", postListModel.getGroupID());
+                i.putExtra("Post_id", post.getPostID());
+                PendingIntent pi = PendingIntent.getBroadcast(getContext(), UUID.randomUUID().hashCode(),
+                        i, PendingIntent.FLAG_UPDATE_CURRENT);
 
                 alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
 
@@ -126,7 +134,6 @@ public class PostFragment extends Fragment {
                     posts.document(post.getPostID()).set(data);
 
                     Toast.makeText(getContext(), "Reminder Set!", Toast.LENGTH_SHORT).show();
-
                     alarmManager.set(AlarmManager.RTC_WAKEUP, timeAtSwitchOn + tenSeconds, pi);
 
                 } else {
