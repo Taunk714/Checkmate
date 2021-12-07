@@ -21,11 +21,6 @@ allprojects {
 }
 
 android {
-    signingConfigs {
-        debug {
-            storeFile file('D:\\school\\2021fall\\cs501\\debug.keystore')
-        }
-    }
     compileSdk 31
 
     defaultConfig {

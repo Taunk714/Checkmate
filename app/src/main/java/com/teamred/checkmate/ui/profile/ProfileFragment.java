@@ -65,11 +65,7 @@ private TextView tUsername;
 private TextView tAbout_me;
 private Button edit;
  String items[]
-            = { "Algorithms", "Data Structures",
-            "Languages", "CS501",
-            "CS412", "INTRO TO CS",
-            "Data Science", "CS Subjects",
-            "Web Technologies" };
+            = { "None yet. Add some!" };
 
     Map<String, Object> userMap = new HashMap<>();
     User user = new User();
@@ -126,8 +122,15 @@ private Button edit;
                         if (document.exists()) {
                             Log.d("ptest2", "DocumentSnapshot data: " + document.getData().get("groupJoined"));
                             userMap.put("groupJoined", document.getData().get("groupJoined"));
+                            Log.d("ptest2", Integer.toString(document.getData().get("groupJoined").toString().split(",")[0].length()));
                             userMap.put("numGroups", document.getData().get("groupJoined").toString().split(",").length);
                             Log.d("ptest2", userMap.toString());
+                            usernameTxtView.setText(userMap.get("username").toString());
+                            if (document.getData().get("groupJoined").toString().equals("[]")) {
+                                numGroupsTxtView.setText(0 + " groups joined");
+                            } else {
+                                numGroupsTxtView.setText(userMap.get("numGroups").toString() + " groups joined");
+                            }
 
                             db.collection("user").document(user.getUid()).collection("savedPosts")
                                     .get()
@@ -153,8 +156,7 @@ private Button edit;
                                                                     userMap.put("savedPostNames", savedPNames);
                                                                     Log.d("ptest4", userMap.toString());
 
-                                                                    usernameTxtView.setText(userMap.get("username").toString());
-                                                                    numGroupsTxtView.setText(userMap.get("numGroups").toString() + " groups joined");
+
 
                                                                     // work on getting things to review today working
                                                                     // savedPNames.toArray();
@@ -234,10 +236,12 @@ private Button edit;
         } else {
             // No user is signed in
         }
+
         binding.signoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
+                Constant.getInstance().setCurrentUser(null);
                 startActivity(new Intent(getActivity(), LoginActivity.class));
                 getActivity().finish();
             }
