@@ -230,6 +230,7 @@ private Button edit;
             @Override
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
+                Constant.getInstance().setCurrentUser(null);
                 startActivity(new Intent(getActivity(), LoginActivity.class));
                 getActivity().finish();
             }
