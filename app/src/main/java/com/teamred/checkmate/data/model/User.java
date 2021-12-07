@@ -1,7 +1,8 @@
 package com.teamred.checkmate.data.model;
 
-import com.google.firebase.firestore.DocumentId;
 import com.teamred.checkmate.data.SavedPost;
+
+import java.util.List;
 
 public class User {
 
@@ -10,7 +11,7 @@ public class User {
     private String name;
     private String username;
     private String photoUrl;
-    private String[] groupJoined;
+    private List<String> groupJoined;
     private SavedPost[] savedPosts;
     private String email;
 
@@ -38,11 +39,11 @@ public class User {
         this.photoUrl = photoUrl;
     }
 
-    public String[] getGroupJoined() {
+    public List<String> getGroupJoined() {
         return groupJoined;
     }
 
-    public void setGroupJoined(String[] groupJoined) {
+    public void setGroupJoined(List<String> groupJoined) {
         this.groupJoined = groupJoined;
     }
 
@@ -68,5 +69,13 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public void joinGroup(String groupId){
+        this.getGroupJoined().add(groupId);
+    }
+
+    public void leaveGroup(String groupId){
+        this.getGroupJoined().remove(groupId);
     }
 }

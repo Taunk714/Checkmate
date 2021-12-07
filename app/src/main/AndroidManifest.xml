@@ -3,6 +3,7 @@
     package="com.teamred.checkmate">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:name=".App"
@@ -11,7 +12,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Checkmate">
+        android:theme="@style/Theme.Checkmate.NoActionBar">
         <activity
             android:name=".MyGroupsActivity"
             android:label="My groups"
@@ -19,26 +20,25 @@
         <activity
             android:name=".OnboardingActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
         </activity>
         <activity
             android:name=".ui.group.CreateGroupActivity"
-            android:exported="true" />
+            android:exported="true">
+        </activity>
         <activity
-            android:name=".MainActivity2"
+            android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/title_activity_main2">
+            android:label="@string/title_activity_main">
+                        <intent-filter>
+                            <action android:name="android.intent.action.MAIN" />
 
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-
-
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
+                            <category android:name="android.intent.category.LAUNCHER" />
+                        </intent-filter>
         </activity>
         <activity
             android:name=".ui.login.LoginActivity"
@@ -49,11 +49,11 @@
             android:exported="true"
             android:label="@string/title_calendar_login"
             android:theme="@style/Theme.Checkmate.NoActionBar" />
-        <activity
-            android:name=".ui.notifications.NotificationsFragment"
-            android:exported="true"
-            android:label="@string/title_calendar_login"
-            android:theme="@style/Theme.Checkmate.NoActionBar" />
+<!--        <activity-->
+<!--            android:name=".ui.notifications.NotificationsFragment"-->
+<!--            android:exported="true"-->
+<!--            android:label="@string/title_calendar_login"-->
+<!--            android:theme="@style/Theme.Checkmate.NoActionBar" />-->
         <activity
             android:name=".ui.login.AfterRegisterActivity"
             android:exported="true"
@@ -65,6 +65,25 @@
             android:label="@string/title_activity_login" />
 
         <receiver android:name=".services.NoteReviewReceiver"/>
+        <activity
+            android:name="com.microsoft.identity.client.BrowserTabActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <!--
+                    Add in your scheme/host from registered redirect URI
+                    note that the leading "/" is required for android:path
+                -->
+                <data
+                    android:host="com.teamred.checkmate"
+                    android:path="/LCkbsYnopCRV1xaxrWgKm1OU4Qg="
+                    android:scheme="msauth" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

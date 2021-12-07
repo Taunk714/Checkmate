@@ -1,10 +1,15 @@
 package com.teamred.checkmate.data.model;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.teamred.checkmate.data.AlgoliaDataSource;
 import com.teamred.checkmate.data.FireStoreDataSource;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Group {
     private String objectID;
@@ -12,30 +17,77 @@ public class Group {
     private String description;
     private Date createDate;
     private Date updateDate;
-    private String[] subTopics = new String[]{};
-    private String creator;
+    private List<String> subTopics = new ArrayList<>();
+    private List<String> tags = new ArrayList<>();
+    private String creator; // creatorUsername on Shirene's
     private String creatorId;
     private Integer status = 0;
     private Integer numMember = 1;
     private Integer numView = 1;
 
 
-    public Group() {}
+    public Group() {
+    }
 
-    public Group(String groupName, String[] tags, String description) {
+    /**
+     * @param groupName       groupname
+     * @param tags            tags array
+     * @param creatorUsername creator's username (firebase)
+     * @param description     description of group
+     */
+    public Group(String groupDocumentID, String groupName, ArrayList<String> tags, String creatorUsername, String description) {
+        this.objectID = groupDocumentID;
         this.groupName = groupName;
+        this.creator = creatorUsername;
         this.description = description;
         this.createDate = new Date();
         this.updateDate = new Date();
+        this.tags = tags;
         this.status = 0;
     }
 
-    public Group(String groupName, String[] tags, String description, Date createDate, Date updateDate) {
-        this.groupName = groupName;
-        this.description = description;
-        this.createDate = createDate;
-        this.updateDate = updateDate;
-        this.status = 0;
+    public static boolean isJoined(String groupId, List<String> joined) {
+        for (String s : joined) {
+            if (s.equals(groupId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static void removeGroup(User user, String groupId) {
+        user.leaveGroup(groupId);
+    }
+
+    public static void joinGroup(User user, String groupId) {
+        user.joinGroup(groupId);
+    }
+
+    public static void updateView(Group group) {
+        FireStoreDataSource.updateGroupView(group).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                AlgoliaDataSource.getInstance().updateGroup(group.objectID, "numView", group.numView.toString());
+            }
+        });
+    }
+
+    public static void updateMember(Group group) {
+        FireStoreDataSource.updateGroupMember(group).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                AlgoliaDataSource.getInstance().updateGroup(group.objectID, "numMember", group.numMember.toString());
+            }
+        });
+
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
+    }
+
+    public List<String> getTags() {
+        return tags;
     }
 
     public String getGroupName() {
@@ -54,27 +106,20 @@ public class Group {
         this.description = description;
     }
 
-    public Date getCreateDate() {
-        return createDate;
-    }
-
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
     }
 
-    public Date getUpdateDate() {
-        return updateDate;
-    }
 
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
     }
 
-    public String[] getSubTopics() {
+    public List<String> getSubTopics() {
         return subTopics;
     }
 
-    public void setSubTopics(String[] subTopics) {
+    public void setSubTopics(List<String> subTopics) {
         this.subTopics = subTopics;
     }
 
@@ -84,6 +129,26 @@ public class Group {
 
     public void setCreator(String creator) {
         this.creator = creator;
+    }
+
+    public void setCreatorId(String creatorId) {
+        this.creatorId = creatorId;
+    }
+
+    public void addView() {
+        this.numView++;
+    }
+
+    public String getObjectID() {
+        return objectID;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public Date getUpdateDate() {
+        return updateDate;
     }
 
     public Integer getStatus() {
@@ -102,14 +167,6 @@ public class Group {
         this.numMember = numMember;
     }
 
-    public String getCreatorId() {
-        return creatorId;
-    }
-
-    public void setCreatorId(String creatorId) {
-        this.creatorId = creatorId;
-    }
-
     public Integer getNumView() {
         return numView;
     }
@@ -118,57 +175,21 @@ public class Group {
         this.numView = numView;
     }
 
-    public void addView(){
-        this.numView++;
-    }
-
-    public String getObjectID() {
-        return objectID;
+    public String getCreatorId() {
+        return creatorId;
     }
 
     public void setObjectID(String objectID) {
         this.objectID = objectID;
     }
 
-    public static boolean isJoined(String groupId, String[] joined){
-        for (String s : joined) {
-            if (s.equals(groupId)){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static void removeGroup(User user, String groupId){
-        ArrayList<String> groups = new ArrayList<>();
-        for (int i = 0; i < user.getGroupJoined().length; i++) {
-            if (groupId.equals(user.getGroupJoined()[i])){
-                continue;
-            }
-            groups.add(user.getGroupJoined()[i]);
-        }
-        user.setGroupJoined(groups.toArray(new String[0]));
-    }
-
-    public static void joinGroup(User user, String groupId){
-        String[] group = new String[user.getGroupJoined().length+1];
-        System.arraycopy(user.getGroupJoined(), 0, group, 0, user.getGroupJoined().length);
-        group[group.length-1] = groupId;
-        user.setGroupJoined(group);
-    }
-
-    public int addMember(){
+    public int addMember() {
         numMember++;
         return numMember;
     }
 
-    public int removeMember(){
+    public int removeMember() {
         numMember--;
         return numMember;
-    }
-
-    public static void update(Group group){
-        FireStoreDataSource.updateGroup(group);
-        AlgoliaDataSource.getInstance().updateGroup(group);
     }
 }

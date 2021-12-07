@@ -29,7 +29,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.teamred.checkmate.MainActivity2;
+import com.teamred.checkmate.MainActivity;
 import com.teamred.checkmate.OnboardingActivity;
 import com.teamred.checkmate.R;
 import com.teamred.checkmate.data.LoginDataSource;
@@ -128,7 +128,7 @@ public class LoginActivity extends AppCompatActivity {
                     Intent i = new Intent(LoginActivity.this, callback);
                     startActivity(i);
                 } else {
-                    startActivity(new Intent(LoginActivity.this, MainActivity2.class));
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
                     finish();
                 }
 

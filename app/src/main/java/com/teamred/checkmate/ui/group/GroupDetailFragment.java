@@ -19,6 +19,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.alibaba.fastjson.JSON;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -27,19 +29,24 @@ import com.teamred.checkmate.Searchable;
 import com.teamred.checkmate.data.AlgoliaDataSource;
 import com.teamred.checkmate.data.Constant;
 import com.teamred.checkmate.data.model.Group;
+import com.teamred.checkmate.data.model.Post;
 import com.teamred.checkmate.data.model.Ranking;
 import com.teamred.checkmate.databinding.FragmentGroupDetailBinding;
+import com.teamred.checkmate.ui.PostListViewAdapter;
+import com.teamred.checkmate.ui.notes.CreatePostFragment;
+import com.teamred.checkmate.ui.notes.PostsViewModel;
 
 import org.json.JSONObject;
+
+import java.util.List;
 
 public class GroupDetailFragment extends Fragment implements Searchable {
 
     private FragmentGroupDetailBinding binding;
 
-//    private Note[] noteList;
+    private List<Post> postList;
 
     private ListAdapter noteAdapter;
-//    private ListAdapter groupAdapter;
     private ListView listView;
     private TextView title;
     private TextView creator;
@@ -62,7 +69,6 @@ public class GroupDetailFragment extends Fragment implements Searchable {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-
         binding = FragmentGroupDetailBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
@@ -74,6 +80,7 @@ public class GroupDetailFragment extends Fragment implements Searchable {
 
         ranking = binding.noteListRanking;
         filter = binding.noteListFilter;
+        listView = binding.noteListView;
 
         Bundle arguments = getArguments();
         if (arguments!= null){
@@ -81,6 +88,15 @@ public class GroupDetailFragment extends Fragment implements Searchable {
             title.setText(group.getGroupName());
             creator.setText(group.getCreator());
             desc.setText(group.getDescription());
+
+            PostsViewModel postsViewModel = new ViewModelProvider(requireActivity()).get(PostsViewModel.class);
+            postsViewModel.init(group.getObjectID());
+
+            postsViewModel.getPosts().observe(getViewLifecycleOwner(), posts -> {
+                // Update UI
+                noteAdapter = new PostListViewAdapter(getContext(), posts.toArray((new Post[posts.size()])), postsViewModel);
+                listView.setAdapter(noteAdapter);
+            });
         }
 
         desc.setOnClickListener(new View.OnClickListener() {
@@ -96,7 +112,7 @@ public class GroupDetailFragment extends Fragment implements Searchable {
 
 
         searchKeywords = binding.searchNote;
-        String numThreads = group.getSubTopics().length + " Available Threads";
+        String numThreads = group.getSubTopics().size() + " Available Threads";
         binding.numberOfThread.setText(numThreads);
         binding.noteListFilter.setAdapter(
                 new ArrayAdapter<String>(
@@ -113,11 +129,22 @@ public class GroupDetailFragment extends Fragment implements Searchable {
             }
         });
 
-//        listView = binding.searchResultList;
-//        searchType = binding.searchType;
-//        filter = binding.btnFilter;
-//        ranking = binding.spnRanking;
 
+        binding.createNoteFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Go to Create Note fragment
+                Fragment createNoteFragment = CreatePostFragment.newInstance(group.getObjectID());
+
+                FragmentManager manager = getParentFragmentManager();
+
+                manager.beginTransaction()
+                        .replace(R.id.navigation_host, createNoteFragment, null)
+                        .setReorderingAllowed(true)
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
 
 
 
@@ -159,16 +186,19 @@ public class GroupDetailFragment extends Fragment implements Searchable {
                 binding.joinGroupButton.setEnabled(false);
                 if (joined){
                     removeGroup(Constant.getInstance().getCurrentUser(), group.getObjectID());
-                    FirebaseFirestore.getInstance().collection("user").document(Constant.getInstance().getCurrentUser().getUid()).set(JSON.toJSON(Constant.getInstance().getCurrentUser()));
+                    FirebaseFirestore.getInstance()
+                            .collection("user")
+                            .document(Constant.getInstance().getCurrentUser().getUid())
+                            .update("groupJoined", Constant.getInstance().getCurrentUser().getGroupJoined());
                     group.removeMember();
-                    Group.update(group);
+                    Group.updateMember(group);
                     binding.joinGroupButton.setEnabled(true);
                     enableJoined();
 
                 }else{
                     joinGroup(Constant.getInstance().getCurrentUser(), group.getObjectID());
                     FirebaseFirestore.getInstance().collection("user").document(Constant.getInstance().getCurrentUser().getUid()).set(JSON.toJSON(Constant.getInstance().getCurrentUser()));
-                    Group.update(group);
+                    Group.updateMember(group);
                     binding.joinGroupButton.setEnabled(true);
                     disableJoined();
 
@@ -213,8 +243,7 @@ public class GroupDetailFragment extends Fragment implements Searchable {
                 AlgoliaDataSource.getInstance().setCustomRanking(
                         GroupDetailFragment.this,
                         title+":note",
-                        selected.getOrder(),
-                        selected.getAttr());
+                        selected);
             }
 
             @Override
@@ -254,19 +283,19 @@ public class GroupDetailFragment extends Fragment implements Searchable {
 
     }
 
-    private String[] generateAdapterArray(String[] subtopics){
-        String[] ret = new String[1 + subtopics.length];
+    private String[] generateAdapterArray(List<String> subtopics){
+        String[] ret = new String[1 + subtopics.size()];
         ret[0] = "All";
-        if (subtopics.length == 0){
+        if (subtopics.size() == 0){
             return ret;
         }
-        System.arraycopy(subtopics, 0, ret, 1, subtopics.length);
+        System.arraycopy(subtopics, 0, ret, 1, subtopics.size());
         return ret;
     }
 
     private void enableJoined(){
-        binding.joinGroupButton.setText("JOINED");
-        binding.joinGroupButton.setBackgroundResource(R.color.background);
+        binding.joinGroupButton.setText("JOIN");
+        binding.joinGroupButton.setBackgroundResource(R.color.blue_a400);
     }
 
     private void disableJoined(){

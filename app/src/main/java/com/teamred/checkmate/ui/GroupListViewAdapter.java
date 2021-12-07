@@ -19,7 +19,6 @@ import com.teamred.checkmate.data.AlgoliaDataSource;
 import com.teamred.checkmate.data.FireStoreDataSource;
 import com.teamred.checkmate.data.model.Group;
 import com.teamred.checkmate.ui.group.GroupDetailFragment;
-import com.teamred.checkmate.util.DateUtil;
 
 public class GroupListViewAdapter extends BaseAdapter {
 
@@ -55,7 +54,7 @@ public class GroupListViewAdapter extends BaseAdapter {
         TextView groupName = (TextView) row.findViewById(R.id.listview_group_name);
         TextView groupCreator = (TextView) row.findViewById(R.id.listview_group_creator);
 //        TextView noteDate = row.findViewById(R.id.note_date);
-        TextView groupDescription = row.findViewById(R.id.listview_group_description);
+        TextView groupDescription = row.findViewById(R.id.post_content);
 //        TextView noteNumber = row.findViewById(R.id.note_number);
         groupDescription.setText(Html.fromHtml(groupList[position].getDescription()));
         groupCreator.setText(Html.fromHtml(groupList[position].getCreator()));
@@ -68,13 +67,15 @@ public class GroupListViewAdapter extends BaseAdapter {
             public void onClick(View v) {
                 Log.i("group", "search group click");
                 groupList[position].addView();
-                Group.update(groupList[position]);
+                Group.updateView(groupList[position]);
                 FragmentTransaction ft = fm.beginTransaction();
                 GroupDetailFragment groupDetailFragment = new GroupDetailFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString("group", JSON.toJSONString(groupList[position]));
                 groupDetailFragment.setArguments(bundle);
-                ft.replace(R.id.nav_host_fragment_activity_main2, groupDetailFragment)
+                ft.replace(R.id.navigation_host, groupDetailFragment)
+                        .setReorderingAllowed(true)
+                        .addToBackStack(null)
                         .commit();
             }
         });

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     tools:context=".ui.home.HomeFragment">
 
     <LinearLayout
@@ -36,16 +37,15 @@
             android:layout_marginBottom="4dp"
             android:text="CALENDAR HEATMAP" />
 
-        <Button
-            android:id="@+id/myGroupsBtn"
-            android:layout_width="121dp"
-            android:layout_height="48dp"
-            android:text="My groups" />
+        <ListView
+            android:id="@+id/allgroups_listview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btn_add_post"
+        android:id="@+id/btn_add_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"

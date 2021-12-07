@@ -127,7 +127,7 @@ public class LoginDataSource {
     public static void setUser(Map<String, Object> data){
         User user = new User();
         user.setName((String) data.get("name"));
-        user.setGroupJoined(((ArrayList<String>) data.get("groupJoined")).toArray(new String[0]));
+        user.setGroupJoined(((ArrayList<String>) data.get("groupJoined")));
         user.setPhotoUrl((String) data.get("photoUrl"));
         user.setUid((String) data.get("uid"));
         user.setUsername((String) data.get("username"));
@@ -145,7 +145,7 @@ public class LoginDataSource {
                 if (task.isSuccessful()){
                     Map<String, Object> data = task.getResult().getData();
                     user.setName((String) data.get("name"));
-                    user.setGroupJoined(((ArrayList<String>) data.get("groupJoined")).toArray(new String[0]));
+                    user.setGroupJoined(((ArrayList<String>) data.get("groupJoined")));
                     user.setPhotoUrl((String) data.get("photoUrl"));
                     user.setUid(uid);
                     user.setUsername((String) data.get("username"));
@@ -179,7 +179,7 @@ public class LoginDataSource {
                 if (task.isSuccessful()){
                     Map<String, Object> data = task.getResult().getData();
                     user.setName((String) data.get("name"));
-                    user.setGroupJoined(((ArrayList<String>) data.get("groupJoined")).toArray(new String[0]));
+                    user.setGroupJoined(((ArrayList<String>) data.get("groupJoined")));
                     user.setPhotoUrl((String) data.get("photoUrl"));
                     user.setUid(uid);
                     user.setUsername((String) data.get("username"));
@@ -198,7 +198,7 @@ public class LoginDataSource {
         User user = new User();
         user.setUid(firebaseUser.getUid());
         user.setUsername(firebaseUser.getEmail());
-        user.setGroupJoined(new String[0]);
+        user.setGroupJoined(new ArrayList<>());
         user.setPhotoUrl(firebaseUser.getPhotoUrl() == null? null:firebaseUser.getPhotoUrl().toString());
         user.setName(firebaseUser.getUid());
         user.setEmail(firebaseUser.getEmail());
@@ -213,10 +213,11 @@ public class LoginDataSource {
         User user = new User();
         user.setUid(firebaseUser.getUid());
         user.setUsername(firebaseUser.getEmail());
-        user.setGroupJoined(new String[0]);
+        user.setGroupJoined(new ArrayList<>());
         user.setPhotoUrl(firebaseUser.getPhotoUrl() == null? null:firebaseUser.getPhotoUrl().toString());
         user.setName(firebaseUser.getUid());
         user.setEmail(firebaseUser.getEmail());
+
         FirebaseFirestore.getInstance()
             .collection("user")
             .document(firebaseUser.getUid())
@@ -232,6 +233,14 @@ public class LoginDataSource {
                     Log.e(TAG, "fail to add new user to firebase");
                 }
             });
+
+    }
+
+    public static Task<Void> updateUser(String uid, String username){
+        return FirebaseFirestore.getInstance()
+                .collection("user")
+                .document(uid)
+                .update("username", username);
     }
 
 

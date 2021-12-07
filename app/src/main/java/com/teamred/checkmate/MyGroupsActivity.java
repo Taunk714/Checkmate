@@ -3,52 +3,52 @@ package com.teamred.checkmate;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
-import android.content.Intent;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.ActionBar;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.teamred.checkmate.data.CheckmateKey;
+import com.teamred.checkmate.ui.GroupListViewAdapter;
 
-import java.sql.Array;
-import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ *
+ * Gets the joined groups of current user
+ *
+ * */
 public class MyGroupsActivity extends AppCompatActivity {
-    String[] testArray = {"Android","IPhone","WindowsMobile","Blackberry",
-            "WebOS","Ubuntu","Windows7","Max OS X"};
 
-    ListView lvMonth;
-    String[] months;
+    ListView lvGroup;
     ArrayList<String> groups = new ArrayList<>();
     String[] groupsPrint;
+    private ListAdapter groupAdapter;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_groups);
-        lvMonth = findViewById(R.id.lvMonth);
-        months = new DateFormatSymbols().getMonths();
+        lvGroup = findViewById(R.id.lvGroups);
 
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-
+        // Fetch all joined groups
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        db.collection("Groups")
+//        groupAdapter = new GroupListViewAdapter(getApplicationContext(), groups, getSupportFragmentManager());
+//        lvGroup.setAdapter(groupAdapter);
+
+
+        db.collection(CheckmateKey.GROUP_FIREBASE)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -67,7 +67,7 @@ public class MyGroupsActivity extends AppCompatActivity {
 
                             ArrayAdapter<String> monthAdapter = new ArrayAdapter<>(getApplication().getApplicationContext(),
                                     android.R.layout.simple_list_item_1, groupsPrint);
-                            lvMonth.setAdapter(monthAdapter);
+                            lvGroup.setAdapter(monthAdapter);
                         } else {
                             Log.w("test", "Error getting documents.", task.getException());
                         }
@@ -78,8 +78,6 @@ public class MyGroupsActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-//        Toast.makeText(getApplicationContext(),"Back Button Clicked", Toast.LENGTH_SHORT).show();
-        startActivity(new Intent(MyGroupsActivity.this, MainActivity2.class));
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 }

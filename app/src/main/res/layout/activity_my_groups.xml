@@ -19,7 +19,7 @@
         android:layout_marginBottom="5dp" />
 
     <ListView
-        android:id="@+id/lvMonth"
+        android:id="@+id/lvGroups"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

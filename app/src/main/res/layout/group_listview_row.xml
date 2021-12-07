@@ -25,7 +25,7 @@
             android:clickable="false"
             android:focusable="false"
             android:focusableInTouchMode="false"
-            android:text="Title"
+            android:text="Group Title"
             android:textColor="@color/black"
             android:textSize="24sp" />
 
@@ -47,7 +47,7 @@
             android:clickable="false"
             android:focusable="false"
             android:focusableInTouchMode="false"
-            android:text="tag" />
+            android:text="group tags" />
     </LinearLayout>
 
     <LinearLayout
@@ -65,20 +65,20 @@
             android:clickable="false"
             android:focusable="false"
             android:focusableInTouchMode="false"
-            android:text="Creator"
+            android:text="group creator"
             android:textColor="@color/browser_actions_title_color" />
 
     </LinearLayout>
 
     <TextView
-        android:id="@+id/listview_group_description"
+        android:id="@+id/post_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="false"
         android:focusable="false"
         android:focusableInTouchMode="false"
         android:maxLines="3"
-        android:text="Description"
+        android:text="group description"
         android:textColor="#514F4F" />
 
 </LinearLayout>

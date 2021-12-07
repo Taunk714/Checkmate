@@ -2,28 +2,51 @@ package com.teamred.checkmate.data.model;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
-public class Note {
+public class Post {
     private String title;
-    private String[] tags;
+    private List<String> tags;
     private String content;
     private Date createDate;
     private String author;
+    private String postID;
+    private String subtopic;
+    private String onenoteAppURL;
+    private String onenoteWebURL;
 //    private Integer number;
 
-    public Note(String title, String[] tags, String content) {
+    public Post(String postID, String title, String subtopic, List<String> tags, String author, String content, String onenoteWebURL, String onenoteAppURL) {
+        this.postID = postID;
         this.title = title;
         this.tags = tags;
         this.content = content;
+        this.author = author; // Author will be the USERNAME, not name, not email, USERNAME.
+        this.createDate = new Date();
+        this.subtopic = subtopic;
+        this.onenoteAppURL = onenoteWebURL;
+        this.onenoteWebURL = onenoteWebURL;
+    }
+
+    public Post() {
         this.createDate = new Date();
 //        this.number = new Random().nextInt(20);
     }
 
-    public Note() {
-        this.createDate = new Date();
-//        this.number = new Random().nextInt(20);
+    public String getOnenoteAppURL() {
+        return onenoteAppURL;
     }
+
+    public String getOnenoteWebURL() {
+        return onenoteWebURL;
+    }
+
+    public String getSubtopic() {
+        return subtopic;
+    }
+
+    public String getPostID() { return postID; }
 
     public String getTitle() {
         return title;
@@ -33,11 +56,11 @@ public class Note {
         this.title = title;
     }
 
-    public String[] getTags() {
+    public List<String> getTags() {
         return tags;
     }
 
-    public void setTags(String[] tags) {
+    public void setTags(List<String> tags) {
         this.tags = tags;
     }
 
@@ -65,7 +88,11 @@ public class Note {
         this.author = author;
     }
 
-//    public Integer getNumber() {
+    public String getsubtopic() {
+        return subtopic;
+    }
+
+    //    public Integer getNumber() {
 //        return number;
 //    }
 

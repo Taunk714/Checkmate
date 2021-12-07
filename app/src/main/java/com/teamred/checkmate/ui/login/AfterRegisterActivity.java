@@ -23,7 +23,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.UploadTask;
-import com.teamred.checkmate.MainActivity2;
+import com.teamred.checkmate.MainActivity;
 import com.teamred.checkmate.R;
 import com.teamred.checkmate.data.Constant;
 import com.teamred.checkmate.data.LoginDataSource;
@@ -100,7 +100,7 @@ public class AfterRegisterActivity extends AppCompatActivity {
                             @Override
                             public void onSuccess(Void unused) {
                                 Log.i(TAG, "add to firebase");
-                                Intent intent = new Intent(AfterRegisterActivity.this, MainActivity2.class);
+                                Intent intent = new Intent(AfterRegisterActivity.this, MainActivity.class);
                                 Constant.getInstance().setCurrentUser(user);
                                 startActivity(intent);
                                 finish();

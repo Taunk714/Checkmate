@@ -15,6 +15,7 @@ import com.alibaba.fastjson.JSON;
 import com.teamred.checkmate.Searchable;
 import com.teamred.checkmate.SyncHelper;
 import com.teamred.checkmate.data.model.Group;
+import com.teamred.checkmate.data.model.Ranking;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -81,14 +82,11 @@ public class AlgoliaDataSource {
         return _instance;
     }
 
-    /**
-     * set custom ranking.
-     * @param fragment
-     * @param attr even is desc/asc, odd is the attribute name
-     */
-    public void setCustomRanking(Fragment fragment, String index, String...  attr){
+
+    public void setCustomRanking(Fragment fragment, String index, Ranking rank){
         JSONArray arr = new JSONArray();
         // add custom ranking
+        String[] attr = rank.getOrder();
         for (int i = 0; i < attr.length; i=i+2) {
             if (attr[i].equalsIgnoreCase("desc")){
                 arr.put("desc("+attr[i+1]+")");
@@ -112,7 +110,7 @@ public class AlgoliaDataSource {
             adminClient.getIndex(index).setSettingsAsync(ranking, new CompletionHandler() {
                 @Override
                 public void requestCompleted(@Nullable JSONObject jsonObject, @Nullable AlgoliaException e) {
-                    Toast.makeText(fragment.getContext(), "Set rank", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(fragment.getContext(), "Set rank", Toast.LENGTH_SHORT).show();
                 }
             });
         } catch (JSONException e) {
@@ -125,10 +123,10 @@ public class AlgoliaDataSource {
      * @param index index to search
      * @param jsonString record
      */
-    public void addRecord(String index, String jsonString){
+    public void addRecord(String index, String jsonString, CompletionHandler handler){
         Index target = adminClient.getIndex(index);
         try {
-            target.addObjectAsync(new JSONObject(jsonString), null);
+            target.addObjectAsync(new JSONObject(jsonString), handler);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -187,7 +185,7 @@ public class AlgoliaDataSource {
 
     }
 
-    public void updateGroup(Group group){
+    public void updateGroup(String objectId, String... keyValue){
         CompletionHandler completionHandler = new CompletionHandler() {
             @Override
             public void requestCompleted(JSONObject content, AlgoliaException error) {
@@ -200,14 +198,20 @@ public class AlgoliaDataSource {
                 }
             }
         };
-        try {
-            adminClient.getIndex("group")
-                    .partialUpdateObjectAsync(
-                            new JSONObject(JSON.toJSONString(group))
-                            , group.getObjectID()
-                            , completionHandler);
-        } catch (JSONException e) {
-            e.printStackTrace();
+
+
+        JSONObject jsonObject = new JSONObject();
+        for (int i = 0; i < keyValue.length; i = i + 2) {
+            try {
+                jsonObject.put(keyValue[i], keyValue[i+1]);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
+        adminClient.getIndex("group")
+                .partialUpdateObjectAsync(
+                        jsonObject
+                        , objectId
+                        , completionHandler);
     }
 }

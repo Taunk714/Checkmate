@@ -5,46 +5,59 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.teamred.checkmate.data.Constant;
 import com.teamred.checkmate.data.LoginDataSource;
-import com.teamred.checkmate.databinding.ActivityBottomMenuBinding;
+import com.teamred.checkmate.databinding.ActivityBottomMenuMainBinding;
 import com.teamred.checkmate.ui.login.LoginActivity;
+
+import com.teamred.checkmate.databinding.ActivityBottomMenuMainBinding;
 import com.teamred.checkmate.ui.search.FilterDialogFragment;
 import com.teamred.checkmate.ui.search.SearchGroupFragment;
 
-import java.util.List;
+public class MainActivity extends AppCompatActivity implements FilterDialogFragment.FilterDialogListener {
 
-public class MainActivity2 extends AppCompatActivity implements FilterDialogFragment.FilterDialogListener {
-
-private ActivityBottomMenuBinding binding;
+    private ActivityBottomMenuMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-     binding = ActivityBottomMenuBinding.inflate(getLayoutInflater());
-     setContentView(binding.getRoot());
+        binding = ActivityBottomMenuMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-
-        BottomNavigationView navView = findViewById(R.id.bottom_nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notification, R.id.navigation_search)
-                .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main2);
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_host);
+        NavController navController = navHostFragment.getNavController();
         NavigationUI.setupWithNavController(binding.bottomNavView, navController);
+//        navController.navigate(R.id);
+//        BottomNavigationView navView = findViewById(R.id.bottom_nav_view);
+//        // Passing each menu ID as a set of Ids because each
+//        // menu should be considered as top level destinations.
+//
+//
+//        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
+//                R.id.navigation_home, R.id.navigation_profile, R.id.navigation_notification, R.id.navigation_search)
+//                .build();
+//        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main2);
+//        NavigationUI.setupWithNavController(binding.bottomNavView, navController);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -53,7 +66,7 @@ private ActivityBottomMenuBinding binding;
 //        filterDialogFragment.setGroupStatusSelect(groupStatusSelected);
 //        List<Fragment> fragments = getSupportFragmentManager().getFragments();
 //        SearchGroupFragment fragmentById = (SearchGroupFragment) (getSupportFragmentManager().findFragmentById(R.id.navigation_search));
-        SearchGroupFragment fragmentById = (SearchGroupFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main2).getChildFragmentManager().getPrimaryNavigationFragment();
+        SearchGroupFragment fragmentById = (SearchGroupFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_host).getChildFragmentManager().getPrimaryNavigationFragment();
         assert fragmentById != null;
         fragmentById.setGroupStatusSelected(filterDialogFragment.getGroupStatusSelect().clone());
     }
@@ -62,7 +75,7 @@ private ActivityBottomMenuBinding binding;
     public void onDialogNegativeClick(DialogFragment dialog) {
         FilterDialogFragment filterDialogFragment = (FilterDialogFragment) dialog;
 
-        SearchGroupFragment fragmentById = (SearchGroupFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main2).getChildFragmentManager().getPrimaryNavigationFragment();
+        SearchGroupFragment fragmentById = (SearchGroupFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_host).getChildFragmentManager().getPrimaryNavigationFragment();
         assert fragmentById != null;
         filterDialogFragment.setGroupStatusSelect(fragmentById.getGroupStatusSelected());
     }
@@ -87,7 +100,7 @@ private ActivityBottomMenuBinding binding;
         if (id == R.id.action_logout) {
             FirebaseAuth.getInstance().signOut();
             Constant.getInstance().setCurrentUser(null);
-            Intent intent = new Intent(MainActivity2.this, LoginActivity.class);
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
             finish();
             return true;

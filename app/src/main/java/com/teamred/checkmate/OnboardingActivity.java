@@ -47,7 +47,7 @@ public class OnboardingActivity extends AppCompatActivity {
                             if (user.getUsername() == null){
                                 startActivity(new Intent(OnboardingActivity.this, AfterRegisterActivity.class));
                             }else{
-                                startActivity(new Intent(OnboardingActivity.this, MainActivity2.class));
+                                startActivity(new Intent(OnboardingActivity.this, MainActivity.class));
                             }
                             finish();
                         }
