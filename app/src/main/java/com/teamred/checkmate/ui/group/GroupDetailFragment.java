@@ -197,7 +197,7 @@ public class GroupDetailFragment extends Fragment implements Searchable {
             @Override
             public boolean onQueryTextSubmit(String s) {
                 // search algolia
-                Toast.makeText(getContext(), "search algolia "+ s, Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "searching... "+ s, Toast.LENGTH_LONG).show();
 //                String filters = generateFilterString();
 //                AlgoliaDataSource.getInstance(getContext()).searchGroup(SearchGroupFragment.this, "group", s, queryType, filters);
 ////                updateSearchResult(demos);

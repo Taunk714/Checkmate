@@ -85,7 +85,6 @@ public class HomeFragment extends Fragment {
 
                 if (FirebaseAuth.getInstance().getCurrentUser() == null){
                     Intent login = new Intent(getActivity(), LoginActivity.class);
-                    Toast.makeText(getContext(), "Interceptor! Jump to login", Toast.LENGTH_LONG).show();
                     login.putExtra("callback", CreateGroupActivity.class.getCanonicalName());
                     startActivity(login);
                 }else{
