@@ -319,7 +319,7 @@ public class GroupDetailFragment extends Fragment implements Searchable {
 
     private void enableJoined(){
         binding.joinGroupButton.setText("JOIN");
-        binding.joinGroupButton.setBackgroundResource(R.color.blue_a400);
+        binding.joinGroupButton.setBackgroundResource(R.color.blue);
     }
 
     private void disableJoined(){

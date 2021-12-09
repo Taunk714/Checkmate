@@ -69,7 +69,7 @@ public class NoteReviewReceiver extends BroadcastReceiver {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_1_ID);
         builder.setSmallIcon(R.drawable.ic_algolia_icon);
-        builder.setColor(ContextCompat.getColor(context, R.color.blue_300));
+        builder.setColor(ContextCompat.getColor(context, R.color.blue));
         builder.setContentTitle(context.getString(R.string.app_name));
         builder.setContentText("Time to Review your Notes!");
         builder.setVibrate(new long[]{1000, 500, 1000, 500, 1000, 500});
