@@ -167,7 +167,7 @@
     <string name="cancel">Cancel</string>
     <string name="logout">Logout</string>
     <string name="name">Name</string>
-    <string name="enter_your_username">Enter your username</string>
+    <string name="enter_your_username">Let's pick your username</string>
     <string name="username">USERNAME</string>
     <string name="message">message</string>
     <string name="title_activity_after_register">AfterRegisterActivity</string>

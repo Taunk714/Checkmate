@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#75CFCB">
 
     <ProgressBar
         android:id="@+id/after_reg_loading"
@@ -32,23 +33,27 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
-        android:text="Welcome to Checkmate!"
-        android:textSize="24sp"
+        android:fontFamily="@font/amiko_semibold"
+        android:text="We're so glad you're here"
+        android:textAllCaps="false"
+        android:textColor="@color/blue"
+        android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/nickname_label"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintHorizontal_bias="0.49"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/nickname_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="16dp"
         android:text="@string/enter_your_username"
+        android:textColor="@color/deepspace"
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/nickname_editor"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.48"
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
@@ -58,7 +63,9 @@
         android:layout_marginBottom="28dp"
         android:ems="10"
         android:hint="@string/username"
+        android:textColorHint="@color/deepspace"
         android:inputType="textPersonName"
+        android:textColor="@color/white"
         android:minHeight="48dp"
         app:layout_constraintBottom_toTopOf="@+id/nickname_confirm"
         app:layout_constraintEnd_toEndOf="parent"
@@ -71,6 +78,8 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="72dp"
         android:text="@string/confirm"
+        android:textColor="@color/white"
+        android:background="@color/colorBlue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"

@@ -2,8 +2,8 @@
     <!-- Base application theme. -->
     <style name="Theme.Checkmate" parent="Theme.AppCompat.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/blue_a700</item>
-        <item name="colorPrimaryVariant">@color/blue_900</item>
+        <item name="colorPrimary">@color/blue</item>
+        <item name="colorPrimaryVariant">@color/colorAccent</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
@@ -17,6 +17,7 @@
     <style name="Theme.Checkmate.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="fontFamily">@font/open_sans</item>
     </style>
 
     <style name="Theme.Checkmate.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

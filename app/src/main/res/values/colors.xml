@@ -8,31 +8,36 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="blue_50">#E1F5FE</color>
-    <color name="blue_100">#B3E5FC</color>
-    <color name="blue_200">#81D4FA</color>
-    <color name="blue_300">#4FC3F7</color>
-    <color name="blue_400">#29B6F6</color>
-    <color name="blue_500">#03A9F4</color>
-    <color name="blue_600">#039BE5</color>
-    <color name="blue_700">#0288D1</color>
-    <color name="blue_800">#0277BD</color>
-    <color name="blue_900">#01579B</color>
-    <color name="blue_a100">#80D8FF</color>
-    <color name="blue_a200">#40C4FF</color>
-    <color name="blue_a400">#00B0FF</color>
-    <color name="blue_a700">#0091EA</color>
-    <color name="blue_a900">#005db3</color>
+<!--    <color name="blue_50">#E1F5FE</color>-->
+<!--    <color name="blue_100">#B3E5FC</color>-->
+<!--    <color name="blue_200">#81D4FA</color>-->
+<!--    <color name="blue_300">#4FC3F7</color>-->
+<!--    <color name="blue_400">#29B6F6</color>-->
+<!--    <color name="blue_500">#03A9F4</color>-->
+<!--    <color name="blue_600">#039BE5</color>-->
+<!--    <color name="blue_700">#0288D1</color>-->
+<!--    <color name="blue_800">#0277BD</color>-->
+<!--    <color name="blue_900">#01579B</color>-->
+<!--    <color name="blue_a100">#80D8FF</color>-->
+<!--    <color name="blue_a200">#40C4FF</color>-->
+<!--    <color name="blue_a400">#00B0FF</color>-->
+<!--    <color name="blue_a700">#0091EA</color>-->
+<!--    <color name="blue_a900">#005db3</color>-->
 
     <color name="background">#F2F3F7</color>
 
+    <color name="deepspace">#476A6F</color>
     <color name="colorPrimary">#FF9800</color>
-    <color name="colorPrimaryDark">#E65100</color>
-    <color name="colorAccent">#2E7D32</color>
+    <color name="colorPrimaryDark">#5F1A37</color>
+    <color name="colorAccent">#FF75CFCB</color>
     <color name="colorTitle">#ffffff</color>
-    <color name="colorLightGray">#ececec</color>
+    <color name="colorLightGray">#ECECEC</color>
     <color name="colorGray">#dedede</color>
     <color name="colorDarkGray">#b4b4b4</color>
-    <color name="colorBlue">#2962FF</color>
-    <color name="textColorPrimary">@color/blue_900</color>
+    <color name="colorBlue">#2C3F74</color>
+    <color name="blue">#1E557E</color>
+    <color name="palelilac">#D6C9C9</color>
+
+
+
 </resources>

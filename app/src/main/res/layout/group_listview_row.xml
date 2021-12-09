@@ -8,7 +8,8 @@
     android:descendantFocusability="blocksDescendants"
     android:orientation="vertical"
     android:paddingLeft="5dp"
-    android:paddingRight="5dp">
+    android:paddingRight="5dp"
+    android:backgroundTint="#C3F3F0">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,7 +27,7 @@
             android:focusable="false"
             android:focusableInTouchMode="false"
             android:text="Group Title"
-            android:textColor="@color/black"
+            android:textColor="@color/blue"
             android:textSize="24sp" />
 
     </LinearLayout>
@@ -47,7 +48,8 @@
             android:clickable="false"
             android:focusable="false"
             android:focusableInTouchMode="false"
-            android:text="group tags" />
+            android:text="group tags"
+            android:textColor="@color/deepspace"/>
     </LinearLayout>
 
     <LinearLayout
@@ -66,7 +68,7 @@
             android:focusable="false"
             android:focusableInTouchMode="false"
             android:text="group creator"
-            android:textColor="@color/browser_actions_title_color" />
+            android:textColor="@color/deepspace" />
 
     </LinearLayout>
 
@@ -79,6 +81,6 @@
         android:focusableInTouchMode="false"
         android:maxLines="3"
         android:text="group description"
-        android:textColor="#514F4F" />
+        android:textColor="@color/deepspace" />
 
 </LinearLayout>

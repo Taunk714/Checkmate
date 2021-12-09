@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.notes.CreatePostFragment">
+    tools:context=".ui.notes.CreatePostFragment"
+    android:backgroundTint="@color/palelilac">
 
     <EditText
         android:id="@+id/tags"
@@ -60,9 +61,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="196dp"
-        android:background="@color/blue_900"
+        android:background="@color/blue"
         android:text="post"
-        android:textColor="@color/blue_50"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"

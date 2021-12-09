@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="20dp"
-    tools:context=".ui.group.CreateGroupActivity">
+    tools:context=".ui.group.CreateGroupActivity"
+    android:background="#B2E3E1">
 
     <TextView
         android:id="@+id/labelTitle"
@@ -22,6 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0"
+        android:fontFamily="@font/open_sans_semibold"
         android:hint="@string/post_title"
         android:maxLines="1" />
 
@@ -77,6 +79,7 @@
         android:ems="10"
         android:gravity="start|top"
         android:hint="@string/post_content"
+
         android:inputType="textMultiLine" />
 
     <Button
@@ -84,6 +87,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0"
-        android:text="@string/group_create" />
+        android:text="@string/group_create"
+        android:background="@color/blue"
+        android:textColor="@color/white"/>
 
 </LinearLayout>

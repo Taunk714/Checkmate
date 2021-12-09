@@ -35,7 +35,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
-            android:text="CALENDAR HEATMAP" />
+            android:text="CALENDAR HEATMAP"
+            android:backgroundTint="@color/blue"
+            android:textColor="@color/white"/>
 
         <ListView
             android:id="@+id/allgroups_listview"

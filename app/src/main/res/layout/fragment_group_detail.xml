@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:backgroundTintMode="screen"
-    android:background="#FFFFFF"
-    tools:context="Active">
+    android:background="@color/colorAccent">
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -15,12 +14,11 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="32dp"
-        android:backgroundTint="@color/blue_700"
+        android:backgroundTint="@color/blue"
         android:clickable="true"
-        app:backgroundTint="@color/blue_900"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_add_black_24dp"
+        app:srcCompat="@drawable/ic_baseline_add_24"
         tools:ignore="SpeakableTextPresentCheck" />
 
     <LinearLayout
@@ -43,7 +41,8 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="5dp"
             android:layout_marginBottom="20dp"
-            android:background="@color/background">
+            android:background="@color/background"
+            android:visibility="invisible">
 
         </SearchView>
 
@@ -52,7 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:background="#FFFEFE"
+            android:background="#37EFEFEF"
             android:orientation="vertical">
 
             <LinearLayout
@@ -91,7 +90,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_margin="1dp"
-                    android:background="@color/blue_a400"
+                    android:background="@color/blue"
                     android:elevation="10dp"
                     android:text="Join" />
 

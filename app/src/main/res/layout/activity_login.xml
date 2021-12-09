@@ -46,7 +46,9 @@
         android:text="@string/action_register"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@color/blue"
+        android:textColor="@color/white"/>
 
     <EditText
         android:id="@+id/username"
@@ -72,7 +74,9 @@
         app:layout_constraintBottom_toTopOf="@+id/textView2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@color/blue"
+        android:textColor="@color/white"/>
 
     <EditText
         android:id="@+id/password"
