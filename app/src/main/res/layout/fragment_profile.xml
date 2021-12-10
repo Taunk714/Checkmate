@@ -6,23 +6,21 @@
     android:layout_height="match_parent"
     tools:context=".ui.profile.ProfileFragment">
 
+    <androidx.constraintlayout.helper.widget.Layer
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="p_pic,background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageView
         android:id="@+id/background"
         android:layout_width="match_parent"
         android:layout_height="112dp"
         android:background="@color/colorPrimary"
         android:scaleType="fitXY"
-        app:layout_constraintEnd_toStartOf="@+id/frameLayout"
-        app:layout_constraintStart_toStartOf="@+id/frameLayout"
-        app:layout_constraintTop_toTopOf="@+id/frameLayout" />
-
-    <FrameLayout
-        android:id="@+id/frameLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent="0.45"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -31,6 +29,8 @@
         android:id="@+id/reviewList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="35dp"
+        android:layout_marginBottom="5dp"
         android:text="Things to Review"
         android:textAlignment="center"
         android:textColor="@color/colorBlue"
@@ -39,7 +39,8 @@
         app:layout_constraintBottom_toTopOf="@+id/reminderlist"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/numgroupsjoined" />
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/p_pic"
@@ -88,12 +89,10 @@
         android:layout_height="22dp"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
         android:gravity="left"
         android:text="8 groups joined"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textColor="#515151"
-        app:layout_constraintBottom_toTopOf="@+id/reviewList"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/username_tv" />
 
@@ -117,7 +116,7 @@
         android:layout_height="150dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toTopOf="@+id/label_done"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.5"
@@ -140,6 +139,7 @@
         android:id="@+id/label_done"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
         android:text="Done"
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/listview_done"
@@ -149,7 +149,7 @@
     <ListView
         android:id="@+id/listview_done"
         android:layout_width="match_parent"
-        android:layout_height="202dp"
+        android:layout_height="150dp"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:layout_marginBottom="16dp"

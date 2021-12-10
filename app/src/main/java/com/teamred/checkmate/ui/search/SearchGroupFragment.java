@@ -74,7 +74,7 @@ public class SearchGroupFragment extends Fragment implements FilterDialogFragmen
             @Override
             public boolean onQueryTextSubmit(String s) {
                 // search algolia
-                Toast.makeText(getContext(), "search algolia "+ s, Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "searching for:  "+ s, Toast.LENGTH_LONG).show();
                 String filters = generateFilterString();
                 AlgoliaDataSource.getInstance().search(SearchGroupFragment.this, "group", s, queryType, filters);
 //                updateSearchResult(demos);
