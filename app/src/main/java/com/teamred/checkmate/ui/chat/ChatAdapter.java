@@ -85,7 +85,9 @@ public class ChatAdapter extends FirebaseRecyclerAdapter<Chat, ChatAdapter.ChatV
                         bundle.putString("otherUser", JSON.toJSONString(user));
                         ChatDetailFragment chatDetailFragment = new ChatDetailFragment();
                         chatDetailFragment.setArguments(bundle);
-                        ft.replace(R.id.navigation_host, chatDetailFragment)
+                        ft.replace(R.id.navigation_host, chatDetailFragment, null)
+                                .setReorderingAllowed(true)
+                                .addToBackStack(null)
                                 .commit();
                     }
                 });
