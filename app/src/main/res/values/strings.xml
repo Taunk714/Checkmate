@@ -169,6 +169,7 @@
     <string name="name">Name</string>
     <string name="enter_your_username">Let\'s pick your username</string>
     <string name="username">USERNAME</string>
+    <string name="username_hint">Remain empty if you don\'t want change</string>
     <string name="message">message</string>
     <string name="title_activity_after_register">AfterRegisterActivity</string>
     <string name="title_activity_createnote">Create Note</string>

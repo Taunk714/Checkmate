@@ -16,8 +16,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.alibaba.fastjson.JSON;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -25,6 +27,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.UploadTask;
 import com.teamred.checkmate.MainActivity;
 import com.teamred.checkmate.R;
+import com.teamred.checkmate.data.CheckmateKey;
 import com.teamred.checkmate.data.Constant;
 import com.teamred.checkmate.data.LoginDataSource;
 import com.teamred.checkmate.data.model.User;
@@ -59,10 +62,16 @@ public class AfterRegisterActivity extends AppCompatActivity {
         nickname_button = binding.nicknameConfirm;
         nickname_editor = binding.nicknameEditor;
 
+
+
         if (Constant.getInstance().getCurrentUser() != null){
             user = Constant.getInstance().getCurrentUser();
         }else{
             user = LoginDataSource.generateUser(FirebaseAuth.getInstance().getCurrentUser());
+        }
+
+        if (user.getPhotoUrl() != null){
+            FriendlyMessageAdapter.loadImageIntoView(binding.avatar, user.getPhotoUrl());
         }
 
 
@@ -90,6 +99,13 @@ public class AfterRegisterActivity extends AppCompatActivity {
         nickname_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String trim = nickname_editor.getText().toString().trim();
+                if (trim.isEmpty()){
+                    Intent intent = new Intent(AfterRegisterActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                    return;
+                }
                 FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
                 user.setUsername(nickname_editor.getText().toString());
                 FirebaseFirestore.getInstance()
@@ -138,6 +154,16 @@ public class AfterRegisterActivity extends AppCompatActivity {
                             public void onSuccess(Uri uri) {
                                 FriendlyMessageAdapter.loadImageIntoView(binding.avatar, uri.toString());
                                 user.setPhotoUrl(uri.toString());
+                                FirebaseFirestore.getInstance()
+                                        .collection(CheckmateKey.USER_FIREBASE)
+                                        .document(user.getUid())
+                                        .update("photoUrl", uri.toString())
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        Log.i(CheckmateKey.USER_FIREBASE, "avatar upload");
+                                    }
+                                });
                             }
                         });
                     }

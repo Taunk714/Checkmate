@@ -25,6 +25,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 
+import com.alibaba.fastjson.JSON;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -41,8 +42,10 @@ import com.teamred.checkmate.data.model.LoggedInUser;
 import com.teamred.checkmate.data.model.User;
 import com.teamred.checkmate.databinding.FragmentProfileBinding;
 import com.teamred.checkmate.services.NoteReviewReceiver;
+import com.teamred.checkmate.ui.chat.FriendlyMessageAdapter;
 import com.teamred.checkmate.ui.group.CreateGroupActivity;
 import com.teamred.checkmate.ui.group.GroupDetailFragment;
+import com.teamred.checkmate.ui.login.AfterRegisterActivity;
 import com.teamred.checkmate.ui.login.LoginActivity;
 
 import org.w3c.dom.Text;
@@ -67,20 +70,17 @@ private Button edit;
  String items[]
             = { "None yet. Add some!" };
 
-    Map<String, Object> userMap = new HashMap<>();
-    User user = new User();
-    String name = user.getName();
+//    Map<String, Object> userMap = new HashMap<>();
+//    User user = new User();
+//    String name = user.getName();
     // String username = user.getUsername();
-    String profile_pic = user.getPhotoUrl();
-    String userN;
+//    String profile_pic = user.getPhotoUrl();
+//    String userN;
     List<Object> savedP = new ArrayList<>();
     List<String> savedPNames = new ArrayList<>();
     List<String> savedPIDs = new ArrayList<>();
 
-    TextView usernameTxtView;
-    // String username;
-    TextView numGroupsTxtView;
-    // Integer numGroups;
+
 
     String groupIDPostBelongsTo = null;
 
@@ -98,41 +98,108 @@ private Button edit;
 
         // firebase auth to check current user
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
+        FirebaseUser fbUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (Constant.getInstance().getCurrentUser() != null) {
+            User me = Constant.getInstance().getCurrentUser();
+            binding.usernameTv.setText(me.getUsername());
+            if (me.getPhotoUrl() != null){
+                FriendlyMessageAdapter.loadImageIntoView(binding.pPic, me.getPhotoUrl());
+            }
+            if (me.getGroupJoined() == null || me.getGroupJoined().size() == 0) {
+                binding.numgroupsjoined.setText(0 + " groups joined");
+            } else {
+                binding.numgroupsjoined.setText(me.getGroupJoined().size() + " groups joined");
+            }
+
+            FirebaseFirestore.getInstance()
+                    .collection("user").document(me.getUid()).collection("savedPosts")
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    Log.d("ptest3", document.getId() + " => " + document.getData());
+
+                                    groupIDPostBelongsTo = document.getData().get("groupIDPostBelongsTo").toString();
+
+                                    DocumentReference docRef = FirebaseFirestore.getInstance().collection("groups").document(document.getData().get("groupIDPostBelongsTo").toString()).collection("posts").document(document.getId());
+                                    docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                            if (task.isSuccessful()) {
+                                                DocumentSnapshot document = task.getResult();
+                                                if (document.exists()) {
+                                                    Log.d("ptest4", "DocumentSnapshot data: " + document.getData());
+                                                    savedP.add(document.getData());
+                                                    savedPNames.add(document.getData().get("postTitle").toString());
+                                                    savedPIDs.add(document.getId());
+//                                                    userMap.put("savedPosts", savedP);
+//                                                    userMap.put("savedPostNames", savedPNames);
+                                                    Log.d("ptest4", JSON.toJSONString(me));
+
+
+
+                                                    // work on getting things to review today working
+                                                    // savedPNames.toArray();
+
+                                                    ArrayAdapter<String> reviewAdapter = new ArrayAdapter<String>(getContext(),
+                                                            android.R.layout.simple_list_item_multiple_choice, savedPNames);
+                                                    list.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+                                                    list.setAdapter(reviewAdapter);
+
+                                                    // ArrayAdapter<String> monthAdapter = new ArrayAdapter<>(getApplication().getApplicationContext(),
+                                                    //         android.R.layout.simple_list_item_1, groupsPrint);
+                                                    // lvMonth.setAdapter(monthAdapter);
+                                                } else {
+                                                    Log.d("ptest4", "No such document");
+                                                }
+                                            } else {
+                                                Log.d("ptest4", "get failed with ", task.getException());
+                                            }
+                                        }
+                                    });
+
+
+
+                                }
+                            } else {
+                                Log.d("ptest3", "Error getting documents: ", task.getException());
+                            }
+                        }
+                    });
+        }else if(fbUser != null){
             // User is signed in
-            Log.d("ptest", user.getUid());
-            Log.d("ptest", user.getEmail());
+            User me = new User();
+            Log.d("ptest", fbUser.getUid());
+            Log.d("ptest", fbUser.getEmail());
 
-            String[] arrOfStr = user.getEmail().split("@", 2);
-            userN = arrOfStr[0];
-
-            userMap.put("uid", user.getUid());
-            userMap.put("email", user.getEmail());
+            String[] arrOfStr = fbUser.getEmail().split("@", 2);
+//            userN = arrOfStr[0];
+            me.setUid(fbUser.getUid());
             // userMap.put("username", userN);
             // Log.d("ptest", user.getPhotoUrl().toString());
             // Log.d("ptest", user.getDisplayName());
 
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-            DocumentReference docRef = db.collection("user").document(user.getUid());
+            DocumentReference docRef = db.collection("user").document(fbUser.getUid());
             docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if (task.isSuccessful()) {
                         DocumentSnapshot document = task.getResult();
                         if (document.exists()) {
-                            Log.d("ptest2", "DocumentSnapshot data: " + document.getData().get("groupJoined"));
-                            userMap.put("groupJoined", document.getData().get("groupJoined"));
-                            userMap.put("username", document.getData().get("username"));
-                            Log.d("ptest2", Integer.toString(document.getData().get("groupJoined").toString().split(",")[0].length()));
-                            userMap.put("numGroups", document.getData().get("groupJoined").toString().split(",").length);
-                            Log.d("ptest2", userMap.toString());
-                            usernameTxtView.setText(userMap.get("username").toString());
-                            if (document.getData().get("groupJoined").toString().equals("[]")) {
-                                numGroupsTxtView.setText(0 + " groups joined");
+                            User user = document.toObject(User.class);
+
+                            binding.usernameTv.setText(user.getUsername());
+                            if (user.getPhotoUrl() != null){
+                                FriendlyMessageAdapter.loadImageIntoView(binding.pPic, user.getPhotoUrl());
+                            }
+                            if (user.getGroupJoined() == null || user.getGroupJoined().size() == 0) {
+                                binding.numgroupsjoined.setText(0 + " groups joined");
                             } else {
-                                numGroupsTxtView.setText(userMap.get("numGroups").toString() + " groups joined");
+                                binding.numgroupsjoined.setText(user.getGroupJoined().size() + " groups joined");
                             }
 
                             db.collection("user").document(user.getUid()).collection("savedPosts")
@@ -157,9 +224,9 @@ private Button edit;
                                                                     savedP.add(document.getData());
                                                                     savedPNames.add(document.getData().get("postTitle").toString());
                                                                     savedPIDs.add(document.getId());
-                                                                    userMap.put("savedPosts", savedP);
-                                                                    userMap.put("savedPostNames", savedPNames);
-                                                                    Log.d("ptest4", userMap.toString());
+//                                                                    userMap.put("savedPosts", savedP);
+//                                                                    userMap.put("savedPostNames", savedPNames);
+                                                                    Log.d("ptest4", JSON.toJSONString(user));
 
 
 
@@ -191,26 +258,6 @@ private Button edit;
                                             }
                                         }
                                     });
-
-                            // CollectionReference docRef = db.collection("user").document(user.getUid()).collection("savedPosts");
-                            // docRef.get().addOnCompleteListener(new OnCompleteListener<CollectionSnapshot>() {
-                            //     @Override
-                            //     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            //         if (task.isSuccessful()) {
-                            //             DocumentSnapshot document = task.getResult();
-                            //             if (document.exists()) {
-                            //                 Log.d("ptest2", "DocumentSnapshot data: " + document.getData().get("groupJoined"));
-                            //                 userMap.put("groupJoined", document.getData().get("groupJoined"));
-                            //                 userMap.put("numGroups", document.getData().get("groupJoined").toString().split(",").length);
-                            //                 Log.d("ptest2", userMap.toString());
-                            //             } else {
-                            //                 Log.d("ptest2", "No such document");
-                            //             }
-                            //         } else {
-                            //             Log.d("ptest2", "get failed with ", task.getException());
-                            //         }
-                            //     }
-                            // });
 
 
 
@@ -289,9 +336,10 @@ private Button edit;
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getActivity(), EditProfileActivity.class);
+                Intent i = new Intent(getActivity(), AfterRegisterActivity.class);
                 Toast.makeText(getContext(), "Edit Profile", Toast.LENGTH_LONG).show();
                 startActivity(i);
+                getActivity().finish();
             }
         });
 
@@ -302,8 +350,6 @@ private Button edit;
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         // set this stuff
-        usernameTxtView = (TextView) getView().findViewById(R.id.username_tv);
-        numGroupsTxtView = (TextView) getView().findViewById(R.id.numgroupsjoined);
     }
 
     @Override
