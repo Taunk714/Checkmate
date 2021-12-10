@@ -162,6 +162,8 @@ public class GroupDetailFragment extends Fragment implements Searchable {
                     ChatDetailFragment chatDetailFragment = new ChatDetailFragment();
                     chatDetailFragment.setArguments(bundle);
                     ft.replace(R.id.navigation_host, chatDetailFragment)
+                            .setReorderingAllowed(true)
+                            .addToBackStack(null)
                             .commit();
 
                 }

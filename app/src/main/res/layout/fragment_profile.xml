@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="112dp"
         android:scaleType="fitXY"
-        android:src="@drawable/profileheader" />
+        android:background="@color/colorPrimary"/>
 
     <FrameLayout
         android:id="@+id/frameLayout"
@@ -29,17 +29,17 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="98dp"
         android:layout_marginEnd="98dp"
-        android:layout_marginBottom="14dp"
-        android:text="Things to Review Today"
+        android:text="Things to Review"
+        android:textAlignment="center"
         android:textColor="@color/colorBlue"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.398" />
+        app:layout_constraintVertical_bias="0.413" />
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/p_pic"
@@ -74,7 +74,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="left"
-        android:text="username"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="#000000"
         app:layout_constraintBottom_toTopOf="@+id/numgroupsjoined"
