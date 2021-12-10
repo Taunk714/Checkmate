@@ -229,12 +229,12 @@ private Button edit;
             public void onItemClick(AdapterView<?> parentView, View childView, int position, long id) {
                 // set reminder for next time to review
                // go to post
-                list.setItemChecked(position, false);
+//                list.setItemChecked(position, false);
                 SavedPost savedPost = review.get(position);
                 FirebaseFirestore.getInstance()
                         .collection(CheckmateKey.GROUP_FIREBASE)
                         .document(savedPost.getGroupId())
-                        .collection("post")
+                        .collection("posts")
                         .document(savedPost.getPostId())
                         .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
@@ -261,12 +261,12 @@ private Button edit;
             public void onItemClick(AdapterView<?> parentView, View childView, int position, long id) {
                 // set reminder for next time to review
                 // go to post
-                list.setItemChecked(position, false);
-                SavedPost savedPost = review.get(position);
+//                list.setItemChecked(position, false);
+                SavedPost savedPost = noTask.get(position);
                 FirebaseFirestore.getInstance()
                         .collection(CheckmateKey.GROUP_FIREBASE)
                         .document(savedPost.getGroupId())
-                        .collection("post")
+                        .collection("posts")
                         .document(savedPost.getPostId())
                         .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
