@@ -65,9 +65,13 @@ public class PostFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        postListModel = new ViewModelProvider(requireActivity()).get(PostsViewModel.class);
-        this.post = postListModel.getSelected();
+        Bundle arguments = getArguments();
+        if (arguments != null){
+            this.post = JSON.parseObject(arguments.getString("post"), Post.class);
+        }else{
+            postListModel = new ViewModelProvider(requireActivity()).get(PostsViewModel.class);
+            this.post = postListModel.getSelected();
+        }
     }
 
     @Override
@@ -130,6 +134,8 @@ public class PostFragment extends Fragment {
                     ChatDetailFragment chatDetailFragment = new ChatDetailFragment();
                     chatDetailFragment.setArguments(bundle);
                     ft.replace(R.id.navigation_host, chatDetailFragment)
+                            .setReorderingAllowed(true)
+                            .addToBackStack(null)
                             .commit();
 
                 }

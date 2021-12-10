@@ -20,25 +20,32 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.alibaba.fastjson.JSON;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.teamred.checkmate.R;
 import com.teamred.checkmate.data.CheckmateKey;
 import com.teamred.checkmate.data.Constant;
 import com.teamred.checkmate.data.SavedPost;
+import com.teamred.checkmate.data.model.Post;
 import com.teamred.checkmate.data.model.ReviewRecord;
 import com.teamred.checkmate.data.model.User;
 import com.teamred.checkmate.databinding.FragmentProfileBinding;
 import com.teamred.checkmate.services.NoteReviewReceiver;
+import com.teamred.checkmate.ui.chat.ChatDetailFragment;
 import com.teamred.checkmate.ui.chat.FriendlyMessageAdapter;
 import com.teamred.checkmate.ui.login.AfterRegisterActivity;
 import com.teamred.checkmate.ui.login.LoginActivity;
+import com.teamred.checkmate.ui.notes.PostFragment;
 import com.teamred.checkmate.util.DateUtil;
 
 import java.util.ArrayList;
@@ -222,9 +229,67 @@ private Button edit;
             public void onItemClick(AdapterView<?> parentView, View childView, int position, long id) {
                 // set reminder for next time to review
                // go to post
+                list.setItemChecked(position, false);
+                SavedPost savedPost = review.get(position);
+                FirebaseFirestore.getInstance()
+                        .collection(CheckmateKey.GROUP_FIREBASE)
+                        .document(savedPost.getGroupId())
+                        .collection("post")
+                        .document(savedPost.getPostId())
+                        .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        Post post = task.getResult().toObject(Post.class);
+                        PostFragment p = new PostFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("post", JSON.toJSONString(post));
+                        p.setArguments(bundle);
+                        FragmentManager fm = getParentFragmentManager();
+                        FragmentTransaction ft = fm.beginTransaction();
+
+                        ft.replace(R.id.navigation_host, p)
+                                .setReorderingAllowed(true)
+                                .addToBackStack(null)
+                                .commit();
+                    }
+                });
 
             } //end onItemClick
         });
+
+        binding.listviewDone.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parentView, View childView, int position, long id) {
+                // set reminder for next time to review
+                // go to post
+                list.setItemChecked(position, false);
+                SavedPost savedPost = review.get(position);
+                FirebaseFirestore.getInstance()
+                        .collection(CheckmateKey.GROUP_FIREBASE)
+                        .document(savedPost.getGroupId())
+                        .collection("post")
+                        .document(savedPost.getPostId())
+                        .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        Post post = task.getResult().toObject(Post.class);
+                        PostFragment p = new PostFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("post", JSON.toJSONString(post));
+                        p.setArguments(bundle);
+                        FragmentManager fm = getParentFragmentManager();
+                        FragmentTransaction ft = fm.beginTransaction();
+
+                        ft.replace(R.id.navigation_host, p)
+                                .setReorderingAllowed(true)
+                                .addToBackStack(null)
+                                .commit();
+                    }
+                });
+
+            } //end onItemClick
+        });
+
+
 
 
         edit = binding.editProfileBtn;
