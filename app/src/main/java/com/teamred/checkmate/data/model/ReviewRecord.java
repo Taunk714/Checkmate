@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class ReviewRecord {
     int times;
-    String postId;
+    String postTitle;
     String groupId;
     Date time;
 
@@ -16,12 +16,12 @@ public class ReviewRecord {
         this.times = times;
     }
 
-    public String getPostId() {
-        return postId;
+    public String getPostTitle() {
+        return postTitle;
     }
 
-    public void setPostId(String postId) {
-        this.postId = postId;
+    public void setPostTitle(String postTitle) {
+        this.postTitle = postTitle;
     }
 
     public Date getTime() {

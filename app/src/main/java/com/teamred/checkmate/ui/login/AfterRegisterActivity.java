@@ -66,6 +66,9 @@ public class AfterRegisterActivity extends AppCompatActivity {
 
         if (Constant.getInstance().getCurrentUser() != null){
             user = Constant.getInstance().getCurrentUser();
+            if (user.getEmail() == null){
+                user.setEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+            }
         }else{
             user = LoginDataSource.generateUser(FirebaseAuth.getInstance().getCurrentUser());
         }

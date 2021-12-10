@@ -124,13 +124,15 @@ public class LoginDataSource {
         return currentUserResult.getValue();
     }
 
-    public static void setUser(Map<String, Object> data){
-        User user = new User();
-        user.setName((String) data.get("name"));
-        user.setGroupJoined(((ArrayList<String>) data.get("groupJoined")));
-        user.setPhotoUrl((String) data.get("photoUrl"));
-        user.setUid((String) data.get("uid"));
-        user.setUsername((String) data.get("username"));
+    public static void setUser(User user){
+        // use carefully
+        if (user.getEmail() == null){
+            user.setEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+            FirebaseFirestore.getInstance()
+                    .collection(CheckmateKey.USER_FIREBASE)
+                    .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                    .update("email", user.getEmail());
+        }
         currentUserResult.setValue(user);
         Constant.getInstance().setCurrentUser(user);
     }
@@ -198,7 +200,7 @@ public class LoginDataSource {
     public static User generateUser(FirebaseUser firebaseUser){
         User user = new User();
         user.setUid(firebaseUser.getUid());
-        user.setUsername(firebaseUser.getEmail());
+        user.setUsername(firebaseUser.getDisplayName());
         user.setGroupJoined(new ArrayList<>());
         user.setPhotoUrl(firebaseUser.getPhotoUrl() == null? null:firebaseUser.getPhotoUrl().toString());
         user.setName(firebaseUser.getUid());

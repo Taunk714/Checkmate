@@ -4,10 +4,14 @@ import java.util.Date;
 
 public class SavedPost {
     private String postId;
+    private String groupId;
     private Date lastReview;
     private Boolean isAuthor;
     private Boolean isStarred;
     private Boolean isLiked;
+    private int reviewCount;
+    private String postTitle;
+//    private String id;
 
     public SavedPost(){}
 
@@ -58,4 +62,41 @@ public class SavedPost {
     public void setLiked(Boolean liked) {
         isLiked = liked;
     }
+
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
+
+    public int getReviewCount() {
+        return reviewCount;
+    }
+
+    public void setReviewCount(int reviewCount) {
+        this.reviewCount = reviewCount;
+    }
+
+    public String getPostTitle() {
+        return postTitle;
+    }
+
+    public void setPostTitle(String postTitle) {
+        this.postTitle = postTitle;
+    }
+
+    @Override
+    public String toString() {
+        return  postTitle;
+    }
+
+//    public String getId() {
+//        return id;
+//    }
+//
+//    public void setId(String id) {
+//        this.id = id;
+//    }
 }

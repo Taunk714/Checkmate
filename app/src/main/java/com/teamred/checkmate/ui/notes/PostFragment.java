@@ -31,8 +31,10 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.teamred.checkmate.R;
+import com.teamred.checkmate.data.CheckmateKey;
 import com.teamred.checkmate.data.Constant;
 import com.teamred.checkmate.data.LoginDataSource;
+import com.teamred.checkmate.data.SavedPost;
 import com.teamred.checkmate.data.model.Post;
 import com.teamred.checkmate.data.model.User;
 import com.teamred.checkmate.databinding.FragmentPostBinding;
@@ -40,6 +42,7 @@ import com.teamred.checkmate.services.NoteReviewReceiver;
 import com.teamred.checkmate.ui.chat.ChatDetailFragment;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -163,18 +166,28 @@ public class PostFragment extends Fragment {
                 if (binding.reminderSwitch.isChecked()) {
                     Log.d(TAG, "onClick: Is checked");
                     final boolean isAuthor = post.getAuthor() == currentUser.getUsername();
+                    SavedPost savedPost = new SavedPost();
+                    savedPost.setReviewCount(0);
+                    savedPost.setPostTitle(post.getPostTitle());
+                    savedPost.setGroupId(postListModel.getGroupID());
+                    savedPost.setPostId(post.getPostID());
+                    savedPost.setAuthor(isAuthor);
+                    savedPost.setLastReview(new Date());
+//                    savedPost.setLiked();
 
-                    Map<String, Object> data = new HashMap<>();
-                    data.put("dateLastReviewed", Calendar.getInstance().getTime());
-                    data.put("isAuthor", isAuthor);
-                    data.put("isStarred", true);
-                    data.put("starredDate", Calendar.getInstance().getTime());
-                    data.put("numTimesReviewed", 0);
-                    data.put("groupIDPostBelongsTo", postListModel.getGroupID());
+//                    Map<String, Object> data = new HashMap<>();
+//                    data.put("dateLastReviewed", Calendar.getInstance().getTime());
+//                    data.put("isAuthor", isAuthor);
+//                    data.put("isStarred", true);
+//                    data.put("starredDate", Calendar.getInstance().getTime());
+//                    data.put("numTimesReviewed", 0);
+//                    data.put("groupIDPostBelongsTo", postListModel.getGroupID());
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-                    CollectionReference posts = db.collection("user").document(currentUser.getUid()).collection("savedPosts");
-                    posts.document(post.getPostID()).set(data);
+                    CollectionReference posts = db.collection(CheckmateKey.USER_FIREBASE)
+                            .document(currentUser.getUid())
+                            .collection(CheckmateKey.SAVE_POST);
+                    posts.document(post.getPostID()).set(JSON.toJSON(savedPost));
 
 
                     Toast.makeText(getContext(), "Reminder Set!", Toast.LENGTH_SHORT).show();

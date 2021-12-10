@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:backgroundTintMode="screen"
-    android:background="@color/colorAccent">
+    android:background="@color/g1"
+    android:backgroundTintMode="screen">
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -26,6 +26,7 @@
         android:layout_height="match_parent"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
+        android:background="@color/g2"
         android:backgroundTintMode="add"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -33,26 +34,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <SearchView
-            android:id="@+id/searchNote"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginBottom="20dp"
-            android:background="@color/background"
-            android:visibility="invisible">
-
-        </SearchView>
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
             android:layout_marginRight="5dp"
-            android:background="#37EFEFEF"
-            android:orientation="vertical">
+            android:background="@color/g4"
+            android:backgroundTintMode="add"
+            android:elevation="5dp"
+            android:orientation="vertical"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -66,6 +59,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:shadowColor="#0B0000"
+                    android:shadowDx="3"
+                    android:shadowDy="3"
+                    android:shadowRadius="3"
                     android:text="Title"
                     android:textColor="@color/black"
                     android:textSize="24sp" />
@@ -100,7 +97,8 @@
                 android:id="@+id/group_detail_creator"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="creator" />
+                android:text="creator"
+                android:textStyle="italic" />
 
             <TextView
                 android:id="@+id/group_detail_desc"
@@ -123,7 +121,8 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:text="5 Available Threads"
-                android:visibility="invisible" />
+                android:textColor="@color/colorDarkGray"
+                android:visibility="gone" />
 
         </LinearLayout>
 
@@ -161,7 +160,8 @@
         <ListView
             android:id="@+id/note_list_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"></ListView>
+            android:layout_height="match_parent"
+            android:background="#CCD6CC"></ListView>
 
     </LinearLayout>
 

@@ -3,12 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="15dp"
-    android:layout_marginTop="5dp"
-    android:layout_marginRight="15dp"
+    android:layout_marginLeft="5dp"
+    android:layout_marginTop="3dp"
+    android:layout_marginRight="5dp"
+    android:layout_marginBottom="3dp"
+    android:background="@android:color/white"
+    android:descendantFocusability="blocksDescendants"
+    android:elevation="5dp"
     android:orientation="vertical"
     android:paddingLeft="5dp"
-    android:paddingTop="5dp"
     android:paddingRight="5dp"
     android:paddingBottom="5dp">
 
@@ -25,7 +28,10 @@
             android:layout_weight="0"
             android:text="Title"
             android:textColor="@color/black"
-            android:textSize="24sp" />
+            android:textSize="24sp"
+            android:shadowDx="3"
+            android:shadowDy="3"
+            android:shadowRadius="3"/>
 
         <TextView
             android:id="@+id/postrowsubtopic_TV"

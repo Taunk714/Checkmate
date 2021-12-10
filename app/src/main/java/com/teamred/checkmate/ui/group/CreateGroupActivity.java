@@ -62,7 +62,7 @@ public class CreateGroupActivity extends AppCompatActivity {
                 String name = String.valueOf(groupName.getText());
                 List<String> tags = Arrays.asList(groupTag.getText().toString().split("[,; ]"));
                 String description = String.valueOf(groupDescription.getText());
-                Toast.makeText(getApplicationContext(), "searching...", Toast.LENGTH_LONG).show();
+//                Toast.makeText(getApplicationContext(), "searching...", Toast.LENGTH_LONG).show();
                 // upload to firebase
                 Group group = new Group();
                 group.setGroupName(name);

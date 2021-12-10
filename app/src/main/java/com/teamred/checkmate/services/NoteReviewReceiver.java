@@ -80,29 +80,10 @@ public class NoteReviewReceiver extends BroadcastReceiver {
 
         manager.notify(2, builder.build());
 
-        updateReviewDate(docRef);
+//        updateReviewDate(docRef);
 
     }
 
-    private void updateReviewDate(DocumentReference docRef){
-        docRef.update("dateLastReviewed", Calendar.getInstance().getTime());
-        docRef.get().addOnCompleteListener(
-                new OnCompleteListener<DocumentSnapshot>() {
-                   @Override
-                   public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                       DocumentSnapshot result1 = task.getResult();
-                       int timesReviewed = Integer.parseInt(result1.get("numTimesReviewed").toString());
-                       docRef.update("numTimesReviewed", timesReviewed);
-                       String simpleDateString = DateUtil.getSimpleDateString(new Date());
-                       ReviewRecord reviewRecord = new ReviewRecord();
-                       reviewRecord.setTime(new Date());
-                       reviewRecord.setTimes(timesReviewed+1);
-                       reviewRecord.setPostId(postId);
-                       db.collection(CheckmateKey.REVIEW_RECORD)
-                               .document(Constant.getInstance().getCurrentUser().getUid())
-                               .collection(simpleDateString).add(JSON.toJSON(reviewRecord));
-                   }
-               });
-    }
+
 
 }

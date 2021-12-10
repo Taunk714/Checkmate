@@ -34,6 +34,7 @@ import com.teamred.checkmate.OnboardingActivity;
 import com.teamred.checkmate.R;
 import com.teamred.checkmate.data.LoginDataSource;
 import com.teamred.checkmate.data.Result;
+import com.teamred.checkmate.data.model.User;
 import com.teamred.checkmate.databinding.ActivityLoginBinding;
 
 import android.app.Activity;
@@ -193,7 +194,7 @@ public class LoginActivity extends AppCompatActivity {
     private void updateUiWithUser(LoggedInUserView model) {
         String welcome = getString(R.string.welcome) + model.getDisplayName();
         // TODO : initiate successful logged in experience
-        Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
+//        Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
     }
 
     private void showLoginFailed(@StringRes Integer errorString) {
@@ -255,8 +256,8 @@ public class LoginActivity extends AppCompatActivity {
                                     .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                 @Override
                                 public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                    Map<String, Object> data = documentSnapshot.getData();
-                                    LoginDataSource.setUser(data);
+                                    User user1 = documentSnapshot.toObject(User.class);
+                                    LoginDataSource.setUser(user1);
                                     loginViewModel.setLoginResult(new Result.Success<>(user));
                                 }
                             });

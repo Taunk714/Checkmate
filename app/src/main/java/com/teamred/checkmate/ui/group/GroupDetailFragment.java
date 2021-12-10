@@ -59,7 +59,7 @@ public class GroupDetailFragment extends Fragment implements Searchable {
     private TextView title;
     private TextView creator;
     private TextView desc;
-    private SearchView searchKeywords;
+//    private SearchView searchKeywords;
     private Spinner searchType;
     private String[] queryType;
     private Spinner filter;
@@ -133,7 +133,7 @@ public class GroupDetailFragment extends Fragment implements Searchable {
         });
 
 
-        searchKeywords = binding.searchNote;
+//        searchKeywords = binding.searchNote;
         String numThreads = group.getSubTopics().size() + " Available Threads";
         binding.numberOfThread.setText(numThreads);
         binding.noteListFilter.setAdapter(
@@ -197,23 +197,23 @@ public class GroupDetailFragment extends Fragment implements Searchable {
 //        }
 
         // enter keywords and search
-        searchKeywords.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                // search algolia
-                Toast.makeText(getContext(), "searching... "+ s, Toast.LENGTH_LONG).show();
-//                String filters = generateFilterString();
-//                AlgoliaDataSource.getInstance(getContext()).searchGroup(SearchGroupFragment.this, "group", s, queryType, filters);
-////                updateSearchResult(demos);
-//                searchKeywords.clearFocus();
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-                return false;
-            }
-        });
+//        searchKeywords.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String s) {
+//                // search algolia
+//                Toast.makeText(getContext(), "searching... "+ s, Toast.LENGTH_LONG).show();
+////                String filters = generateFilterString();
+////                AlgoliaDataSource.getInstance(getContext()).searchGroup(SearchGroupFragment.this, "group", s, queryType, filters);
+//////                updateSearchResult(demos);
+////                searchKeywords.clearFocus();
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String s) {
+//                return false;
+//            }
+//        });
 
         joined = isJoined(group.getObjectID(), Constant.getInstance().getCurrentUser().getGroupJoined());
         if (joined){

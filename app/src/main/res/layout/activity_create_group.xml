@@ -6,8 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="20dp"
-    tools:context=".ui.group.CreateGroupActivity"
-    android:background="#B2E3E1">
+    tools:context=".ui.group.CreateGroupActivity">
 
     <TextView
         android:id="@+id/labelTitle"
@@ -51,15 +50,6 @@
             android:hint="enter tags, use semicolon"
             android:inputType="textPersonName" />
 
-        <ImageButton
-            android:id="@+id/imageButton2"
-            style="@android:style/Widget.Holo.Light.ImageButton"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:backgroundTint="#00FFFFFF"
-            android:src="@drawable/ic_baseline_add_24"
-            tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
-
     </LinearLayout>
 
     <TextView
@@ -87,8 +77,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0"
-        android:text="@string/group_create"
         android:background="@color/blue"
-        android:textColor="@color/white"/>
+        android:text="@string/group_create"
+        android:textColor="@color/white" />
 
 </LinearLayout>

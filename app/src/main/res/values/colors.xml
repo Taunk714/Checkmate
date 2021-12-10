@@ -23,6 +23,10 @@
 <!--    <color name="blue_a400">#00B0FF</color>-->
 <!--    <color name="blue_a700">#0091EA</color>-->
 <!--    <color name="blue_a900">#005db3</color>-->
+    <color name="g1">#66806A</color>
+    <color name="g2">#B4C6A6</color>
+    <color name="g3">#FFC286</color>
+    <color name="g4">#FFF1AF</color>
 
     <color name="background">#F2F3F7</color>
 

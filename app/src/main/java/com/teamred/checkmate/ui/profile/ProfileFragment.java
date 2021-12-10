@@ -13,7 +13,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,42 +20,32 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.Observer;
 
 import com.alibaba.fastjson.JSON;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.teamred.checkmate.R;
+import com.teamred.checkmate.data.CheckmateKey;
 import com.teamred.checkmate.data.Constant;
-import com.teamred.checkmate.data.model.LoggedInUser;
+import com.teamred.checkmate.data.SavedPost;
+import com.teamred.checkmate.data.model.ReviewRecord;
 import com.teamred.checkmate.data.model.User;
 import com.teamred.checkmate.databinding.FragmentProfileBinding;
 import com.teamred.checkmate.services.NoteReviewReceiver;
 import com.teamred.checkmate.ui.chat.FriendlyMessageAdapter;
-import com.teamred.checkmate.ui.group.CreateGroupActivity;
-import com.teamred.checkmate.ui.group.GroupDetailFragment;
 import com.teamred.checkmate.ui.login.AfterRegisterActivity;
 import com.teamred.checkmate.ui.login.LoginActivity;
-
-import org.w3c.dom.Text;
+import com.teamred.checkmate.util.DateUtil;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class ProfileFragment extends Fragment {
 
@@ -76,9 +65,11 @@ private Button edit;
     // String username = user.getUsername();
 //    String profile_pic = user.getPhotoUrl();
 //    String userN;
-    List<Object> savedP = new ArrayList<>();
-    List<String> savedPNames = new ArrayList<>();
-    List<String> savedPIDs = new ArrayList<>();
+    List<SavedPost> savedP = new ArrayList<>();
+    List<SavedPost> review = new LinkedList<>();
+    List<SavedPost> noTask = new LinkedList<>();
+//    List<String> savedPNames = new ArrayList<>();
+//    List<String> savedPIDs = new ArrayList<>();
 
 
 
@@ -112,180 +103,37 @@ private Button edit;
             }
 
             FirebaseFirestore.getInstance()
-                    .collection("user").document(me.getUid()).collection("savedPosts")
+                    .collection("user").document(me.getUid()).collection(CheckmateKey.SAVE_POST)
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
                                 for (QueryDocumentSnapshot document : task.getResult()) {
+                                    SavedPost savedPost = document.toObject(SavedPost.class);
                                     Log.d("ptest3", document.getId() + " => " + document.getData());
-
-                                    groupIDPostBelongsTo = document.getData().get("groupIDPostBelongsTo").toString();
-
-                                    DocumentReference docRef = FirebaseFirestore.getInstance().collection("groups").document(document.getData().get("groupIDPostBelongsTo").toString()).collection("posts").document(document.getId());
-                                    docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                            if (task.isSuccessful()) {
-                                                DocumentSnapshot document = task.getResult();
-                                                if (document.exists()) {
-                                                    Log.d("ptest4", "DocumentSnapshot data: " + document.getData());
-                                                    savedP.add(document.getData());
-                                                    savedPNames.add(document.getData().get("postTitle").toString());
-                                                    savedPIDs.add(document.getId());
-//                                                    userMap.put("savedPosts", savedP);
-//                                                    userMap.put("savedPostNames", savedPNames);
-                                                    Log.d("ptest4", JSON.toJSONString(me));
-
-
-                                                    // work on getting things to review today working
-                                                    // savedPNames.toArray();
-
-                                                    ArrayAdapter<String> reviewAdapter = new ArrayAdapter<String>(getContext(),
-                                                            android.R.layout.simple_list_item_multiple_choice, savedPNames);
-                                                    list.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-                                                    list.setAdapter(reviewAdapter);
-
-                                                    // ArrayAdapter<String> monthAdapter = new ArrayAdapter<>(getApplication().getApplicationContext(),
-                                                    //         android.R.layout.simple_list_item_1, groupsPrint);
-                                                    // lvMonth.setAdapter(monthAdapter);
-                                                } else {
-                                                    Log.d("ptest4", "No such document");
-                                                }
-                                            } else {
-                                                Log.d("ptest4", "get failed with ", task.getException());
-                                            }
-                                        }
-                                    });
-
-
+                                    savedP.add(savedPost);
+                                    if (calDiff(savedPost.getLastReview(), new Date()) >= CheckmateKey.REVIEW_INTERNAL){
+                                        review.add(savedPost);
+                                    }else{
+                                        noTask.add(savedPost);
+                                    }
 
                                 }
+
+                                ArrayAdapter<SavedPost> reviewAdapter = new ArrayAdapter<>(getContext(),
+                                        android.R.layout.simple_list_item_multiple_choice, review);
+                                list.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+                                list.setAdapter(reviewAdapter);
+
+                                ArrayAdapter<SavedPost> noTaskAdapter = new ArrayAdapter<>(getContext(),
+                                        android.R.layout.simple_list_item_1, noTask);
+                                binding.listviewDone.setAdapter(noTaskAdapter);
                             } else {
                                 Log.d("ptest3", "Error getting documents: ", task.getException());
                             }
                         }
                     });
-        }else if(fbUser != null){
-            // User is signed in
-            User me = new User();
-            Log.d("ptest", fbUser.getUid());
-            Log.d("ptest", fbUser.getEmail());
-
-            String[] arrOfStr = fbUser.getEmail().split("@", 2);
-//            userN = arrOfStr[0];
-            me.setUid(fbUser.getUid());
-            // userMap.put("username", userN);
-            // Log.d("ptest", user.getPhotoUrl().toString());
-            // Log.d("ptest", user.getDisplayName());
-
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-            DocumentReference docRef = db.collection("user").document(fbUser.getUid());
-            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
-                        if (document.exists()) {
-                            User user = document.toObject(User.class);
-
-                            binding.usernameTv.setText(user.getUsername());
-                            if (user.getPhotoUrl() != null){
-                                FriendlyMessageAdapter.loadImageIntoView(binding.pPic, user.getPhotoUrl());
-                            }
-                            if (user.getGroupJoined() == null || user.getGroupJoined().size() == 0) {
-                                binding.numgroupsjoined.setText(0 + " groups joined");
-                            } else {
-                                binding.numgroupsjoined.setText(user.getGroupJoined().size() + " groups joined");
-                            }
-
-                            db.collection("user").document(user.getUid()).collection("savedPosts")
-                                    .get()
-                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                            if (task.isSuccessful()) {
-                                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                                    Log.d("ptest3", document.getId() + " => " + document.getData());
-
-                                                    groupIDPostBelongsTo = document.getData().get("groupIDPostBelongsTo").toString();
-
-                                                    DocumentReference docRef = db.collection("groups").document(document.getData().get("groupIDPostBelongsTo").toString()).collection("posts").document(document.getId());
-                                                    docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                                        @Override
-                                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                                            if (task.isSuccessful()) {
-                                                                DocumentSnapshot document = task.getResult();
-                                                                if (document.exists()) {
-                                                                    Log.d("ptest4", "DocumentSnapshot data: " + document.getData());
-                                                                    savedP.add(document.getData());
-                                                                    savedPNames.add(document.getData().get("postTitle").toString());
-                                                                    savedPIDs.add(document.getId());
-//                                                                    userMap.put("savedPosts", savedP);
-//                                                                    userMap.put("savedPostNames", savedPNames);
-                                                                    Log.d("ptest4", JSON.toJSONString(user));
-
-
-
-                                                                    // work on getting things to review today working
-                                                                    // savedPNames.toArray();
-
-                                                                    ArrayAdapter<String> reviewAdapter = new ArrayAdapter<String>(getContext(),
-                                                                            android.R.layout.simple_list_item_multiple_choice, savedPNames);
-                                                                    list.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-                                                                    list.setAdapter(reviewAdapter);
-
-                                                                    // ArrayAdapter<String> monthAdapter = new ArrayAdapter<>(getApplication().getApplicationContext(),
-                                                                    //         android.R.layout.simple_list_item_1, groupsPrint);
-                                                                    // lvMonth.setAdapter(monthAdapter);
-                                                                } else {
-                                                                    Log.d("ptest4", "No such document");
-                                                                }
-                                                            } else {
-                                                                Log.d("ptest4", "get failed with ", task.getException());
-                                                            }
-                                                        }
-                                                    });
-
-
-
-                                                }
-                                            } else {
-                                                Log.d("ptest3", "Error getting documents: ", task.getException());
-                                            }
-                                        }
-                                    });
-
-
-
-                        } else {
-                            Log.d("ptest2", "No such document");
-                        }
-                    } else {
-                        Log.d("ptest2", "get failed with ", task.getException());
-                    }
-                }
-            });
-
-            // db.collection("user")
-            //         .get()
-            //         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            //             @Override
-            //             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-            //                 if (task.isSuccessful()) {
-            //                     for (QueryDocumentSnapshot document : task.getResult()) {
-            //                         Log.d("ptest", document.getId() + " => " + document.getData().get("name"));
-            //                     }
-            //                 } else {
-            //                     Log.w("ptest", "Error getting documents.", task.getException());
-            //                 }
-            //             }
-            //         });
-
-        } else {
-            // No user is signed in
         }
 
         binding.signoutBtn.setOnClickListener(new View.OnClickListener() {
@@ -298,35 +146,83 @@ private Button edit;
             }
         });
 
+         binding.reminderlist.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+             @Override
+             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                 // go
+                 //Object selectedFromList = (list.getItemAtPosition(position));
+                 AlarmManager alarmManager;
+
+                 Intent i = new Intent(getContext(), NoteReviewReceiver.class);
+                 //PendingIntent pi = PendingIntent.getBroadcast(getContext(), 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
+                 SavedPost savedPost = review.get(position);
+                 i.putExtra("Post_id", savedPost.getPostId());
+                 i.putExtra("Group_id", savedPost.getGroupId());
+                 i.putExtra("post_title", savedPost.getPostTitle());
+
+                 savedPost.setReviewCount(savedPost.getReviewCount()+1);
+                 savedPost.setLastReview(new Date());
+
+                 FirebaseFirestore.getInstance()
+                         .collection(CheckmateKey.USER_FIREBASE)
+                         .document(Constant.getInstance().getCurrentUser().getUid())
+                         .collection(CheckmateKey.SAVE_POST)
+                         .document(savedPost.getPostId())
+                         .update("reviewCount", savedPost.getReviewCount()
+                                 , "lastReview", savedPost.getLastReview())
+                         .addOnCompleteListener(new OnCompleteListener<Void>() {
+                             @Override
+                             public void onComplete(@NonNull Task<Void> task) {
+                                 String simpleDateString = DateUtil.getSimpleDateString(savedPost.getLastReview());
+                                 ReviewRecord reviewRecord = new ReviewRecord();
+                                 reviewRecord.setTime(savedPost.getLastReview());
+                                 reviewRecord.setTimes(savedPost.getReviewCount());
+                                 reviewRecord.setPostTitle(savedPost.getPostTitle());
+                                 FirebaseFirestore.getInstance().collection(CheckmateKey.REVIEW_RECORD)
+                                         .document(Constant.getInstance().getCurrentUser().getUid())
+                                         .collection(simpleDateString).add(JSON.toJSON(reviewRecord));
+                             }
+                         });
+
+
+
+                 PendingIntent pi = PendingIntent.getBroadcast(getContext(), UUID.randomUUID().hashCode(),
+                         i, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                 alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+
+                 long timeAtSwitchOn = System.currentTimeMillis();
+
+                 long tenSeconds = 1000 * 10;
+
+                 if (list.isItemChecked(position)) {
+                     Toast.makeText(getContext(), "Review!", Toast.LENGTH_SHORT).show();
+                     alarmManager.set(AlarmManager.RTC_WAKEUP, timeAtSwitchOn + tenSeconds, pi);
+                 } else {
+                     Toast.makeText(getContext(), "Reminder Canceled.", Toast.LENGTH_SHORT).show();
+                     alarmManager.cancel(pi);
+                 }
+                 review.remove(savedPost);
+                 noTask.add(savedPost);
+                 ArrayAdapter<SavedPost> reviewAdapter = new ArrayAdapter<>(getContext(),
+                         android.R.layout.simple_list_item_multiple_choice, review);
+                 list.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+                 list.setAdapter(reviewAdapter);
+
+                 ArrayAdapter<SavedPost> noTaskAdapter = new ArrayAdapter<>(getContext(),
+                         android.R.layout.simple_list_item_1, noTask);
+                 binding.listviewDone.setAdapter(noTaskAdapter);
+                 return true;
+             }
+         });
+
         // list.isItemChecked(position)
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parentView, View childView, int position, long id) {
                 // set reminder for next time to review
-                //Object selectedFromList = (list.getItemAtPosition(position));
-                AlarmManager alarmManager;
+               // go to post
 
-                Intent i = new Intent(getContext(), NoteReviewReceiver.class);
-                //PendingIntent pi = PendingIntent.getBroadcast(getContext(), 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
-                i.putExtra("Post_id", savedPIDs.get(position));
-                i.putExtra("Group_id", groupIDPostBelongsTo);
-                i.putExtra("post_title", savedPNames.get(position));
-                PendingIntent pi = PendingIntent.getBroadcast(getContext(), UUID.randomUUID().hashCode(),
-                        i, PendingIntent.FLAG_UPDATE_CURRENT);
-
-                alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-
-                long timeAtSwitchOn = System.currentTimeMillis();
-
-                long tenSeconds = 1000 * 10;
-
-                if (list.isItemChecked(position)) {
-                    Toast.makeText(getContext(), "Reminder Set!", Toast.LENGTH_SHORT).show();
-                    alarmManager.set(AlarmManager.RTC_WAKEUP, timeAtSwitchOn + tenSeconds, pi);
-                } else {
-                    Toast.makeText(getContext(), "Reminder Canceled.", Toast.LENGTH_SHORT).show();
-                    alarmManager.cancel(pi);
-                }
             } //end onItemClick
         });
 
@@ -336,7 +232,7 @@ private Button edit;
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(getActivity(), AfterRegisterActivity.class);
-                Toast.makeText(getContext(), "Edit Profile", Toast.LENGTH_LONG).show();
+//                Toast.makeText(getContext(), "Edit Profile", Toast.LENGTH_LONG).show();
                 startActivity(i);
                 getActivity().finish();
             }
@@ -355,6 +251,14 @@ private Button edit;
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    public int calDiff(Date date, Date latter){
+        String simpleDateString = DateUtil.getSimpleDateString(date);
+        String simpleDateString1 = DateUtil.getSimpleDateString(latter);
+        Date a = DateUtil.parse(simpleDateString);
+        Date b = DateUtil.parse(simpleDateString1);
+        return (int) Math.abs((a.getTime()-b.getTime())/(1000*3600*24));
     }
 
 }

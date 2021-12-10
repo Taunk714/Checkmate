@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#75CFCB">
+    android:layout_height="match_parent">
 
     <ProgressBar
         android:id="@+id/after_reg_loading"
@@ -78,24 +77,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="72dp"
+        android:background="@color/colorBlue"
         android:text="@string/confirm"
         android:textColor="@color/white"
-        android:background="@color/colorBlue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent" />
 
-<!--    <ImageView-->
-<!--        android:id="@+id/avatar"-->
-<!--        android:layout_width="177dp"-->
-<!--        android:layout_height="166dp"-->
-<!--        android:layout_marginBottom="24dp"-->
-<!--        app:layout_constraintBottom_toTopOf="@+id/welcome_label"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.495"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        tools:srcCompat="@drawable/account" />-->
+    <!--    <ImageView-->
+    <!--        android:id="@+id/avatar"-->
+    <!--        android:layout_width="177dp"-->
+    <!--        android:layout_height="166dp"-->
+    <!--        android:layout_marginBottom="24dp"-->
+    <!--        app:layout_constraintBottom_toTopOf="@+id/welcome_label"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintHorizontal_bias="0.495"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        tools:srcCompat="@drawable/account" />-->
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/avatar"
@@ -108,6 +107,6 @@
         app:layout_constraintBottom_toTopOf="@+id/welcome_label"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -108,20 +108,20 @@ public class ChatAdapter extends FirebaseRecyclerAdapter<Chat, ChatAdapter.ChatV
 
         public void bind(Chat item) {
 
-            User user = null;
+//            User user = null;
             LoginDataSource.getTargetUser(item.getOtherUser()).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @SuppressLint("ResourceAsColor")
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    Map<String, Object> data = task.getResult().getData();
-                    if (data.get("username").toString().trim().isEmpty()) {
+                    User user= task.getResult().toObject(User.class);
+                    if (user.getUsername().isEmpty()) {
                         binding.otherUsername.setText(ANONYMOUS);
                     } else {
-                        binding.otherUsername.setText(data.get("username").toString());
+                        binding.otherUsername.setText(user.getUsername());
                     }
 
-                    if (data.get("photoUrl") != null) {
-                        FriendlyMessageAdapter.loadImageIntoView(binding.chatAvatar, data.get("photoUrl").toString());
+                    if (user.getPhotoUrl() != null) {
+                        FriendlyMessageAdapter.loadImageIntoView(binding.chatAvatar, user.getPhotoUrl());
                     } else {
                         binding.chatAvatar.setImageResource(R.drawable.ic_account_circle_black_36dp);
                     }

@@ -381,7 +381,7 @@ public class CompactCalendarTab extends Fragment {
 
                         Event event = new Event(argb
                                 , reviewRecord.getTime().getTime()
-                                , "Review " + reviewRecord.getPostId() + " the " + reviewRecord.getTimes() + "th times at " + reviewRecord.getTime());
+                                , "Review " + reviewRecord.getPostTitle() + " the " + reviewRecord.getTimes() + "th times at " + reviewRecord.getTime());
                         events.add(event);
                     }
                     compactCalendarView.addEvents(events);
