@@ -116,7 +116,9 @@ public class PostFragment extends Fragment {
                 if (postAuthor == null){
                     // go to profile
                     Toast.makeText(getContext(), "Wait a sec!", Toast.LENGTH_SHORT).show();
-                }else{
+                } else if (postAuthor.getUid().equals(Constant.getInstance().getCurrentUser().getUid())) {
+                    Toast.makeText(getContext(), "You can't talk with yourself", Toast.LENGTH_SHORT).show();
+                } else {
                     FragmentManager fm = getParentFragmentManager();
                     FragmentTransaction ft = fm.beginTransaction();
 
