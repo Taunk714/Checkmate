@@ -161,7 +161,7 @@ private Button edit;
                  AlarmManager alarmManager;
 
                  Intent i = new Intent(getContext(), NoteReviewReceiver.class);
-                 //PendingIntent pi = PendingIntent.getBroadcast(getContext(), 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
+//                 PendingIntent pi = PendingIntent.getBroadcast(getContext(), 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
                  SavedPost savedPost = review.get(position);
                  i.putExtra("Post_id", savedPost.getPostId());
                  i.putExtra("Group_id", savedPost.getGroupId());
@@ -200,13 +200,13 @@ private Button edit;
 
                  long timeAtSwitchOn = System.currentTimeMillis();
 
-                 long tenSeconds = 1000 * 3600*24*2;
+                 long tenSeconds =  172800 * 10;
 
                  if (list.isItemChecked(position)) {
                      Toast.makeText(getContext(), "Review!", Toast.LENGTH_SHORT).show();
                      alarmManager.set(AlarmManager.RTC_WAKEUP, timeAtSwitchOn + tenSeconds, pi);
                  } else {
-                     Toast.makeText(getContext(), "Reminder Canceled.", Toast.LENGTH_SHORT).show();
+                     Toast.makeText(getContext(), "Completed task", Toast.LENGTH_SHORT).show();
                      alarmManager.cancel(pi);
                  }
                  review.remove(savedPost);

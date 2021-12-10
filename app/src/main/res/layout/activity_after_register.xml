@@ -46,12 +46,14 @@
 
     <TextView
         android:id="@+id/nickname_label"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
+        android:gravity="center"
+        android:paddingHorizontal="2dp"
         android:text="@string/enter_your_username"
         android:textColor="@color/deepspace"
-        android:textSize="20sp"
+        android:textSize="17sp"
         app:layout_constraintBottom_toTopOf="@+id/nickname_editor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -65,7 +67,7 @@
         android:hint="@string/username_hint"
         android:inputType="textPersonName"
         android:minHeight="48dp"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:textColorHint="@color/deepspace"
         app:layout_constraintBottom_toTopOf="@+id/nickname_confirm"
         app:layout_constraintEnd_toEndOf="parent"
