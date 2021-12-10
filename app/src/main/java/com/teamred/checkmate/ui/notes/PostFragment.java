@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -92,7 +93,7 @@ public class PostFragment extends Fragment {
         });
 
         binding.postDate.setText(this.post.getCreateDate().toString());
-        binding.postContentTV.setText(this.post.getContent());
+        binding.postContentTV.setText(Html.fromHtml(this.post.getContent()));
         binding.postSubTopic.setText(this.post.getSubtopic());
 
         User currentUser = Constant.getInstance().getCurrentUser();

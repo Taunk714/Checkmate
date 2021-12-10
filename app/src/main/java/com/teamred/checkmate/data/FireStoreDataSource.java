@@ -121,9 +121,9 @@ public class FireStoreDataSource {
         return db.collection(CheckmateKey.GROUP_FIREBASE).get();
     }
 
-    public static Task<DocumentReference>  addUser(User user){
-        return db.collection(CheckmateKey.USER_FIREBASE).add(JSON.toJSON(user));
-    }
+//    public static Task<DocumentReference>  addUser(User user){
+//        return db.collection(CheckmateKey.USER_FIREBASE).add(JSON.toJSON(user));
+//    }
 
     public static Task<Void> updateUser(String uid, String username){
         return FirebaseFirestore.getInstance()

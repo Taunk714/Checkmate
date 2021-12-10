@@ -3,6 +3,7 @@ package com.teamred.checkmate.ui;
 import static android.content.ContentValues.TAG;
 
 import android.content.Context;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,7 +69,7 @@ public class PostListViewAdapter extends BaseAdapter {
         TextView postContent = row.findViewById(R.id.post_content);
         TextView postSubTopic = row.findViewById(R.id.postrowsubtopic_TV);
 //        TextView postNumber = row.findViewById(R.id.post_number);
-        postContent.setText(postList[position].getContent());
+        postContent.setText(Html.fromHtml(postList[position].getContent()));
         LoginDataSource.getTargetUser(postList[position].getAuthor()).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {

@@ -146,12 +146,17 @@ public class LoginDataSource {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()){
-                    Map<String, Object> data = task.getResult().getData();
-                    user.setName((String) data.get("name"));
-                    user.setGroupJoined(((ArrayList<String>) data.get("groupJoined")));
-                    user.setPhotoUrl((String) data.get("photoUrl"));
-                    user.setUid(uid);
-                    user.setUsername((String) data.get("username"));
+                    User user = task.getResult().toObject(User.class);
+                    if (user.getUid() == null){
+                        user.setUid(uid);
+                        FirebaseFirestore.getInstance().collection(CheckmateKey.USER_FIREBASE).document(uid).update("uid", uid);
+                    }
+//                    Map<String, Object> data = task.getResult().getData();
+//                    user.setName((String) data.get("name"));
+//                    user.setGroupJoined(((ArrayList<String>) data.get("groupJoined")));
+//                    user.setPhotoUrl((String) data.get("photoUrl"));
+//                    user.setUid(uid);
+//                    user.setUsername((String) data.get("username"));
                     Constant.getInstance().setCurrentUser(user);
                     currentUserResult.setValue(user);
                     Log.i(TAG, "Fetch algolia key");
@@ -172,30 +177,30 @@ public class LoginDataSource {
         return documentSnapshotTask;
     }
 
-    public static User getChatUser(String uid){
-        User user = new User();
-        Source source = Source.SERVER;
-        Task<DocumentSnapshot> documentSnapshotTask = FirebaseFirestore.getInstance().collection("user").document(uid).get();
-        documentSnapshotTask.addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()){
-                    Map<String, Object> data = task.getResult().getData();
-                    user.setName((String) data.get("name"));
-                    user.setGroupJoined(((ArrayList<String>) data.get("groupJoined")));
-                    user.setPhotoUrl((String) data.get("photoUrl"));
-                    user.setUid(uid);
-                    user.setUsername((String) data.get("username"));
-                    Log.i(TAG, "Get chat user");
-//                    AlgoliaDataSource.
-                }else{
-                    Log.i(TAG, "Get User Error");
-                }
-
-            }
-        });
-        return user;
-    }
+//    public static User getChatUser(String uid){
+//        User user = new User();
+//        Source source = Source.SERVER;
+//        Task<DocumentSnapshot> documentSnapshotTask = FirebaseFirestore.getInstance().collection("user").document(uid).get();
+//        documentSnapshotTask.addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                if (task.isSuccessful()){
+//                    Map<String, Object> data = task.getResult().getData();
+//                    user.setName((String) data.get("name"));
+//                    user.setGroupJoined(((ArrayList<String>) data.get("groupJoined")));
+//                    user.setPhotoUrl((String) data.get("photoUrl"));
+//                    user.setUid(uid);
+//                    user.setUsername((String) data.get("username"));
+//                    Log.i(TAG, "Get chat user");
+////                    AlgoliaDataSource.
+//                }else{
+//                    Log.i(TAG, "Get User Error");
+//                }
+//
+//            }
+//        });
+//        return user;
+//    }
 
     public static User generateUser(FirebaseUser firebaseUser){
         User user = new User();
@@ -212,32 +217,32 @@ public class LoginDataSource {
         return FirebaseFirestore.getInstance().collection("user").document(uid).get();
     }
 
-    public static void addUser(FirebaseUser firebaseUser){
-        User user = new User();
-        user.setUid(firebaseUser.getUid());
-        user.setUsername(firebaseUser.getEmail());
-        user.setGroupJoined(new ArrayList<>());
-        user.setPhotoUrl(firebaseUser.getPhotoUrl() == null? null:firebaseUser.getPhotoUrl().toString());
-        user.setName(firebaseUser.getUid());
-        user.setEmail(firebaseUser.getEmail());
-
-        FirebaseFirestore.getInstance()
-            .collection("user")
-            .document(firebaseUser.getUid())
-            .set(JSON.toJSON(user))
-            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void unused) {
-                    Log.i(TAG, "add to firebase");
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.e(TAG, "fail to add new user to firebase");
-                }
-            });
-
-    }
+//    public static void addUser(FirebaseUser firebaseUser){
+//        User user = new User();
+//        user.setUid(firebaseUser.getUid());
+//        user.setUsername(firebaseUser.getEmail());
+//        user.setGroupJoined(new ArrayList<>());
+//        user.setPhotoUrl(firebaseUser.getPhotoUrl() == null? null:firebaseUser.getPhotoUrl().toString());
+//        user.setName(firebaseUser.getUid());
+//        user.setEmail(firebaseUser.getEmail());
+//
+//        FirebaseFirestore.getInstance()
+//            .collection("user")
+//            .document(firebaseUser.getUid())
+//            .set(JSON.toJSON(user))
+//            .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                @Override
+//                public void onSuccess(Void unused) {
+//                    Log.i(TAG, "add to firebase");
+//                }
+//            }).addOnFailureListener(new OnFailureListener() {
+//                @Override
+//                public void onFailure(@NonNull Exception e) {
+//                    Log.e(TAG, "fail to add new user to firebase");
+//                }
+//            });
+//
+//    }
 
     public static Task<Void> updateUser(String uid, String username){
         return FirebaseFirestore.getInstance()

@@ -75,12 +75,7 @@ public class ChatAdapter extends FirebaseRecyclerAdapter<Chat, ChatAdapter.ChatV
                 userTask.addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        User user = new User();
-                        Map<String, Object> data = task.getResult().getData();
-                        user.setName((String) data.get("name"));
-                        user.setPhotoUrl((String) data.get("photoUrl"));
-                        user.setUid((String) data.get("uid"));
-                        user.setUsername((String) data.get("username"));
+                        User user = task.getResult().toObject(User.class);
                         Bundle bundle = new Bundle();
                         bundle.putString("otherUser", JSON.toJSONString(user));
                         ChatDetailFragment chatDetailFragment = new ChatDetailFragment();

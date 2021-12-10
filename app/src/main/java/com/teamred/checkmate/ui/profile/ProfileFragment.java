@@ -200,7 +200,7 @@ private Button edit;
 
                  long timeAtSwitchOn = System.currentTimeMillis();
 
-                 long tenSeconds = 1000 * 10;
+                 long tenSeconds = 1000 * 3600*24*2;
 
                  if (list.isItemChecked(position)) {
                      Toast.makeText(getContext(), "Review!", Toast.LENGTH_SHORT).show();
