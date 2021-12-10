@@ -23,7 +23,7 @@ allprojects {
 android {
     signingConfigs {
         debug {
-            storeFile file(var)
+            storeFile file('C:\\Users\\kevin\\.android\\debug.keystore')
         }
     }
     compileSdk 31

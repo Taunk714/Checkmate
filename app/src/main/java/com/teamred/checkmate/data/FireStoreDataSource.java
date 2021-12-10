@@ -125,11 +125,17 @@ public class FireStoreDataSource {
         return db.collection(CheckmateKey.USER_FIREBASE).add(JSON.toJSON(user));
     }
 
-    public static Task<Void> updateUser(String uid, String username){
+    public static Task<Void> updateUsername(String uid, String username){
         return FirebaseFirestore.getInstance()
                 .collection("user")
                 .document(uid)
                 .update("username", username);
+    }
+    public static Task<Void> updatePhotoUrl(String uid, String url){
+        return FirebaseFirestore.getInstance()
+                .collection("user")
+                .document(uid)
+                .update("photoUrl", url);
     }
 
 

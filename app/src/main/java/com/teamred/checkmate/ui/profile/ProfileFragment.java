@@ -55,6 +55,8 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class ProfileFragment extends Fragment {
 
 private FragmentProfileBinding binding;
@@ -64,6 +66,7 @@ private TextView tName;
 private TextView tUsername;
 private TextView tAbout_me;
 private Button edit;
+private CircleImageView p_pic;
  String items[]
             = { "None yet. Add some!" };
 
@@ -242,6 +245,7 @@ private Button edit;
             // No user is signed in
         }
 
+
         binding.signoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -304,6 +308,7 @@ private Button edit;
         // set this stuff
         usernameTxtView = (TextView) getView().findViewById(R.id.username_tv);
         numGroupsTxtView = (TextView) getView().findViewById(R.id.numgroupsjoined);
+        p_pic = (CircleImageView) getView().findViewById(R.id.p_pic);
     }
 
     @Override
