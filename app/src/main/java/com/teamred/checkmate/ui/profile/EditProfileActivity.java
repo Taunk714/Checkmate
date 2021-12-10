@@ -120,7 +120,7 @@ public class EditProfileActivity extends AppCompatActivity {
                         voidTask.addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
-                                startActivity(new Intent(EditProfileActivity.this, ProfileFragment.class));
+                                finish();
                             }
                         });
                     }
