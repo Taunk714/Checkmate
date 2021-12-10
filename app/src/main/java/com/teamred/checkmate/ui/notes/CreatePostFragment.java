@@ -99,13 +99,14 @@ public class CreatePostFragment extends Fragment {
                 final List<String> tags = Arrays.asList(binding.tags.getText().toString().split(",").clone());
                 final String content = binding.postContent.getText().toString();
 
+
                 Map<String, Object> data = new HashMap<>();
                 data.put("postTitle", postTitle);
                 data.put("subTopic", subTopic);
                 data.put("tags", tags);
                 data.put("content", content);
                 data.put("createdDate", Calendar.getInstance().getTime());
-                data.put("author", Constant.getInstance().getCurrentUser().getUsername());
+                data.put("author", Constant.getInstance().getCurrentUser().getUid());
                 data.put("onenoteWebURL", selectedWebURL);
                 data.put("onenoteAppURL", selectedAppURL);
 

@@ -1,12 +1,10 @@
 package com.teamred.checkmate.data.model;
 
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 public class Post {
-    private String title;
+    private String postTitle;
     private List<String> tags;
     private String content;
     private Date createDate;
@@ -19,7 +17,7 @@ public class Post {
 
     public Post(String postID, String title, String subtopic, List<String> tags, String author, String content, String onenoteWebURL, String onenoteAppURL) {
         this.postID = postID;
-        this.title = title;
+        this.postTitle = title;
         this.tags = tags;
         this.content = content;
         this.author = author; // Author will be the USERNAME, not name, not email, USERNAME.
@@ -34,26 +32,12 @@ public class Post {
 //        this.number = new Random().nextInt(20);
     }
 
-    public String getOnenoteAppURL() {
-        return onenoteAppURL;
+    public String getPostTitle() {
+        return postTitle;
     }
 
-    public String getOnenoteWebURL() {
-        return onenoteWebURL;
-    }
-
-    public String getSubtopic() {
-        return subtopic;
-    }
-
-    public String getPostID() { return postID; }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
+    public void setPostTitle(String postTitle) {
+        this.postTitle = postTitle;
     }
 
     public List<String> getTags() {
@@ -88,15 +72,35 @@ public class Post {
         this.author = author;
     }
 
-    public String getsubtopic() {
+    public String getPostID() {
+        return postID;
+    }
+
+    public void setPostID(String postID) {
+        this.postID = postID;
+    }
+
+    public String getSubtopic() {
         return subtopic;
     }
 
-    //    public Integer getNumber() {
-//        return number;
-//    }
+    public void setSubtopic(String subtopic) {
+        this.subtopic = subtopic;
+    }
 
-//    public void setNumber(Integer number) {
-//        this.number = number;
-//    }
+    public String getOnenoteAppURL() {
+        return onenoteAppURL;
+    }
+
+    public void setOnenoteAppURL(String onenoteAppURL) {
+        this.onenoteAppURL = onenoteAppURL;
+    }
+
+    public String getOnenoteWebURL() {
+        return onenoteWebURL;
+    }
+
+    public void setOnenoteWebURL(String onenoteWebURL) {
+        this.onenoteWebURL = onenoteWebURL;
+    }
 }

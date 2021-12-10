@@ -21,11 +21,7 @@ allprojects {
 }
 
 android {
-    signingConfigs {
-        debug {
-            storeFile file(var)
-        }
-    }
+
     compileSdk 31
 
     defaultConfig {

@@ -25,15 +25,29 @@ import com.teamred.checkmate.data.model.FriendlyMessage;
 import com.teamred.checkmate.databinding.ImageMessageBinding;
 import com.teamred.checkmate.databinding.MessageBinding;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class FriendlyMessageAdapter extends FirebaseRecyclerAdapter<FriendlyMessage, RecyclerView.ViewHolder> {
     private FirebaseRecyclerOptions<FriendlyMessage> options;
     private String currentUserName;
+    private String otherUsername;
+    private String currentUID;
+    private String otherUID;
+    private Map<String, String> map = new HashMap<>();
 
 
-    public FriendlyMessageAdapter(@NonNull FirebaseRecyclerOptions<FriendlyMessage> options,  String currentUserName) {
+    public FriendlyMessageAdapter(@NonNull FirebaseRecyclerOptions<FriendlyMessage> options,
+                                  String currentUserName, String otherUsername,
+                                  String currentUID, String otherUID) {
         super(options);
         this.options = options;
+        map.put(currentUID, currentUserName);
+        map.put(otherUID, otherUsername);
         this.currentUserName = currentUserName;
+        this.otherUsername = otherUsername;
+        this.currentUID = currentUID;
+        this.otherUID = otherUID;
     }
 
     @NonNull
@@ -85,12 +99,12 @@ public class FriendlyMessageAdapter extends FirebaseRecyclerAdapter<FriendlyMess
 
         public void bind(FriendlyMessage item){
             binding.messageTextView.setText(item.getText());
-            setTextColor(item.getName(), binding.messageTextView);
+            setTextColor(item.getFrom(), binding.messageTextView);
 
-            if (item.getName() == null){
+            if (item.getFrom() == null){
                 binding.messengerTextView.setText(ANONYMOUS);
             }else{
-                binding.messengerTextView.setText(item.getName());
+                binding.messengerTextView.setText(map.get(item.getFrom()));
             }
 
             if (item.getPhotoUrl() != null) {
@@ -124,10 +138,10 @@ public class FriendlyMessageAdapter extends FirebaseRecyclerAdapter<FriendlyMess
         public void bind(FriendlyMessage item){
             loadImageIntoView(binding.messageImageView, item.getImageUrl());
 
-            if (item.getName() == null){
+            if (item.getFrom() == null){
                 binding.messengerTextView.setText(ANONYMOUS);
             }else{
-                binding.messengerTextView.setText(item.getName());
+                binding.messengerTextView.setText(map.get(item.getFrom()));
             }
             if (item.getPhotoUrl() != null) {
                 loadImageIntoView(binding.messengerImageView, item.getImageUrl());

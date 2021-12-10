@@ -45,19 +45,24 @@ public class PostsViewModel extends ViewModel {
                 // Something was changed in the posts. Recreate our posts list.
                 List<Post> postList = new ArrayList<Post>();
                 for (QueryDocumentSnapshot document : value) {
-                    Map<String, Object> data = document.getData();
+                    Post post = document.toObject(Post.class);
+                    if (post.getPostID() == null){
+                        post.setPostID(document.getId());
+                        docRef.collection("posts").document(document.getId()).update("postID", document.getId());
+                    }
+//                    Map<String, Object> data = document.getData();
+//
+//                    String title = data.get("postTitle").toString();
+//                    List<String> tags = (ArrayList<String>) data.get("tags");
+//                    String author = data.get("author").toString();
+//                    String content = data.get("content").toString();
+//                    String subtopic = data.get("subTopic").toString();
+//                    String onenoteWebURL = data.get("onenoteWebURL") != null ? data.get("onenoteWebURL").toString() : null;
+//                    String onenoteAppURL = data.get("onenoteAppURL") != null ? data.get("onenoteAppURL").toString() : null;
+//
+//                    Post n = new Post(document.getId(), title, subtopic, tags, author, content, onenoteWebURL, onenoteAppURL);
 
-                    String title = data.get("postTitle").toString();
-                    List<String> tags = (ArrayList<String>) data.get("tags");
-                    String author = data.get("author").toString();
-                    String content = data.get("content").toString();
-                    String subtopic = data.get("subTopic").toString();
-                    String onenoteWebURL = data.get("onenoteWebURL") != null ? data.get("onenoteWebURL").toString() : null;
-                    String onenoteAppURL = data.get("onenoteAppURL") != null ? data.get("onenoteAppURL").toString() : null;
-
-                    Post n = new Post(document.getId(), title, subtopic, tags, author, content, onenoteWebURL, onenoteAppURL);
-
-                    postList.add(n);
+                    postList.add(post);
                 }
                 posts.setValue(postList);
             }
@@ -91,18 +96,19 @@ public class PostsViewModel extends ViewModel {
                         if (task.isSuccessful()) {
                             List<Post> postList = new ArrayList<Post>();
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                Map<String, Object> data = document.getData();
-
-                                String title = data.get("postTitle").toString();
-                                List<String> tags = (List<String>) data.get("tags");
-                                String author = "TODO Author";
-                                String content = data.get("content").toString();
-                                String subtopic = data.get("subTopic").toString();
-                                String onenoteWebURL = data.get("onenoteWebURL") != null ? data.get("onenoteWebURL").toString() : null;
-                                String onenoteAppURL = data.get("onenoteAppURL") != null ? data.get("onenoteAppURL").toString() : null;
-
-                                Post n = new Post(document.getId(), title, subtopic, tags, author, content, onenoteWebURL, onenoteAppURL);
-                                postList.add(n);
+                                Post post = document.toObject(Post.class);
+//                                Map<String, Object> data = document.getData();
+//
+//                                String title = data.get("postTitle").toString();
+//                                List<String> tags = (List<String>) data.get("tags");
+//                                String author = "TODO Author";
+//                                String content = data.get("content").toString();
+//                                String subtopic = data.get("subTopic").toString();
+//                                String onenoteWebURL = data.get("onenoteWebURL") != null ? data.get("onenoteWebURL").toString() : null;
+//                                String onenoteAppURL = data.get("onenoteAppURL") != null ? data.get("onenoteAppURL").toString() : null;
+//
+//                                Post n = new Post(document.getId(), title, subtopic, tags, author, content, onenoteWebURL, onenoteAppURL);
+                                postList.add(post);
                             }
                             posts.setValue(postList);
                         } else {

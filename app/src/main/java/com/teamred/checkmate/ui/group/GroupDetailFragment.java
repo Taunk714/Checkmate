@@ -73,6 +73,8 @@ public class GroupDetailFragment extends Fragment implements Searchable {
 
     private boolean[] groupStatusSelected = new boolean[]{true, true};
 
+    private User creatorUser;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -94,8 +96,15 @@ public class GroupDetailFragment extends Fragment implements Searchable {
         if (arguments!= null){
             group = JSON.parseObject(arguments.getString("group"), Group.class);
             title.setText(group.getGroupName());
-            creator.setText(group.getCreator());
             desc.setText(group.getDescription());
+
+            LoginDataSource.getTargetUser(group.getCreatorId()).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    creatorUser = task.getResult().toObject(User.class);
+                    creator.setText(creatorUser.getUsername());
+                }
+            });
 
             group.addView();
             Group.updateView(group);
@@ -138,30 +147,23 @@ public class GroupDetailFragment extends Fragment implements Searchable {
             public void onClick(View v) {
                 // go to user profile
                 // uid is creatorId
-                String uid = group.getCreatorId();
-                if (uid.equals(Constant.getInstance().getCurrentUser().getUid())){
+//                String uid = group.getCreatorId();
+                if (creatorUser == null){
                     // go to profile
+                    Toast.makeText(getContext(), "Wait a sec!", Toast.LENGTH_SHORT).show();
+                }else if (creatorUser.getUid().equals(Constant.getInstance().getCurrentUser().getUid())){
+                    Toast.makeText(getContext(), "You can't talk with yourself", Toast.LENGTH_SHORT).show();
                 }else{
                     FragmentManager fm = getParentFragmentManager();
                     FragmentTransaction ft = fm.beginTransaction();
-                    Task<DocumentSnapshot> userTask = LoginDataSource.getUserTask(uid);
-                    userTask.addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            User user = new User();
-                            Map<String, Object> data = task.getResult().getData();
-                            user.setName((String) data.get("name"));
-                            user.setPhotoUrl((String) data.get("photoUrl"));
-                            user.setUid((String) data.get("uid"));
-                            user.setUsername((String) data.get("username"));
-                            Bundle bundle = new Bundle();
-                            bundle.putString("otherUser", JSON.toJSONString(user));
-                            ChatDetailFragment chatDetailFragment = new ChatDetailFragment();
-                            chatDetailFragment.setArguments(bundle);
-                            ft.replace(R.id.navigation_host, chatDetailFragment)
-                                    .commit();
-                        }
-                    });
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString("otherUser", JSON.toJSONString(creatorUser));
+                    ChatDetailFragment chatDetailFragment = new ChatDetailFragment();
+                    chatDetailFragment.setArguments(bundle);
+                    ft.replace(R.id.navigation_host, chatDetailFragment)
+                            .commit();
+
                 }
 
             }

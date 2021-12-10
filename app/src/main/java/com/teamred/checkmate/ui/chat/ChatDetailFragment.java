@@ -100,7 +100,7 @@ public class ChatDetailFragment extends Fragment {
                 .setQuery(messagesRef, FriendlyMessage.class)
                 .build();
 
-        adapter = new FriendlyMessageAdapter(options, getUserName());
+        adapter = new FriendlyMessageAdapter(options, getUserName(), otherUser.getUsername(), Constant.getInstance().getCurrentUser().getUid(), otherUser.getUid());
         binding.progressBar.setVisibility(ProgressBar.INVISIBLE);
         manager = new LinearLayoutManager(getContext());
         manager.setStackFromEnd(true);

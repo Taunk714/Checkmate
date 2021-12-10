@@ -10,15 +10,20 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.teamred.checkmate.R;
+import com.teamred.checkmate.data.LoginDataSource;
 import com.teamred.checkmate.data.model.Post;
+import com.teamred.checkmate.data.model.User;
 import com.teamred.checkmate.ui.notes.PostFragment;
 import com.teamred.checkmate.ui.notes.PostsViewModel;
-import com.teamred.checkmate.util.DateUtil;
 
 import java.util.List;
 
@@ -35,7 +40,7 @@ public class PostListViewAdapter extends BaseAdapter {
     public PostListViewAdapter(Context context, Post[] postList, PostsViewModel postsViewModel) {
         this.postList = postList;
         for (Post p: postList) {
-            Log.i(TAG, "PostListViewAdapter: Post's subtopic: " + p.getsubtopic());
+            Log.i(TAG, "PostListViewAdapter: Post's subtopic: " + p.getSubtopic());
         }
         this.context = context;
         this.postsViewModel = postsViewModel;
@@ -64,12 +69,19 @@ public class PostListViewAdapter extends BaseAdapter {
         TextView postSubTopic = row.findViewById(R.id.postrowsubtopic_TV);
 //        TextView postNumber = row.findViewById(R.id.post_number);
         postContent.setText(postList[position].getContent());
-        postAuthor.setText(postList[position].getAuthor());
+        LoginDataSource.getTargetUser(postList[position].getAuthor()).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                User user = task.getResult().toObject(User.class);
+                postAuthor.setText(user.getUsername());
+            }
+        });
+
         postDate.setText(postList[position].getCreateDate().toString());
-        postTitle.setText(postList[position].getTitle());
+        postTitle.setText(postList[position].getPostTitle());
         postTags.setText(parseTags(postList[position].getTags()));
-        Log.i(TAG, "getView: postlist position subtopic" + postList[position].getsubtopic());
-        postSubTopic.setText(postList[position].getsubtopic());
+        Log.i(TAG, "getView: postlist position subtopic" + postList[position].getSubtopic());
+        postSubTopic.setText(postList[position].getSubtopic());
 
 //        postNumber.setText(postList[position].getNumber().toString());
 

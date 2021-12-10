@@ -19,7 +19,7 @@ public class Group {
     private Date updateDate;
     private List<String> subTopics = new ArrayList<>();
     private List<String> tags = new ArrayList<>();
-    private String creator; // creatorUsername on Shirene's
+//    private String creator; // creatorUsername on Shirene's
     private String creatorId;
     private Integer status = 0;
     private Integer numMember = 1;
@@ -35,10 +35,10 @@ public class Group {
      * @param creatorUsername creator's username (firebase)
      * @param description     description of group
      */
-    public Group(String groupDocumentID, String groupName, ArrayList<String> tags, String creatorUsername, String description) {
+    public Group(String groupDocumentID, ArrayList<String> tags, String creatorUsername, String description) {
         this.objectID = groupDocumentID;
         this.groupName = groupName;
-        this.creator = creatorUsername;
+//        this.creator = creatorUsername;
         this.description = description;
         this.createDate = new Date();
         this.updateDate = new Date();
@@ -123,13 +123,13 @@ public class Group {
         this.subTopics = subTopics;
     }
 
-    public String getCreator() {
-        return creator;
-    }
-
-    public void setCreator(String creator) {
-        this.creator = creator;
-    }
+//    public String getCreator() {
+//        return creator;
+//    }
+//
+//    public void setCreator(String creator) {
+//        this.creator = creator;
+//    }
 
     public void setCreatorId(String creatorId) {
         this.creatorId = creatorId;

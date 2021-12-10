@@ -2,7 +2,7 @@ package com.teamred.checkmate.data.model;
 
 public class FriendlyMessage {
     private String text;
-    private String name;
+//    private String name;
     private String photoUrl;
     private String imageUrl;
 
@@ -15,7 +15,7 @@ public class FriendlyMessage {
         this.from = from;
         this.to = to;
         this.text = text;
-        this.name = name;
+//        this.name = name;
         this.photoUrl = photoUrl;
         this.imageUrl = imageUrl;
     }
@@ -28,13 +28,13 @@ public class FriendlyMessage {
         this.text = text;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+//    public String getName() {
+//        return name;
+//    }
+//
+//    public void setName(String name) {
+//        this.name = name;
+//    }
 
     public String getPhotoUrl() {
         return photoUrl;

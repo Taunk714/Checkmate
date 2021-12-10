@@ -1,7 +1,5 @@
 package com.teamred.checkmate.ui.notes;
 
-import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -11,6 +9,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.util.Log;
@@ -22,6 +22,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -29,11 +30,14 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.teamred.checkmate.R;
 import com.teamred.checkmate.data.Constant;
+import com.teamred.checkmate.data.LoginDataSource;
 import com.teamred.checkmate.data.model.Post;
 import com.teamred.checkmate.data.model.User;
 import com.teamred.checkmate.databinding.FragmentPostBinding;
 import com.teamred.checkmate.services.NoteReviewReceiver;
+import com.teamred.checkmate.ui.chat.ChatDetailFragment;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -48,6 +52,8 @@ public class PostFragment extends Fragment {
     final String TAG = "PostFragment";
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+    private User postAuthor;
 
     public PostFragment() {
         // Required empty public constructor
@@ -67,12 +73,20 @@ public class PostFragment extends Fragment {
         // Inflate the layout for this fragment
         binding = FragmentPostBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        Log.d(TAG, this.post.getTitle());
-        binding.postTitle.setText(this.post.getTitle());
-        binding.postAuthorTV.setText(this.post.getAuthor());
+        Log.d(TAG, this.post.getPostTitle());
+        binding.postTitle.setText(this.post.getPostTitle());
+        Task<DocumentSnapshot> targetUser = LoginDataSource.getTargetUser(this.post.getAuthor());
+        targetUser.addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                postAuthor = task.getResult().toObject(User.class);
+                binding.postAuthorTV.setText(postAuthor.getUsername());
+            }
+        });
+
         binding.postDate.setText(this.post.getCreateDate().toString());
         binding.postContentTV.setText(this.post.getContent());
-        binding.postSubTopic.setText(this.post.getsubtopic());
+        binding.postSubTopic.setText(this.post.getSubtopic());
 
         User currentUser = Constant.getInstance().getCurrentUser();
 
@@ -94,6 +108,31 @@ public class PostFragment extends Fragment {
             }
         });
 
+        binding.postAuthorTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // go to user profile
+                // uid is creatorId
+                if (postAuthor == null){
+                    // go to profile
+                    Toast.makeText(getContext(), "Wait a sec!", Toast.LENGTH_SHORT).show();
+                }else{
+                    FragmentManager fm = getParentFragmentManager();
+                    FragmentTransaction ft = fm.beginTransaction();
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString("otherUser", JSON.toJSONString(postAuthor));
+                    ChatDetailFragment chatDetailFragment = new ChatDetailFragment();
+                    chatDetailFragment.setArguments(bundle);
+                    ft.replace(R.id.navigation_host, chatDetailFragment)
+                            .commit();
+
+                }
+
+            }
+        });
+
+
         binding.reminderSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -109,7 +148,7 @@ public class PostFragment extends Fragment {
                 //PendingIntent pi = PendingIntent.getBroadcast(getContext(), 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
                 i.putExtra("Group_id", postListModel.getGroupID());
                 i.putExtra("Post_id", post.getPostID());
-                i.putExtra("post_title", post.getTitle());
+                i.putExtra("post_title", post.getPostTitle());
                 PendingIntent pi = PendingIntent.getBroadcast(getContext(), UUID.randomUUID().hashCode(),
                         i, PendingIntent.FLAG_UPDATE_CURRENT);
 

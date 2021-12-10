@@ -68,7 +68,7 @@ public class CreateGroupActivity extends AppCompatActivity {
                 group.setGroupName(name);
                 group.setDescription(description);
                 group.setSubTopics(new ArrayList<>());
-                group.setCreator(Constant.getInstance().getCurrentUser().getUsername());
+//                group.setCreator(Constant.getInstance().getCurrentUser().getUsername());
                 group.setCreatorId(Constant.getInstance().getCurrentUser().getUid());
                 group.setCreateDate(new Date());
                 group.setUpdateDate(new Date());
@@ -80,6 +80,7 @@ public class CreateGroupActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<DocumentReference> task) {
                         String id = task.getResult().getId();
                         group.setObjectID(id);
+                        FirebaseFirestore.getInstance().collection(CheckmateKey.GROUP_FIREBASE).document(id).update("objectID", id);
                         String s = JSON.toJSONString(group);
                         AlgoliaDataSource.getInstance().addRecord(CheckmateKey.GROUP_ALGOLIA, s, new CompletionHandler() {
                             @Override

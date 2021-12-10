@@ -108,7 +108,7 @@ public class FireStoreDataSource {
 
     public static Task<DocumentReference>  addGroup(Group group){
         JSONObject groupDoc = (JSONObject) JSON.toJSON(group);
-        groupDoc.fluentRemove("objectID");
+//        groupDoc.fluentRemove("objectID");
         Log.i(TAG, "addGroup: adding group to firebase, " + groupDoc.toString());
         return db.collection(CheckmateKey.GROUP_FIREBASE).add(groupDoc);
 
